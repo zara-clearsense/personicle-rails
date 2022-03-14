@@ -1,0 +1,12 @@
+
+<div align="center">
+
+    <% if session[:oktastate] %>
+     
+        <h3> Welcome to personicle, <%= session[:oktastate]["info"]["name"]%>! </h3>
+    <% else %>
+        <h3> Hello, please sign in to access the personicle! </h3>
+         <%# <p>The Personicle is a person centric healthcare data platform that registers Individual events of lifestyle, health, social, environmental, and other related events to provide highly personalized & preventive health insights in real time. %>
+    </p>
+    <% end %>
+</div>

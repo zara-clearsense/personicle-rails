@@ -1,0 +1,14 @@
+
+<div align="center"> 
+    <% if !session[:oktastate] %>
+        <h2>Hello, please login to explore personicle!</h2>
+    
+    <% else %>
+        <%= session[:oktastate].to_json %>
+        <h2>Your connections, <%= session[:oktastate]["info"]["name"] %></h2>
+        <%= link_to "View Activites", get_user_events_path, class: "btn btn-info" %>
+        
+          <%# <div id="timeline"></div> %>
+          <%# <%= react_component("timeline") %> 
+    <% end %>
+</div>  
