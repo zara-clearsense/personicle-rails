@@ -3,7 +3,7 @@
     <div class="row align-items-center">
       <div class="col">
         <h6 class="text-light text-uppercase ls-1 mb-1">Overview</h6>
-        <h5 class="h3 text-white mb-0">Your Activites</h5>
+        <h5 class="h3 text-white mb-0">Your Summary</h5>
       </div>
       <div class="col">
         <ul class="nav nav-pills justify-content-end">
@@ -35,7 +35,9 @@
         ["Jefferson", "1801-03-03", "1809-03-03"]
       ] %> 
       <% if user_data.length() != 0 %>
-         <%= react_component("TimeLine", { user_data: user_data}) %>
+     
+         <%= react_component("BarChart", { userSummary: user_data}) %>
+         
       <%else%>
         <h3 style="color:white;">No activities for the past 3 months</h3>
       <%end%>

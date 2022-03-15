@@ -14,6 +14,7 @@ gem 'activerecord-session_store'
 gem 'figaro'
 gem "chartkick"
 gem 'react-rails'
+gem 'jquery-turbolinks'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets

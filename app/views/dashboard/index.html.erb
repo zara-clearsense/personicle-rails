@@ -15,15 +15,15 @@
   <div class="row">
     <div class="col-xl-8">
     <%# <% puts @response%>
-      <%= render 'pages/dashboard/charts/sales', user_data: @response%>
+      <%= render 'pages/dashboard/charts/sales', user_data: @response %>
     </div>
     <div class="col-xl-4">
-      <%= render 'pages/dashboard/charts/orders' %>
+      <%= render 'pages/dashboard/charts/orders'%>
     </div>
   </div>
   <div class="row">
     <div class="col-xl-8">
-      <%= render 'pages/dashboard/tables/page_visits' %>
+      <%= render 'pages/dashboard/charts/page_visits', user_data: @response %>
     </div>
     <div class="col-xl-4">
       <%= render 'pages/dashboard/tables/social_traffic' %>

@@ -22,9 +22,10 @@
 
 'use strict';
 
-$( document ).on('turbolinks:load', function() {
-  var Layout = (function() {
 
+$( document ).on('ready page:load', function() {
+  var Layout = (function() {
+      
       function pinSidenav() {
           $('.sidenav-toggler').addClass('active');
           $('.sidenav-toggler').data('action', 'sidenav-unpin');

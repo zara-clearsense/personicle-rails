@@ -76,6 +76,9 @@ function TimelineChart ({user_data}) {
       var options = {'title':'Gantt Chart Timeline Visualization',
                     'width':' 100%',
                     'height': '100%',
+                    hAxis: {
+                      textStyle:{color: '#FFF'}
+                  },
                     timeline: { groupByRowLabel: true}, 
                     displayAnnotations: false};
 
@@ -94,14 +97,17 @@ function TimelineChart ({user_data}) {
 
       // Create a timeline chart, passing some options
       var timelineOptions = {
-        width: 1000,
-        height: 240, //window.innerHeight,        
+        width: 740,
+        height: 500, //window.innerHeight,        
     };
 
       var timelineChart = new google.visualization.ChartWrapper({
         'chartType': 'Timeline',
         'containerId': 'timeline',
-        'options': timelineOptions
+        'options': timelineOptions,
+        hAxis: {
+          textStyle:{color: '#FFF'}
+      },
       });
 
       // Instantiate and draw our dashboard and chart, passing in some options.
@@ -114,7 +120,7 @@ function TimelineChart ({user_data}) {
       function resize () {
         const chart = new google.visualization.Timeline(document.getElementById('timeline'));
 
-        timelineOptions.width = .45 * window.innerWidth;
+        timelineOptions.width = .5 * window.innerWidth;
         timelineOptions.height = .5 * window.innerHeight;
   
         dashboard.draw(data, options);
@@ -139,7 +145,7 @@ function TimelineChart ({user_data}) {
       {!google && <Spinner />}
       <div id="dashboard_div">
         <div id="filter_div"></div>
-        <div id="timeline" className={!google ? 'd-none' : ''}/>
+        <div id="timeline"  className={!google ? 'd-none' : ''}/>
       </div>
       
     </>

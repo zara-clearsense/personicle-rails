@@ -6,7 +6,7 @@ function useGoogleCharts () {
   const [google, setGoogle] = useState(null);
   
   useEffect(() => {
-    if (!google) {
+    // if (!google) {
       const head = document.head;
       let script = document.getElementById('googleChartsScript');
       if (!script) {
@@ -15,7 +15,7 @@ function useGoogleCharts () {
         script.id = 'googleChartsScript';
         script.onload = () => {
           if (window.google && window.google.charts) {
-            window.google.charts.load('current', {'packages':['timeline', 'controls']});
+            window.google.charts.load('current', {'packages':['timeline', 'controls','corechart']});
             
             window.google.charts.setOnLoadCallback(() => setGoogle(window.google))
           }
@@ -24,13 +24,13 @@ function useGoogleCharts () {
       } else if (window.google && window.google.charts && window.google.visualization) {
         setGoogle(window.google);
       }
-    }
+    // }
 
     return () => {
       let script = document.getElementById('googleChartsScript');
-      if (script) {
-        script.remove();
-      }
+      // if (script) {
+      //   script.remove();
+      // }
     }
   }, [google]);
 
