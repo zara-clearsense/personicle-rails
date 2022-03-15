@@ -10,7 +10,6 @@ Clone the repo:
 
 Add ``` application.yml ``` file inside /config folder
 
-``` rake db:create ```
 
 ``` rake db:migrate ```
 
