@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  before_action :require_user, except: [:login,:register]
   layout :resolve_layout
   
   private

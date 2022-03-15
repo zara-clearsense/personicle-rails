@@ -4,7 +4,7 @@
       <%= render partial: 'pages/header', locals: {
             icon: 'home',
             breadcrumb_1: 'Components',
-            breadcrumb_2: 'Icons'
+            breadcrumb_2: 'Connections'
       } %>
     </div>
   </div>
@@ -15,35 +15,39 @@
     <div class=" col ">
       <div class="card">
         <div class="card-header bg-transparent">
-          <h3 class="mb-0">Icons</h3>
+          <h3 class="mb-0">Connections</h3>
         </div>
         <div class="card-body">
           <div class="row icon-examples">
             <div class="col-lg-3 col-md-6">
-              <button type="button" class="btn-icon-clipboard" data-clipboard-text="active-40" title="Copy to clipboard">
+            <a href="<%= ENV['FITBIT_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
+              <button type="button" class="btn-icon-clipboard" data-clipboard-text="active-40" title="Connect your Fitbit">
                 <div>
-                  <i class="ni ni-active-40"></i>
-                  <span>active-40</span>
+                  <span class="iconify" data-icon="vscode-icons:file-type-fitbit"></span>
+                  <span class="btn-inner--text">Fitbit</span>
+                </div>
+              </button>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <a  href="<%= ENV['GOOGLEFIT_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
+              <button type="button" class="btn-icon-clipboard" data-clipboard-text="air-baloon" title="Connect your Google Fit">
+                <div>
+                  <span class="iconify" data-icon="logos:google-fit"></span>
+                <span class="btn-inner--text">Google Fit</span>
+                </div>
+              </button>
+            </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <button type="button" class="btn-icon-clipboard" data-clipboard-text="album-2" title="Connect your Oura">
+                <div>
+                  <%# <span class="btn-inner--icon"><%= image_tag 'icons/common/oura.png'</span>  %>
+                  <span>Oura</span>
                 </div>
               </button>
             </div>
-            <div class="col-lg-3 col-md-6">
-              <button type="button" class="btn-icon-clipboard" data-clipboard-text="air-baloon" title="Copy to clipboard">
-                <div>
-                  <i class="ni ni-air-baloon"></i>
-                  <span>air-baloon</span>
-                </div>
-              </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <button type="button" class="btn-icon-clipboard" data-clipboard-text="album-2" title="Copy to clipboard">
-                <div>
-                  <i class="ni ni-album-2"></i>
-                  <span>album-2</span>
-                </div>
-              </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="align-center" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-align-center"></i>
@@ -58,8 +62,8 @@
                   <span>align-left-2</span>
                 </div>
               </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            </div> %>
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="ambulance" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-ambulance"></i>
@@ -170,8 +174,8 @@
                   <span>book-bookmark</span>
                 </div>
               </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            </div> %>
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="books" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-books"></i>
@@ -770,16 +774,16 @@
                   <span>world</span>
                 </div>
               </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            </div> %>
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="zoom-split-in" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-zoom-split-in"></i>
                   <span>zoom-split-in</span>
                 </div>
               </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            </div> %>
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="collection" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-collection"></i>
@@ -818,15 +822,15 @@
                   <span>world-2</span>
                 </div>
               </button>
-            </div>
-            <div class="col-lg-3 col-md-6">
+            </div> %>
+            <%# <div class="col-lg-3 col-md-6">
               <button type="button" class="btn-icon-clipboard" data-clipboard-text="ui-04" title="Copy to clipboard">
                 <div>
                   <i class="ni ni-ui-04"></i>
                   <span>ui-04</span>
                 </div>
               </button>
-            </div>
+            </div> %>
           </div>
         </div>
       </div>
