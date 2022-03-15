@@ -1,8 +1,10 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    puts "hello"
     def oktaoauth
+      puts "hello here"
       # You need to implement the method below in your model (e.g. app/models/user.rb)
       @user = User.from_omniauth(request.env["omniauth.auth"].except("extra"))
-  
+      
       if @user.save
         session[:oktastate] = request.env["omniauth.auth"].except("extra")
         # puts request.env["omniauth.auth"].except("extra")
@@ -17,7 +19,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   
     def failure
-  
+     
     end
   end
   
