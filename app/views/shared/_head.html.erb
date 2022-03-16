@@ -2,13 +2,14 @@
   <title>Personicle</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+   <%= javascript_include_tag "//www.google.com/jsapi" %>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="<%= yield(:meta_description) %>">
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 
-  <%# <%= javascript_include_tag "//www.google.com/jsapi" %> 
+ 
   <%# <%= javascript_include_tag "application", "chartkick" %> 
  <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
   <!-- Fonts -->
