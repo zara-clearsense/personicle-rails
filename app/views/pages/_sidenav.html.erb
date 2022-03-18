@@ -30,7 +30,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_tables_path %>">
+            <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_foodlog_path %>">
               <i class="ni ni-bullet-list-67 text-default"></i>
               <span class="nav-link-text">Logging</span>
             </a>
@@ -47,12 +47,12 @@
               <%# <span class="nav-link-text">Register</span> %>
             <%# </a> %>
           <%# </li> %>
-          <li class="nav-item">
-            <a class="nav-link" href="<%= pages_upgrade_path %>">
-              <i class="ni ni-send text-dark"></i>
+          <%# <li class="nav-item">
+            <a class="nav-link" href="<%= pages_recipes_path %>
+              <%# <i class="ni ni-send text-dark"></i>
               <span class="nav-link-text">Upgrade</span>
             </a>
-          </li>
+          </li> %> 
         </ul>
         <!-- Divider -->
         <hr class="my-3">
@@ -86,12 +86,12 @@
               <span class="nav-link-text">Plugins</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active active-pro" href="<%= pages_upgrade_path %>">
-              <i class="ni ni-send text-dark"></i>
+          <%# <li class="nav-item">
+            <a class="nav-link active active-pro" href="<%= pages_recipes_path 
+              <%# <i class="ni ni-send text-dark"></i>
               <span class="nav-link-text">Upgrade to PRO</span>
             </a>
-          </li>
+          </li> %> 
         </ul>
       </div>
     </div>

@@ -15,8 +15,10 @@ Rails.application.routes.draw do
   get 'pages/dashboard', :to => 'dashboard#index'
   get 'pages/connections'
   get 'pages/profile', :to => 'profile#index'
-  get 'pages/tables'
+  get 'pages/foodlog', :to => 'foodlog#index'
+  get 'pages/foodlog/data', :to => 'foodlog#get_edamam_data' , :as => 'get_edamam_data' 
+  # get 'pages/foodlog/recipes', :to => 'foodlog#render'
   get 'pages/login'
   get 'pages/register'
-  get 'pages/upgrade'
+  # get 'pages/recipes'
 end

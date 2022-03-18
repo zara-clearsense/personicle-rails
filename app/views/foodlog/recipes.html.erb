@@ -1,0 +1,47 @@
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <%= render partial: 'pages/header', locals: {
+            icon: 'home',
+            breadcrumb_1: 'Recipes',
+            breadcrumb_2: 'Recipes'
+      } %>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row mt--5">
+    <div class="col-md-10 ml-auto mr-auto">
+      <div class="card card-upgrade">
+        <div class="card-header text-center border-bottom-0">
+          <h4 class="card-title">Select your meal</h4>
+          <%# <p class="card-category">Are you looking for more components? Please check our Premium Version of Argon Dashboard.</p> %>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive table-upgrade">
+            <table class="table">
+              <thead>
+               
+                <tr>
+                   <th style="font-weight:bold;">Recipe Name</th>
+                  <%# <th >PRO</th> %>
+                </tr>
+              </thead> 
+              <tbody>
+                    <% if recipes%>
+                        <% recipes.each do |r| %>
+                            <tr>
+                                <th scope="row"> <%= link_to r.recipe.label, r.recipe.url, target: :_blank %> </th>
+                            </tr>
+                        <% end %>
+                    <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'pages/footer' %>
+</div>

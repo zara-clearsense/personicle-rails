@@ -3,8 +3,8 @@
     <div class="header-body">
       <%= render partial: 'pages/header', locals: {
             icon: 'home',
-            breadcrumb_1: 'Examples',
-            breadcrumb_2: 'Upgrade to PRO'
+            breadcrumb_1: 'Recipes',
+            breadcrumb_2: 'Recipes'
       } %>
     </div>
   </div>
@@ -15,8 +15,9 @@
     <div class="col-md-10 ml-auto mr-auto">
       <div class="card card-upgrade">
         <div class="card-header text-center border-bottom-0">
-          <h4 class="card-title">Argon Dashboard PRO</h4>
-          <p class="card-category">Are you looking for more components? Please check our Premium Version of Argon Dashboard.</p>
+          <h4 class="card-title">Select your meal </h4>
+          <% if recipes then puts recipes end %>
+          <%# <p class="card-category">Are you looking for more components? Please check our Premium Version of Argon Dashboard.</p> %>
         </div>
         <div class="card-body">
           <div class="table-responsive table-upgrade">
@@ -24,7 +25,7 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th class="text-center">Free</th>
+                  <th class="text-center">Recipe URL</th>
                   <th class="text-center">PRO</th>
                 </tr>
               </thead>

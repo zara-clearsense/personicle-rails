@@ -8,11 +8,11 @@
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-
+  
  
   <%# <%= javascript_include_tag "application", "chartkick" %> 
  <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-  
+  <%= yield(:foodlog) %>
 </head>
