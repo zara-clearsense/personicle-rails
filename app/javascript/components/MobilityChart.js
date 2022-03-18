@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from "react";
 // import { Spinner } from "react-bootstrap";
-// import sample_events from "../sample_data/sample_events"
+// import sample_steps from "../sample_data/sample_steps"
 // import useGoogleCharts from './useGoogleCharts'
 
 // function MobilityChart ({userSummary}) {
