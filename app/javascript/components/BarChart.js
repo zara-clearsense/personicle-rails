@@ -4,7 +4,7 @@ import sample_events from "../sample_data/sample_events"
 import useGoogleCharts from './useGoogleCharts'
 
 function BarChart ({userSummary}) {
-    console.log(userSummary)
+    // console.log(userSummary)
     const google = useGoogleCharts()
     const [chart, setChart] = useState(null);
     const [dimensions, setDimensions] = useState({ 

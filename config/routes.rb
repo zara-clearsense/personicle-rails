@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root to: 'pages#login'
 
   get 'pages/dashboard', :to => 'dashboard#index'
-  get 'pages/icons'
+  get 'pages/connections'
   get 'pages/profile', :to => 'profile#index'
   get 'pages/tables'
   get 'pages/login'

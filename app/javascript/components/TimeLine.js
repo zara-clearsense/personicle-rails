@@ -10,8 +10,8 @@ function TimelineChart ({user_data}) {
     height: 0,
     width: 0
   })
-  console.log(typeof user_data)
-  console.log( user_data)
+  // console.log(typeof user_data)
+  // console.log( user_data)
 
   useEffect(() => {
 
