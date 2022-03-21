@@ -20,7 +20,7 @@ class FoodlogController < ApplicationController
         end
         if form_complete
             form_status_msg = 'Fetching recipes!'
-            url = "https://api.edamam.com/search?q=#{params[:q]}&mealType=#{params[:mealType]}&cuisinetype=#{params[:cuisineType]}&app_id=0254fb82&app_key=4856fb6baec97ae4ba40af3dc73edef8"
+            url = "https://api.edamam.com/search?q=#{params[:q]}&mealType=#{params[:mealType]}&cuisinetype=#{params[:cuisineType]}&app_id=0254fb82&app_key=4856fb6baec97ae4ba40af3dc73edef8&to=100"
             res = RestClient::Request.execute(:url => url, :method => :get)
             response = JSON.parse(res,object_class: OpenStruct)
             

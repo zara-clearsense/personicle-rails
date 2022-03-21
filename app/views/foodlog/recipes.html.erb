@@ -9,6 +9,54 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="nutrients-modal" tabindex="-1" role="dialog" aria-labelledby="nutrients" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nutrients">Total Nutition</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive table-upgrade">
+            <table class="table" id="table-nutrients">
+              <thead>
+               
+                <tr>
+                   <th style="font-weight:bold;">Label</th>
+                   <th style="font-weight:bold;">Quantity</th>
+                   <th style="font-weight:bold;">Unit</th>
+                   
+
+                  
+                  <%# <th >PRO</th> %>
+                </tr>
+              </thead> 
+                <tbody>
+                    <% if recipes%>
+                        <%# <% recipes.each do |r| %> 
+                            <%# <% puts r.recipe.totalNutrients%> 
+                            <tr>
+                                <%# <th scope="row" class="nutrient-label"></th>
+                                <td class="nutrient-quantity"></td> %>
+                              
+                                   <%# <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#exampleModalLong' , locals: { nutrients: r.recipe.totalNutrients } %>
+                            </tr>
+                          
+                        <%# <% end %> 
+                    <% end %>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Page content -->
 <div class="container-fluid mt--6">
   <div class="row mt--5">
@@ -20,20 +68,28 @@
         </div>
         <div class="card-body">
           <div class="table-responsive table-upgrade">
-            <table class="table">
+            <table class="table" id="table-recipes" data-page-length="10">
               <thead>
-               
+               <input type="text" id="myInput" style="margin-bottom:5px;margin-left=5px;" onkeyup="searchRecipes()" placeholder="Search for recipes..">
                 <tr>
                    <th style="font-weight:bold;">Recipe Name</th>
-                  <%# <th >PRO</th> %>
+                   <th style="font-weight:bold;">Enter Servings</th>
+                   <th style="font-weight:bold;">Nutritional Facts</th>
+                   <th style="font-weight:bold;">Log</th>
                 </tr>
               </thead> 
               <tbody>
+               
                     <% if recipes%>
                         <% recipes.each do |r| %>
+                            <%# <% puts r.recipe.totalNutrients%> 
                             <tr>
-                                <th scope="row"> <%= link_to r.recipe.label, r.recipe.url, target: :_blank %> </th>
+                                <td style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:320px;"> <%= link_to r.recipe.label, r.recipe.url, target: :_blank %> </td>
+                                <td> <%= select_tag "cuisineType", options_for_select([ 1,2,3,4,5,6,7,8,9,10]), prompt: 'Servings..' %></td>
+                                <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label } %></td>
+                                <td><button type="button" class="btn btn-primary">Log</button></td>
                             </tr>
+                          
                         <% end %>
                     <% end %>
               </tbody>
@@ -45,3 +101,38 @@
   </div>
   <%= render 'pages/footer' %>
 </div>
+<%# Add rows to nutrients table %>
+<script>
+$('#nutrients-modal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var label = button.data('label') 
+  var nutrients = button.data('nutrients')
+  var modal = $(this)
+ $("#table-nutrients tbody tr").remove()
+    Object.values(nutrients.table).forEach(n => {
+        var row = $(`<tr><td>`+n.table.label+`</td><td> ${n.table.quantity}</td><td> ${n.table.unit} </td></tr>`);
+        $("#table-nutrients").append(row)
+    }); 
+    
+   modal.find('.modal-title').text(label)
+})
+
+function searchRecipes() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table-recipes");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
