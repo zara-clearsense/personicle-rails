@@ -22,29 +22,17 @@
         <div class="table-responsive table-upgrade">
             <table class="table" id="table-nutrients">
               <thead>
-               
                 <tr>
                    <th style="font-weight:bold;">Label</th>
                    <th style="font-weight:bold;">Quantity</th>
                    <th style="font-weight:bold;">Unit</th>
-                   
-
-                  
-                  <%# <th >PRO</th> %>
+                   <th style="font-weight:bold;">Daily Value (%)</th>
                 </tr>
               </thead> 
                 <tbody>
                     <% if recipes%>
-                        <%# <% recipes.each do |r| %> 
-                            <%# <% puts r.recipe.totalNutrients%> 
                             <tr>
-                                <%# <th scope="row" class="nutrient-label"></th>
-                                <td class="nutrient-quantity"></td> %>
-                              
-                                   <%# <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#exampleModalLong' , locals: { nutrients: r.recipe.totalNutrients } %>
                             </tr>
-                          
-                        <%# <% end %> 
                     <% end %>
               </tbody>
             </table>
@@ -70,7 +58,7 @@
           <div class="table-responsive table-upgrade">
             <table class="table" id="table-recipes" data-page-length="10">
               <thead>
-               <input type="text" id="myInput" style="margin-bottom:5px;margin-left=5px;" onkeyup="searchRecipes()" placeholder="Search for recipes..">
+               <input type="text" id="myInput" style="margin-bottom:5px;margin-left=5px;" onkeyup="searchRecipes()" placeholder="Search for keywords..">
                 <tr>
                    <th style="font-weight:bold;">Recipe Name</th>
                    <th style="font-weight:bold;">Enter Servings</th>
@@ -86,7 +74,7 @@
                             <tr>
                                 <td style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:320px;"> <%= link_to r.recipe.label, r.recipe.url, target: :_blank %> </td>
                                 <td> <%= select_tag "cuisineType", options_for_select([ 1,2,3,4,5,6,7,8,9,10]), prompt: 'Servings..' %></td>
-                                <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label } %></td>
+                                <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label, daily: r.recipe.totalDaily } %></td>
                                 <td><button type="button" class="btn btn-primary">Log</button></td>
                             </tr>
                           
@@ -107,14 +95,26 @@ $('#nutrients-modal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
   var label = button.data('label') 
   var nutrients = button.data('nutrients')
+  var totalDaily = button.data('daily')
   var modal = $(this)
- $("#table-nutrients tbody tr").remove()
-    Object.values(nutrients.table).forEach(n => {
-        var row = $(`<tr><td>`+n.table.label+`</td><td> ${n.table.quantity}</td><td> ${n.table.unit} </td></tr>`);
+  var totalDailyLen = Object.values(totalDaily.table).length
+
+  modal.find('.modal-title').text(label)
+    $("#table-nutrients tbody tr").remove()
+    // get the nutrient label, quantity, unit from nutrients
+    // and get the total daily value from totalDaily
+    // only add daily value if nutrient key exists in totalDaily object
+    Object.keys(nutrients["table"]).forEach((key,idx) => {
+        var row = $(`<tr>
+            <td> ${nutrients['table'][key]['table']['label']} </td>
+            <td> ${nutrients['table'][key]['table']['quantity']}</td>
+            <td> ${ nutrients['table'][key]['table']['unit']}</td>
+            <td> ${ (totalDaily['table'].hasOwnProperty(key)) ? totalDaily['table'][key]['table']['quantity'] : 'NA'}</td>
+        </tr>`);
         $("#table-nutrients").append(row)
-    }); 
+    });
     
-   modal.find('.modal-title').text(label)
+   
 })
 
 function searchRecipes() {

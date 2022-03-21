@@ -168,29 +168,22 @@
   <div class="container">
     
   <div class="testbox">
-   
-
-    <%# <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#mymodal">
-  Launch demo modal
-</button> %>
-
 
     <%= form_with url: get_edamam_data_path, local: true, method: :get do  %>
         <h1>Log your food</h1>
         <h4>Type of Meal<span>*</span></h4>
      
-          <%= select_tag "mealType", options_for_select([ "Breakfast", "Lunch", "Snack", "Dinner" ], if fields then fields.fetch(:mealType, "") end ), prompt: 'Choose one...' %>
+          <%= select_tag "mealType",options_for_select([ "Breakfast", "Lunch", "Snack", "Dinner" ], if fields then fields.fetch(:mealType, "") end ), prompt: 'Choose one...',:required => true %>
         
         <h4>Cuisine type<span>*</span></h4>
 
           <%= select_tag "cuisineType", options_for_select([ "American", "Asian", "British", "Caribbean", "Central Europe", "Chinese", "Eastern Europe",
-          "French", "Indian", "Italian", "Japanese", "Kosher", "Mediterranean", "Mexican","Middle Eastern", "Nordic", "South American", "South East Asian" ], if fields then fields.fetch(:cuisineType, "") end ), prompt: 'Choose one...' %>
+          "French", "Indian", "Italian", "Japanese", "Kosher", "Mediterranean", "Mexican","Middle Eastern", "Nordic", "South American", "South East Asian" ], if fields then fields.fetch(:cuisineType, "") end ), prompt: 'Choose one...',:required => true %>
         <h4>Ingredients<span>*</span></h4>
-       <%= text_field_tag "q", if fields then fields.fetch(:q, nil) end%>
+        <%= text_field_tag "q",if fields then fields.fetch(:q, nil) end ,:required => true %>
        
         <div class="btn-block">
-      
-          <button type="submit" >Submit</button>
+          <button type="submit" >View Meals</button>
         </div>
  
       <% end %>
