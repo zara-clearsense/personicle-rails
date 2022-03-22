@@ -97,7 +97,7 @@ function TimelineChart ({user_data}) {
 
       // Create a timeline chart, passing some options
       var timelineOptions = {
-        width: 740,
+        width: 650,
         height: 500, //window.innerHeight,        
     };
 
@@ -120,7 +120,7 @@ function TimelineChart ({user_data}) {
       function resize () {
         const chart = new google.visualization.Timeline(document.getElementById('timeline'));
 
-        timelineOptions.width = .5 * window.innerWidth;
+        timelineOptions.width = .4 * window.innerWidth;
         timelineOptions.height = .5 * window.innerHeight;
   
         dashboard.draw(data, options);

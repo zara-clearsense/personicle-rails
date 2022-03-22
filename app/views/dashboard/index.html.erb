@@ -13,17 +13,17 @@
 </div>
 <div class="container-fluid mt--6">
   <div class="row">
-    <div class="col-xl-8">
+    <div class="col-xl-7">
     <%# <% puts @response%>
-      <%= render 'pages/dashboard/charts/sales', user_data: @response %>
+      <%= render 'pages/dashboard/charts/timeline', user_data: @response %>
     </div>
-    <div class="col-xl-4">
-      <%= render 'pages/dashboard/charts/orders'%>
+    <div class="col-xl-5">
+      <%= render 'pages/dashboard/charts/bar', user_data: @response %>
     </div>
   </div>
   <div class="row">
     <div class="col-xl-8">
-      <%= render 'pages/dashboard/charts/page_visits', user_data: @response %>
+      <%= render 'pages/dashboard/charts/progression', user_data: @response %>
     </div>
     <div class="col-xl-4">
       <%= render 'pages/dashboard/tables/social_traffic' %>

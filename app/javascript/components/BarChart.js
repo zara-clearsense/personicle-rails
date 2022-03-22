@@ -68,7 +68,7 @@ function BarChart ({userSummary}) {
 
       // Create a Bar chart, passing some options
       var barChartOptions = {
-        width: 730,
+        width: 410,
         height: 200,
         legend: 'none'
     };
@@ -89,7 +89,7 @@ function BarChart ({userSummary}) {
       // console.log("called barchart resize");
       const chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
-      barChartOptions.width = .45 * window.innerWidth;
+      barChartOptions.width = .7 * window.innerWidth;
       //barChartOptions.height = .4 * window.innerHeight;
       dashboard.draw(data, options);
     }

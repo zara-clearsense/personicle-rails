@@ -6,6 +6,7 @@ class DashboardController < ApplicationController
   
   def index
     # puts session[:oktastate]['credentials']['token']
+    # puts session[:oktastate]["uid"]
     three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     url = ENV['EVENTS_ENDPOINT']+"?user_id="+"#{session[:oktastate]["uid"]}"+"&startTime="+three_months_ago+"&endTime="+current_time
