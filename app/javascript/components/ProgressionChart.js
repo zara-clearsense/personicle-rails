@@ -146,7 +146,7 @@ function ProgressionChart ({user_data}) {
       // Create a Bar chart, passing some options
       var comboChartOptions = {
         // title: '',
-        width: 800,
+        width: 770,
         height: 270,
         vAxis: {title: 'Total Duration'},
         hAxis: 
