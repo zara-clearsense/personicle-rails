@@ -67,12 +67,12 @@
                 </tr>
               </thead> 
               <tbody>
-               
+           
                     <% if recipes%>
                         <% recipes.each do |r| %>
-                            <%# <% puts r.recipe.totalNutrients%> 
+                            
                             <tr>
-                                <td style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:320px;"> <%= link_to r.recipe.label, r.recipe.url, target: :_blank %> </td>
+                                <td style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:320px;"> <%= link_to r.recipe.label, r.recipe.url, id: "health", data: { trigger: "hover",toggle: "popover", content: r.recipe.healthLabels.join(', ') } , target: :_blank %> </td>
                                 <td> <%= select_tag "cuisineType", options_for_select([ 1,2,3,4,5,6,7,8,9,10]), prompt: 'Servings..' %></td>
                                 <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label, daily: r.recipe.totalDaily } %></td>
                                 <td><button type="button" class="btn btn-primary">Log</button></td>
@@ -91,6 +91,12 @@
 </div>
 <%# Add rows to nutrients table %>
 <script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+// $('.popover-dismiss').popover({
+//   trigger: 'focus'
+// })
 $('#nutrients-modal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
   var label = button.data('label') 
@@ -125,7 +131,13 @@ function searchRecipes() {
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
+    // tdd =  td.getElementsByTagName("a")
+    // healthLabels = document.querySelectorAll("[data-content]");
+    
     if (td) {
+      // console.log(tdd)
+      // console.log(td)
+
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
