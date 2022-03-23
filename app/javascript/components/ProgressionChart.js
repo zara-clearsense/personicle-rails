@@ -147,7 +147,7 @@ function ProgressionChart ({user_data}) {
       var comboChartOptions = {
         // title: '',
         width: 770,
-        height: 270,
+        height: 205,
         vAxis: {title: 'Total Duration'},
         hAxis: 
             {title: 'Event',
