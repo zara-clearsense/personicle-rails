@@ -13,6 +13,7 @@ gem 'omniauth-oktaoauth'
 gem 'activerecord-session_store'
 gem 'figaro'
 gem "chartkick"
+gem "groupdate"
 gem 'react-rails'
 gem 'jquery-turbolinks'
 gem 'omniauth-google-oauth2'

@@ -4,13 +4,14 @@
 // that code so it'll be compiled.
 
 import 'bootstrap'
+import "chartkick/chart.js"
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 
-require("chart.js")
-require("Chart.extension.js")
+// require("chart.js")
+// require("Chart.extension.js")
 require("jquery-scrollLock.min.js")
 require("jquery.scrollbar.min.js")
 require("argon.js")
