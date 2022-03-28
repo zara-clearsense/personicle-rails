@@ -40,5 +40,39 @@ class FoodlogController < ApplicationController
         end
         
     end
+
+    def log_food
+        
+        if  not params[:start_time].blank?
+            start_time = params[:start_date]+" "+ params[:start_time] + ":00"
+        else
+            start_time = Time.now.strftime("%F %T")
+        end
+        
+        if  not params[:start_time].blank?
+            end_time = params[:start_date]+" "+ params[:end_time] + ":00"
+        else
+            default_end_time = Time.now + 15.minutes
+            end_time = default_end_time.strftime("%F %T")
+        end
+        
+        data = [{
+            "individual_id": "#{session[:oktastate]["uid"]}",
+            "start_time": "#{start_time}",
+            "end_time": "#{end_time}",
+            "event_name": "Food",
+            "source": "personicle-foodlogger",
+            "parameters": "{'recipe_name': '#{params[:recipe_name]}', 'servings' : '#{params[:servings]}'}"
+        }]
+      
+        res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json},:verify_ssl => false)
+        
+        if res
+            respond_to do |format|
+                format.html {render :index, locals: { status_msg: "Successfully logged your meal"} }
+            end
+        end
+        
+    end
   end
   
