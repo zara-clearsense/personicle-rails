@@ -5,6 +5,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user = User.from_omniauth(request.env["omniauth.auth"].except("extra") )
       
       if @user.save
+        puts request.env["omniauth.auth"]
         session[:oktastate] = request.env["omniauth.auth"].except("extra")
         
       else

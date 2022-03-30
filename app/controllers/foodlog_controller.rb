@@ -62,17 +62,18 @@ class FoodlogController < ApplicationController
             "end_time": "#{end_time}",
             "event_name": "Food",
             "source": "personicle-foodlogger",
-            "parameters": "{'recipe_name': '#{params[:recipe_name]}', 'servings' : '#{params[:servings]}'}"
+            "parameters": "{\"recipe_name\": \"#{params[:recipe_name]}\", \"servings\" : \"#{params[:servings]}\"}"
         }]
       
         res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json},:verify_ssl => false)
-        
+        puts res
+        puts data.to_json
         if res
             respond_to do |format|
                 format.html {render :index, locals: { status_msg: "Successfully logged your meal"} }
             end
         end
-        
+
     end
   end
   
