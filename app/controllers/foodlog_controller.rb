@@ -46,23 +46,31 @@ class FoodlogController < ApplicationController
         if  not params[:start_time].blank?
             start_time = params[:start_date]+" "+ params[:start_time] + ":00"
         else
-            start_time = Time.now.strftime("%F %T")
+            start_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
         end
         
         if  not params[:start_time].blank?
             end_time = params[:start_date]+" "+ params[:end_time] + ":00"
         else
             default_end_time = Time.now + 15.minutes
-            end_time = default_end_time.strftime("%F %T")
+            end_time = default_end_time.strftime("%Y-%m-%d %H:%M:%S.%6N")
         end
-        
+        # start_time += ".000000"
+        # end_time += ".000000"
+        puts start_time
+        puts end_time
+        start_time_millis = (Time.parse(start_time).to_f)*1000
+        end_time_millis = (Time.parse(end_time).to_f)*1000
+        duration = end_time_millis - start_time_millis
+        puts duration
         data = [{
             "individual_id": "#{session[:oktastate]["uid"]}",
             "start_time": "#{start_time}",
             "end_time": "#{end_time}",
+            "duration": "#{duration}",
             "event_name": "Food",
             "source": "personicle-foodlogger",
-            "parameters": "{\"recipe_name\": \"#{params[:recipe_name]}\", \"servings\" : \"#{params[:servings]}\"}"
+            "parameters": "{\"recipe_name\": \"#{params[:recipe_name]}\", \"duration\": \"#{duration}\", \"servings\" : \"#{params[:servings]}\"}"
         }]
       
         res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json},:verify_ssl => false)
