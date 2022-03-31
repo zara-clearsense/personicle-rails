@@ -14,7 +14,7 @@ function TimelineChart ({user_data}) {
   
 
   useEffect(() => {
-    console.log(user_data)
+    // console.log(user_data)
     if (google && !chart) {
 
     function endDateInMilliseconds(startDate, duration) {

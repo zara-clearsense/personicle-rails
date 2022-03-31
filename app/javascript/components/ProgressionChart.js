@@ -29,7 +29,11 @@ function ProgressionChart ({user_data}) {
             // console.log(`The week number of the current date (${currentdate}) is ${result}.`);
             return result;
         }
-
+        function getDuration(startTime, endTime){
+            var startTime = Date.parse(startTime)
+            var endTime = Date.parse(endTime)
+            return endTime - startTime
+        }
         // let events = sample_events["sample_events"];
         // console.log(events);
         // Create the data table.
@@ -55,12 +59,21 @@ function ProgressionChart ({user_data}) {
                     }
                     if (event.table.event_name in totalDuration) 
                         {
-                        totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(event.table.parameters.table.duration);
-                       
+                            if(event.table.parameters.duration != undefined){
+                                totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(event.table.parameters.table.duration);
+                            } else {
+                                var duration = getDuration(event.table.start_time,event.table.end_time)
+                                totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(duration);
+                            }
                         }
                     else 
-                        {
-                            totalDuration[event.table.event_name] = totalDurationInMins(event.table.parameters.table.duration)
+                        { 
+                            if(event.table.parameters.duration != undefined){
+                                totalDuration[event.table.event_name] = totalDurationInMins(event.table.parameters.table.duration)
+                            } else {
+                                var duration = getDuration(event.table.start_time,event.table.end_time)
+                                totalDuration[event.table.event_name] = totalDurationInMins(duration)
+                            }
                         } 
                     // console.log(totalDuration);
                     // console.log(year_week)
