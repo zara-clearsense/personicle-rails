@@ -89,7 +89,8 @@
                                   <td><a  tabindex="0" data-animation="true" data-toggle="popover" data-trigger="hover click" title="Ingredients" data-content="<%= r.recipe.ingredientLines.join(', ')%>">Ingredients</a></td>
                                   <td> <%= select_tag "servings", options_for_select([ 1,2,3,4,5,6,7,8,9,10]), prompt: 'Servings..', :required => true  %></td>
                                   <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label, daily: r.recipe.totalDaily } %></td>
-                                   
+                                   <input type="hidden" name="ingredients" value="<%= r.recipe.ingredientLines.join(', ') %>">
+                                   <input type="hidden" name="nutrition" value="<%= r.recipe.totalNutrients %>">
                                   <td><button type="submit" class="btn btn-primary">Log</button></td>
                               </tr>
                             <% end %>
