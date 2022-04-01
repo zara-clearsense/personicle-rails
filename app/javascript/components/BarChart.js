@@ -36,7 +36,7 @@ function BarChart ({userSummary}) {
                 if (event.table.event_name in totalDuration)
                     { 
                       if(event.table.parameters.duration != undefined){
-                          totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(event.table.parameters.table.duration);
+                          totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(Math.trunc(event.table.parameters.table.duration));
                       } else {
                         var duration = getDuration(event.table.start_time,event.table.end_time)
                         totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(duration);
@@ -45,7 +45,7 @@ function BarChart ({userSummary}) {
                 else 
                     {
                       if(event.table.parameters.duration != undefined){
-                        totalDuration[event.table.event_name] = totalDurationInMins(event.table.parameters.table.duration)
+                        totalDuration[event.table.event_name] = totalDurationInMins(Math.trunc(event.table.parameters.table.duration))
                       } else {
                         var duration = getDuration(event.table.start_time,event.table.end_time)
                         totalDuration[event.table.event_name] = totalDurationInMins(duration);

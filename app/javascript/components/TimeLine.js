@@ -10,7 +10,7 @@ function TimelineChart ({user_data}) {
     height: 0,
     width: 0
   })
-  // console.log(typeof user_data)
+  
   
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function TimelineChart ({user_data}) {
           {
             if(d.table.parameters.table.duration != undefined){
             
-             data.addRow([d.table.event_name, "", dateToStandardFormat(d.table.start_time),  GFG_Fun(endDateInMilliseconds(d.table.start_time, d.table.parameters.table.duration))]);
+             data.addRow([d.table.event_name, "", dateToStandardFormat(d.table.start_time),  GFG_Fun(endDateInMilliseconds(d.table.start_time, Math.trunc(d.table.parameters.table.duration)))]);
             } else {
               let end_time = Date.parse(d.table.end_time)
               data.addRow([d.table.event_name, "", dateToStandardFormat(d.table.start_time),  GFG_Fun(end_time)]);
