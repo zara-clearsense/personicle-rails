@@ -188,7 +188,7 @@ Devise.setup do |config|
   config.omniauth(:oktaoauth,
     ENV['OKTA_CLIENT_ID'],
     ENV['OKTA_CLIENT_SECRET'],
-    :scope => 'openid profile email',
+    :scope => 'openid profile email heartrate',
     :fields => ['profile', 'email'],
     :client_options => {site: ENV['OKTA_ISSUER'], authorize_url: ENV['OKTA_ISSUER'] + "/v1/authorize?idp=" + ENV['GOOGLE_IDP'], token_url: ENV['OKTA_ISSUER'] + "/v1/token"},
     :redirect_uri => ENV["OKTA_REDIRECT_URI"],

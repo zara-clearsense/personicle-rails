@@ -20,6 +20,11 @@ function BarChart ({userSummary}) {
             return durationInMins;
         }
 
+        function getDuration(startTime, endTime){
+          var startTime = Date.parse(startTime)
+          var endTime = Date.parse(endTime)
+          return endTime - startTime
+        }
         // let events = sample_events["sample_events"];
 
         // Create the data table.
@@ -29,12 +34,22 @@ function BarChart ({userSummary}) {
         data.addColumn({ type: 'number', id: 'Duration' });
             userSummary.forEach(event => {
                 if (event.table.event_name in totalDuration)
-                    {
-                        totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(event.table.parameters.table.duration);
+                    { 
+                      if(event.table.parameters.duration != undefined){
+                          totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(Math.trunc(event.table.parameters.table.duration));
+                      } else {
+                        var duration = getDuration(event.table.start_time,event.table.end_time)
+                        totalDuration[event.table.event_name] = totalDuration[event.table.event_name] + totalDurationInMins(duration);
+                      }
                     }
                 else 
                     {
-                        totalDuration[event.table.event_name] = totalDurationInMins(event.table.parameters.table.duration)
+                      if(event.table.parameters.duration != undefined){
+                        totalDuration[event.table.event_name] = totalDurationInMins(Math.trunc(event.table.parameters.table.duration))
+                      } else {
+                        var duration = getDuration(event.table.start_time,event.table.end_time)
+                        totalDuration[event.table.event_name] = totalDurationInMins(duration);
+                      }
                     } 
                    
                 }
@@ -68,7 +83,7 @@ function BarChart ({userSummary}) {
 
       // Create a Bar chart, passing some options
       var barChartOptions = {
-        width: 730,
+        width: 410,
         height: 200,
         legend: 'none'
     };
@@ -89,7 +104,7 @@ function BarChart ({userSummary}) {
       // console.log("called barchart resize");
       const chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
-      barChartOptions.width = .45 * window.innerWidth;
+      barChartOptions.width = .7 * window.innerWidth;
       //barChartOptions.height = .4 * window.innerHeight;
       dashboard.draw(data, options);
     }

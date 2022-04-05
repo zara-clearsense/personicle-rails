@@ -1,0 +1,84 @@
+class FoodlogController < ApplicationController
+    require 'json'
+    require 'ostruct'
+    require 'date'
+    before_action :require_user
+    
+    def index
+        
+    end
+    
+    def get_edamam_data
+        required = [:q, :mealType, :cuisineType]
+      
+        form_complete = true
+        required.each do |k|
+            if params.has_key?(k) and not params[k].blank?
+            else
+                form_complete = false
+            end
+        end
+        if form_complete
+            form_status_msg = 'Fetching recipes!'
+            url = "https://api.edamam.com/search?q=#{params[:q]}&mealType=#{params[:mealType]}&cuisinetype=#{params[:cuisineType]}&app_id=0254fb82&app_key=4856fb6baec97ae4ba40af3dc73edef8&to=100"
+            res = RestClient::Request.execute(:url => url, :method => :get)
+            response = JSON.parse(res,object_class: OpenStruct)
+            
+          else
+            form_status_msg = 'Please fill out all fields'
+        end
+
+        if form_complete
+            respond_to do |format|
+                format.html {render :recipes, locals: { status_msg: form_status_msg, feedback: params, recipes: response.hits } }
+                # redirect_to pages_recipes_path, recipes: response.hits
+            end
+        else 
+            respond_to do |format|
+                format.html {render :index, locals: { status_msg: form_status_msg, feedback: params} }
+            end
+        end
+        
+    end
+
+    def log_food
+        
+        if  not params[:start_time].blank?
+            start_time = params[:start_date]+" "+ params[:start_time] + ":00"
+        else
+            start_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        end
+        
+        if  not params[:start_time].blank?
+            end_time = params[:start_date]+" "+ params[:end_time] + ":00"
+        else
+            default_end_time = Time.now + 15.minutes
+            end_time = default_end_time.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        end
+       
+        start_time_millis = (Time.parse(start_time).to_f)*1000
+        end_time_millis = (Time.parse(end_time).to_f)*1000
+        duration = end_time_millis - start_time_millis
+        puts params[:ingredients]
+        data = [{
+            "individual_id": "#{session[:oktastate]["uid"]}",
+            "start_time": "#{start_time}",
+            "end_time": "#{end_time}",
+            "duration": "#{duration}",
+            "event_name": "Food",
+            "source": "personicle-foodlogger",
+            "parameters": "{\"recipe_name\": \"#{params[:recipe_name]}\", \"duration\": \"#{duration}\", \"servings\" : \"#{params[:servings]}\" , \"ingredients\": \"#{params[:ingredients]}\"}"
+        }]
+      
+        res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json},:verify_ssl => false)
+        # puts res
+        # puts data.to_json
+        if res
+            respond_to do |format|
+                format.html {render :index, locals: { status_msg: "Successfully logged your meal"} }
+            end
+        end
+
+    end
+  end
+  

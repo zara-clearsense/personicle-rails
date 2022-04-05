@@ -4,11 +4,14 @@
 // that code so it'll be compiled.
 
 import 'bootstrap'
+import "chartkick/chart.js"
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
-//require("Chart.extension.js")
+
+// require("chart.js")
+// require("Chart.extension.js")
 require("jquery-scrollLock.min.js")
 require("jquery.scrollbar.min.js")
 require("argon.js")
@@ -35,3 +38,6 @@ import "chartkick/chart.js"
 var componentRequireContext = require.context("components", true);
 var ReactRailsUJS = require("react_ujs");
 ReactRailsUJS.useContext(componentRequireContext);
+
+global.$ = global.jQuery = jQuery;
+window.$ = window.jQuery= jQuery;

@@ -12,14 +12,14 @@ class DashboardController < ApplicationController
 
     logger.info "heyyyyyy"
     # puts session[:oktastate]['credentials']['token']
+  
     three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    # url = ENV['EVENTS_ENDPOINT']+"?user_id="+"#{session[:oktastate]["uid"]}"+"&startTime="+three_months_ago+"&endTime="+current_time
-
-    url = 'http://localhost:3000/stepsCopy.json'
-    logger.info 'url: ' + url
-    res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get, :verify_ssl => false)
     
+url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
+# url = "http://127.0.0.1:8000/request/events"+"?user_id="+"#{session[:oktastate][1]}"+"&startTime="+three_months_ago+"&endTime="+current_time
+res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
+
   ##
   #"name": "2019-11-01 00:00:00",
   #"createdAt": "2019-11-01 00:00:00",

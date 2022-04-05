@@ -1,0 +1,183 @@
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <%= render partial: 'pages/header', locals: {
+            icon: 'home',
+            breadcrumb_1: 'Recipes',
+            breadcrumb_2: 'Recipes'
+      } %>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="nutrients-modal" tabindex="-1" role="dialog" aria-labelledby="nutrients" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nutrients">Total Nutition</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive table-upgrade">
+            <table class="table" id="table-nutrients">
+              <thead>
+                <tr>
+                   <th style="font-weight:bold;">Label</th>
+                   <th style="font-weight:bold;">Quantity</th>
+                   <th style="font-weight:bold;">Unit</th>
+                   <th style="font-weight:bold;">Daily Value (%)</th>
+                </tr>
+              </thead> 
+                <tbody>
+                    <% if recipes %>
+                            <tr>
+                            </tr>
+                    <% end %>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row mt--5">
+    <div class="col-md-10 ml-auto mr-auto">
+      <div class="card card-upgrade">
+        <div class="card-header text-center border-bottom-0">
+          <h4 class="card-title">Select your meal</h4>
+         
+          <%# <p class="card-category">Are you looking for more components? Please check our Premium Version of Argon Dashboard.</p> %>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive table-upgrade">
+            <table class="table" id="table-recipes" data-page-length="10">
+              <thead>
+
+               <input type="text" id="myInput" style="margin-bottom:5px;margin-left=5px;" onkeyup="searchRecipes()" placeholder="Search for keywords..">
+               <div style="margin-bottom:5px;">   <br> Date   <input type="date" id="date" onchange="setDateValue()" required > 
+                 Start Time <input type="time" id="s_time"  onchange="setStartTimeValue()" required>
+                 End Time <input type="time" id="e_time"  onchange="setEndTimeValue()" required></div>
+           
+                <tr>
+                   <th style="font-weight:bold;">Recipe Name</th>
+                   <th style="font-weight:bold;">Ingredients</th>
+                   <th style="font-weight:bold;">Enter Servings</th>
+                   <th style="font-weight:bold;">Nutritional Facts</th>
+                   <th style="font-weight:bold;">Log</th>
+                </tr>
+              </thead> 
+              <tbody>
+           
+                    <% if recipes%>
+                     
+                        <% recipes.each do |r| %>
+                            <%= form_with url: log_food_path, local: true, method: :post do  %>
+                              <tr>
+                             
+                                  <td  style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:320px;"> <%= link_to r.recipe.label, r.recipe.url, id: "health", data: { trigger: "hover",toggle: "popover", content: r.recipe.healthLabels.join(', ') } , target: :_blank %> </td>
+                                  <input type="hidden" name="recipe_name" value="<%= r.recipe.label %>">
+                                  <input type="hidden" id="start_date" name="start_date" required>
+                                  <input type="hidden" id="start_time" name="start_time" required>
+                                  <input type="hidden" id="end_time" name="end_time" required>
+                                  <td><a  tabindex="0" data-animation="true" data-toggle="popover" data-trigger="hover click" title="Ingredients" data-content="<%= r.recipe.ingredientLines.join(', ')%>">Ingredients</a></td>
+                                  <td> <%= select_tag "servings", options_for_select([ 1,2,3,4,5,6,7,8,9,10]), prompt: 'Servings..', :required => true  %></td>
+                                  <td><%= link_to "View Nutrition", "#", "data-toggle" => "modal", 'data-target' => '#nutrients-modal' , data: { nutrients: r.recipe.totalNutrients, label: r.recipe.label, daily: r.recipe.totalDaily } %></td>
+                                   <input type="hidden" name="ingredients" value="<%= r.recipe.ingredientLines.join(', ') %>">
+                                   <input type="hidden" name="nutrition" value="<%= r.recipe.totalNutrients %>">
+                                  <td><button type="submit" class="btn btn-primary">Log</button></td>
+                              </tr>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'pages/footer' %>
+</div>
+<%# Add rows to nutrients table %>
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+function setDateValue() {
+  console.log("set date value")
+  document.getElementById('start_date').value = document.getElementById('date').value
+}
+function setStartTimeValue() {
+  console.log("set start time value")
+
+  document.getElementById('start_time').value = document.getElementById('s_time').value
+}
+function setEndTimeValue() {
+  console.log("set end time value")
+
+  document.getElementById('end_time').value = document.getElementById('e_time').value
+ 
+}
+
+// $('.popover-dismiss').popover({
+//   trigger: 'focus'
+// })
+$('#nutrients-modal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var label = button.data('label') 
+  var nutrients = button.data('nutrients')
+  var totalDaily = button.data('daily')
+  var modal = $(this)
+  var totalDailyLen = Object.values(totalDaily.table).length
+
+  modal.find('.modal-title').text(label)
+    $("#table-nutrients tbody tr").remove()
+    // get the nutrient label, quantity, unit from nutrients
+    // and get the total daily value from totalDaily
+    // only add daily value if nutrient key exists in totalDaily object
+    Object.keys(nutrients["table"]).forEach((key,idx) => {
+        var row = $(`<tr>
+            <td> ${nutrients['table'][key]['table']['label']} </td>
+            <td> ${nutrients['table'][key]['table']['quantity']}</td>
+            <td> ${ nutrients['table'][key]['table']['unit']}</td>
+            <td> ${ (totalDaily['table'].hasOwnProperty(key)) ? totalDaily['table'][key]['table']['quantity'] : 'NA'}</td>
+        </tr>`);
+        $("#table-nutrients").append(row)
+    });
+    
+   
+})
+
+function searchRecipes() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table-recipes");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    // tdd =  td.getElementsByTagName("a")
+    // healthLabels = document.querySelectorAll("[data-content]");
+    
+    if (td) {
+      // console.log(tdd)
+      // console.log(td)
+
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
