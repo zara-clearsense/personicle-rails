@@ -1,3 +1,4 @@
+<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
 
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
@@ -14,6 +15,25 @@
 <div class="container-fluid mt--6">
   <div class="row">
     <div class="col-xl-8">
+
+    <h1>Cats</h1>
+<div>
+  <%# <%= bar_chart(a:3, b:9, c:4) %>
+  <%#= line_chart charts_user_mobility_path, title: "Line Chart" %>
+  
+  <%#= line_chart charts_user_mobility_path %>
+  <%= line_chart @dashboards, id: "chart-1", width: "300px", height: "300px", min: 50, max:3000, overflow: "auto" %>
+  <%# <%= pie_chart @dashboards, title: "Number of students in each course" %>
+<%# @data = response.collect{|i| [i['dateTime'], i['value']]}
+<%= line_chart @data%>
+
+  <%#= line_chart [
+  {name: "Time of Day", data: {"2021-01-01" => 3, "2021-01-02" => 4}},
+  {name: "Average Mobility Score", data: {"2021-01-01" => 5, "2021-01-02" => 3}}
+] 
+  %>
+</div>
+    
     <%# <% puts @response%>
       <%= render 'pages/dashboard/charts/sales', user_data: @response %>
     </div>

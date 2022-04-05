@@ -34,13 +34,14 @@
         ["Adams", "1797-03-03", "1801-03-03"],
         ["Jefferson", "1801-03-03", "1809-03-03"]
       ] %> 
-      <% if user_data.length() != 0 %>
+      <%# <% if user_data.length() != 0 %>
      
          <%= react_component("BarChart", { userSummary: user_data}) %>
          
-      <%else%>
+      <%# <%else%> %> %>
         <h3 style="color:white;">No activities for the past 3 months</h3>
-      <%end%>
+        
+      <%# <%end%> %>
      
       <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
     </div>
