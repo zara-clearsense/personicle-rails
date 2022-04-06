@@ -16,9 +16,10 @@ class DashboardController < ApplicationController
     three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     
-url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
-# url = "http://127.0.0.1:8000/request/events"+"?user_id="+"#{session[:oktastate][1]}"+"&startTime="+three_months_ago+"&endTime="+current_time
-res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
+    url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
+    steps = File.read('app/views/pages/dashboard/charts/steps.json')
+    #url = "http://127.0.0.1:8000/request/events"+"?user_id="+"#{session[:oktastate][1]}"+"&startTime="+three_months_ago+"&endTime="+current_time
+    res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
 
   ##
   #"name": "2019-11-01 00:00:00",
@@ -41,7 +42,8 @@ res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer 
   # hi = Time.new(year,month,day,hour,minute,second)
   # p hi
     if res
-      response = JSON.parse(res)
+      response = JSON.parse(steps)
+      @response = JSON.parse(res,object_class: OpenStruct)
       #{"dateTime": "2019-11-01 00:00:00", "value": "0"}
       @dashboards =[]
       response.each do |r|
@@ -56,7 +58,7 @@ res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer 
       end
       #puts @dashboards.each { |d| d['createdAt']}
 
-      puts "======= th12244e response #{@dashboards}"
+      #puts "======= th12244e response #{@dashboards}"
       @dashboards = @dashboards.group_by_day { |u| u['createdAt']}.to_h { |k, v| [k, v.size]}
       #@dashboards = @dashboards.group_by_minute { |u| u['createdAt']}.to_h { |k, v| [k, v.size] }
  
