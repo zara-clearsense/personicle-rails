@@ -12,10 +12,12 @@ class ApplicationController < ActionController::Base
   def session_active?
     if session[:oktastate]
       access_token = session[:oktastate]['credentials']['token']
+
       url = ENV['TOKEN_INTROSPECTION']+"?token="+access_token
       
       res = RestClient::Request.execute(:url => url, headers: {Authorization: "Basic #{ENV['BASE_64_CLIENT']}", :content_type =>'application/x-www-form-urlencoded'}, :method => :post)
-      is_active =  JSON.parse(res)
+      is_active =  JSON.parse(res)['active']
+      
       if !is_active
         flash[:danger] = "Your session has expired. Please login again"
         redirect_to root_path

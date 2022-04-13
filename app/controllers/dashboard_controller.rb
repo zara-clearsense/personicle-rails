@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
   before_action :require_user, :session_active?
   
   def index
-   
+    
     three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
