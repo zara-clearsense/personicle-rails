@@ -2,7 +2,7 @@ class FoodlogController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
-    before_action :require_user
+    before_action :require_user, :session_active?
     
     def index
         

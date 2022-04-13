@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :logged_in?, :require_user
+  helper_method :logged_in?, :require_user, :session_active?
   
   def user_is_logged_in?
     if !session[:oktastate]
@@ -8,6 +8,22 @@ class ApplicationController < ActionController::Base
       root_path
     end
   end
+
+  def session_active?
+    if session[:oktastate]
+      access_token = session[:oktastate]['credentials']['token']
+      puts ENV['TOKEN_INTROSPECTION']
+      url = ENV['TOKEN_INTROSPECTION']+"?token="+access_token
+      
+      res = RestClient::Request.execute(:url => url, headers: {Authorization: "Basic #{ENV['BASE_64_CLIENT']}", :content_type =>'application/x-www-form-urlencoded'}, :method => :post)
+      is_active =  JSON.parse(res)
+      if !is_active
+        flash[:danger] = "Your session has expired. Please login again"
+        redirect_to root_path
+      end
+    end
+  end
+
 
   def logged_in?
     !session[:oktastate].nil?
