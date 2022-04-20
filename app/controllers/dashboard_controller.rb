@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
   before_action :require_user, :session_active?
   
   def index
-    
+    puts session[:oktastate]['credentials']['token']
     three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
@@ -13,7 +13,6 @@ class DashboardController < ApplicationController
     res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
     
     if res
-      # puts "hello"
       @response = JSON.parse(res,object_class: OpenStruct)
     end
     

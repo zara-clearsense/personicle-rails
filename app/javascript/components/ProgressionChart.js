@@ -5,7 +5,7 @@ import useGoogleCharts from './useGoogleCharts'
 
 
 function ProgressionChart ({user_data}) {
-    
+  
     const google = useGoogleCharts()
     const [chart, setChart] = useState(null);
     const [dimensions, setDimensions] = useState({ 
