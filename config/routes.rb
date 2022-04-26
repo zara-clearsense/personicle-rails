@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root to: 'pages#login'
 
   get 'pages/dashboard', :to => 'dashboard#index'
-  get 'pages/connections'
+  get 'pages/connections', :to => 'connection#index'
   get 'pages/profile', :to => 'profile#index'
   get 'pages/foodlog', :to => 'foodlog#index'
   get 'pages/foodlog/data', :to => 'foodlog#get_edamam_data' , :as => 'get_edamam_data' 
