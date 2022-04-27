@@ -18,8 +18,17 @@ class DashboardController < ApplicationController
       @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
       # last_week_total_sleep, last_week_sleep_events
-      @last_week_average_sleep = 9.5
-      @last_month_average_sleep = 8
+
+      @sleep_events = @response.select {|event| event['event_name'] == 'Sleep'}
+      # duration is in milliseconds in the data packet
+      @last_month_total_sleep = @sleep_events.select {|event| event['start_time'].to_datetime > 30.days.ago}.sum {|event| event['parameters']['duration']}/(60*1000)
+      @last_month_sleep_event = @sleep_events.select {|event| event['start_time'].to_datetime > 30.days.ago}.size
+      @last_week_total_sleep = @sleep_events.select {|event| event['start_time'].to_datetime > 7.days.ago}.sum {|event| event['parameters']['duration']}/(60*1000)
+      @last_week_sleep_event = @sleep_events.select {|event| event['start_time'].to_datetime > 7.days.ago}.size
+      
+      @last_week_average_sleep = @last_week_sleep_event>0? @last_week_total_sleep/@last_week_sleep_event:0
+      @last_month_average_sleep = @last_month_sleep_event>0? @last_month_total_sleep/@last_month_sleep_event:0
+      
     end
     
   end
