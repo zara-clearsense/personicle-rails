@@ -80,7 +80,7 @@ function TimelineChart ({user_data}) {
   
       // Set chart options
       var options = {'title':'Gantt Chart Timeline Visualization',
-                    'width':' 100%',
+                    'width':'100%',
                     'height': '100%',
                     hAxis: {
                       textStyle:{color: '#FFF'}

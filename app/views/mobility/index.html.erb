@@ -1,0 +1,27 @@
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <%= render partial: 'pages/header', locals: {
+            icon: 'home',
+            breadcrumb_1: 'Logging',
+            breadcrumb_2: 'Logging'
+      } %>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col" background-color="white">
+        <%= render 'pages/mobility/charts/day_of_week', user_data: @processed_steps_data.map { |day_of_week, per_minute_data|
+            {name: day_of_week, data: per_minute_data}
+        } %>
+      
+    </div>
+    
+  </div>
+  
+
+  <%= render 'pages/footer' %>
+</div>

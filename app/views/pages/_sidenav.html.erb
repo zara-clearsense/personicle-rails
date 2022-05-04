@@ -36,6 +36,13 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_mobility_path %>">
+              <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
+              <i class="fas fa-walking text-default"></i>
+              <span class="nav-link-text">Mobility</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="<%= pages_login_path %>">
               <i class="ni ni-key-25 text-info"></i>
               <span class="nav-link-text">Login</span>
