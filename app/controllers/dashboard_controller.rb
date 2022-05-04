@@ -13,7 +13,8 @@ class DashboardController < ApplicationController
     url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
     # url = "http://127.0.0.1:8000/request/events"+"?user_id="+"#{session[:oktastate][1]}"+"&startTime="+three_months_ago+"&endTime="+current_time
     res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
-    
+    # add another request for specific data streams (step count)
+    # use exercise for another chart
     if res
       @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
