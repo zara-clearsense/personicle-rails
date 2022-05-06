@@ -14,9 +14,17 @@
       
       <% if user_data.length() != 0 %>
          
-         <%= column_chart user_data, points:false, round: 2, loading: "Loading...",
+         <%#= column_chart user_data, points:false, round: 2, loading: "Loading...",
             xtitle: "Date", ytitle: "Total Sleep"
           %>
+          <%= column_chart [
+              {
+                  name: "Daily Sleep", type: "column", data: user_data.map {|k,v| [k, v['duration']]} 
+              },
+              {
+                  name: "Moving Average", type: "line", data: user_data.map {|k,v| [k, v['moving_average']]} 
+              }
+          ], suffix: " h",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Sleep Duration (hours)" %>
       <%else%>
         <h3 style="color:white;">No sleep events for the past 3 months</h3>
       <%end%>

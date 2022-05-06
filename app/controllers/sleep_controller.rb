@@ -23,8 +23,13 @@ class SleepController < ApplicationController
                 end
             end
             @daily_sleep_summary = @daily_sleep_summary.sort.to_h
-            # puts @daily_sleep_summary
+            moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
+            
+            (min_date..max_date).each do |d|
+                @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => moving_average_sleep[d]}
+            end
             # puts max_date, min_date
+            # puts @daily_sleep_summary
         end
     end
 end
