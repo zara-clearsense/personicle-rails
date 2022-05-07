@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get 'pages/foodlog/data', :to => 'foodlog#get_edamam_data' , :as => 'get_edamam_data' 
   post 'pages/foodlog/log', :to => 'foodlog#log_food', :as => 'log_food'
   get 'pages/mobility', :to => 'mobility#index'
+  get 'pages/sleep', :to => 'sleep#index'
   # get 'pages/foodlog/recipes', :to => 'foodlog#render'
   get 'pages/login'
   get 'pages/register'

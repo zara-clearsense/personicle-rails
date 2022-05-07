@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-header bg-transparent">
+    <div class="row align-items-center">
+      <div class="col">
+        
+        <h5 class="h3 text-black mb-0">Daily Sleep durations</h5>
+      </div>
+      
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Chart -->
+    <div class="chart">
+      
+      <% if user_data.length() != 0 %>
+         
+         <%#= column_chart user_data, points:false, round: 2, loading: "Loading...",
+            xtitle: "Date", ytitle: "Total Sleep"
+          %>
+          <%= column_chart [
+              {
+                  name: "Daily Sleep", type: "column", data: user_data.map {|k,v| [k, v['duration']]} 
+              },
+              {
+                  name: "Moving Average", type: "line", data: user_data.map {|k,v| [k, v['moving_average']]} 
+              }
+          ], suffix: " h",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Sleep Duration (hours)" %>
+      <%else%>
+        <h3 style="color:white;">No sleep events for the past 3 months</h3>
+      <%end%>
+     
+      <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
+    </div>
+  </div>
+</div>
