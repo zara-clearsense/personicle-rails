@@ -7,9 +7,9 @@ class FetchData
         
         if !is_hard_refresh # if reload is not hard refresh
             if event # if event type is specified
-                if Rails.cache.fetch([:events,ses[:oktastate]['uid'],"all_events"]) # and all events for this users are in the cache 
+                if Rails.cache.fetch([:events,ses[:oktastate]['uid'],"all_events"]) # and all events for this user are in the cache 
                     Rails.cache.fetch([:events,ses[:oktastate]['uid'],"all_events"]).select {|e| e['event_name'] == event} # then select the event specified in parameter
-                else
+                else # get event by making api call
                     url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time+"&event_type="+event
                     JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                 end
@@ -19,7 +19,12 @@ class FetchData
                 end
             end
         else # if hard refresh, make api call to get all events
-            JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            if event
+                url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time+"&event_type="+event
+                JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            else
+                JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            end
         end
     end
 
