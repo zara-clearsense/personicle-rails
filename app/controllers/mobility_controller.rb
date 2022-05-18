@@ -5,20 +5,12 @@ class MobilityController < ApplicationController
     before_action :require_user, :session_active?
 
   def index
-    puts session[:oktastate]['credentials']['token']
-    start_date = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    end_date = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
 
-    @source = 'google-fit'
-    @steps_data_type = 'com.personicle.individual.datastreams.step.count'
-    # @week_day = params[:day_of_week] || 'Monday'
-    # get steps data here
-    url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&source="+@source+"&datatype="+@steps_data_type
-    res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
     # add another request for specific data streams (step count)
     # use exercise for another chart
-    if res
-      @response = JSON.parse(res,object_class: OpenStruct)
+    @response = FetchData.get_datastreams(session)
+    if @response
+      # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
       @steps_data_raw = []
       @response.each { |record|

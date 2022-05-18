@@ -7,11 +7,11 @@ class SleepController < ApplicationController
     def index
         start_time = 12.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
         current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+current_time+"&event_type=Sleep"
-        res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
-        if res
-            @response = JSON.parse(res,object_class: OpenStruct)
-
+        # url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+current_time+"&event_type=Sleep"
+        # res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
+        @response = FetchData.get_events(session,event_type="Sleep")
+        if @response
+        
             daily_sleep = @response.map {|event| {'date' => event['start_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
             max_date = daily_sleep.max {|rec| rec['date']}['date']
