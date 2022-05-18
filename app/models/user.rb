@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # devise :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :validatable
 
-  devise :omniauthable, omniauth_providers: [:oktaoauth]
+  devise :omniauthable, omniauth_providers: [:oktaoauth, :google_oauth2]
 
   def self.from_omniauth(auth)
     User.find_or_create_by(email: auth["info"]["email"]) do |user|

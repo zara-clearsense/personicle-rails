@@ -184,17 +184,37 @@ Devise.setup do |config|
   # one (and only one) @ exists in the given string. This is mainly
   # to give user feedback and not to assert the e-mail validity.
   config.email_regexp = /\A[^@\s]+@[^@\s]+\z/
-  
+  # config.omniauth(:oktaoauth_email,
+  #   ENV['OKTA_CLIENT_ID'],
+  #   ENV['OKTA_CLIENT_SECRET'],
+  #   :scope => 'openid profile email',
+  #   :fields => ['profile', 'email'],
+  #   :client_options => {site: ENV['OKTA_ISSUER'], authorize_url: ENV['OKTA_ISSUER'] + "/v1/authorize", token_url: ENV['OKTA_ISSUER'] + "/v1/token"},
+  #   :redirect_uri => ENV["OKTA_REDIRECT_URI"],
+  #   :auth_server_id => ENV['OKTA_AUTH_SERVER_ID'],
+  #   :issuer => ENV['OKTA_ISSUER'],
+  #   :strategy_class => OmniAuth::Strategies::Oktaoauth)
+
   config.omniauth(:oktaoauth,
     ENV['OKTA_CLIENT_ID'],
     ENV['OKTA_CLIENT_SECRET'],
     :scope => 'openid profile email',
     :fields => ['profile', 'email'],
-    :client_options => {site: ENV['OKTA_ISSUER'], authorize_url: ENV['OKTA_ISSUER'] + "/v1/authorize?idp=" + ENV['GOOGLE_IDP'], token_url: ENV['OKTA_ISSUER'] + "/v1/token"},
+    :client_options => {site: ENV['OKTA_ISSUER'], authorize_url: ENV['OKTA_ISSUER'] + "/v1/authorize", token_url: ENV['OKTA_ISSUER'] + "/v1/token"},
     :redirect_uri => ENV["OKTA_REDIRECT_URI"],
     :auth_server_id => ENV['OKTA_AUTH_SERVER_ID'],
     :issuer => ENV['OKTA_ISSUER'],
     :strategy_class => OmniAuth::Strategies::Oktaoauth)
+  
+   config.omniauth(:google_oauth2, ENV["OKTA_CLIENT_ID"], ENV["OKTA_CLIENT_SECRET"],
+    :scope => 'openid profile email',
+    :fields => ['profile', 'email'],
+    :client_options => {site: ENV['OKTA_ISSUER'], authorize_url: ENV['OKTA_ISSUER'] + "/v1/authorize?idp="+ENV['GOOGLE_IDP'], token_url: ENV['OKTA_ISSUER'] + "/v1/token"},
+    :redirect_uri => ENV["OKTA_REDIRECT_URI"],
+    :auth_server_id => ENV['OKTA_AUTH_SERVER_ID'],
+    :issuer => ENV['OKTA_ISSUER'],
+    access_type: "online")
+    
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
