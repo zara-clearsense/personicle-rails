@@ -25,6 +25,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def hard_refresh?
+    
+  end
 
   def logged_in?
     !session[:oktastate].nil?

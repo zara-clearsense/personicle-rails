@@ -5,10 +5,16 @@ class MobilityController < ApplicationController
     before_action :require_user, :session_active?
 
   def index
-
     # add another request for specific data streams (step count)
     # use exercise for another chart
-    @response = FetchData.get_datastreams(session)
+    if params.has_key?(:refresh) && params[:refresh]=="hard_refresh"
+      puts "hard refresh"
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=true)
+    else
+      puts "not hard refresh"
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
+    end 
+   
     if @response
       # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}

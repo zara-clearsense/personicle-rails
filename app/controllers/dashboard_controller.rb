@@ -16,8 +16,14 @@ class DashboardController < ApplicationController
   # end
 
   def index
-   
-    @response = FetchData.get_events(session,event_type=false)
+    if params[:refresh]=="hard_refresh"
+      puts "hard refresh"
+      @response = FetchData.get_events(session,event_type=false,hard_refresh=true)
+    else
+      puts "not hard refresh"
+      @response = FetchData.get_events(session,event_type=false,hard_refresh=false)
+    end 
+    
     if @response
       # @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
