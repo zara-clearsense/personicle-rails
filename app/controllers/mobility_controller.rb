@@ -18,6 +18,7 @@ class MobilityController < ApplicationController
     if @response
       # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
+    
       @steps_data_raw = []
       @response.each { |record|
         timestamp_data = record['timestamp'].to_datetime
