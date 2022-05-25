@@ -7,9 +7,12 @@ ruby '2.7.1'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 # Use postgres as the database for Active Record
 gem 'pg'
-
+gem 'dalli'
+gem 'memcachier'
 gem 'devise'
 gem 'omniauth-oktaoauth'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
 gem 'activerecord-session_store'
 gem 'figaro'
 gem "chartkick"

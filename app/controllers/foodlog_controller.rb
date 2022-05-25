@@ -59,7 +59,7 @@ class FoodlogController < ApplicationController
         start_time_millis = (Time.parse(start_time).to_f)*1000
         end_time_millis = (Time.parse(end_time).to_f)*1000
         duration = end_time_millis - start_time_millis
-        puts params[:ingredients]
+        # puts params[:ingredients]
         data = [{
             "individual_id": "#{session[:oktastate]["uid"]}",
             "start_time": "#{start_time}",

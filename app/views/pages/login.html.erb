@@ -14,9 +14,16 @@
               <span class="btn-inner--icon"><%= image_tag 'icons/common/okta.png' %></span>
              <%# <span class="btn-inner--text">Okta</span> %>
             <%# </a>  %>
-            <%= link_to  user_oktaoauth_omniauth_authorize_path, :class => "btn btn-neutral btn-icon" do %>
+            <%= link_to  user_google_oauth2_omniauth_authorize_path, method: :post, :class => "btn btn-neutral btn-icon" do %>
+              
              <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
              <span class="btn-inner--text">Google</span>
+            <% end %>
+
+            <%= link_to  user_oktaoauth_omniauth_authorize_path, method: :post, :class => "btn btn-neutral btn-icon" do %>
+             <%# <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
+            
+             <span class="btn-inner--text">Sign in with email</span>
             <% end %>
           
             <%# Add google idp here %>
@@ -27,11 +34,11 @@
                <%# <%= react_component("HelloWorld", { greeting: "Hello from react-rails." }) %> 
           </div>
         </div>
-        <div class="card-body px-lg-5 py-lg-5">
-          <div class="text-center text-muted mb-4">
+        <%# <div class="card-body px-lg-5 py-lg-5"> %>
+          <%# <div class="text-center text-muted mb-4">
             <small>Or sign in with credentials</small>
-          </div>
-          <form role="form">
+          </div> %>
+          <%# <form role="form">
             <div class="form-group mb-3">
               <div class="input-group input-group-merge input-group-alternative">
                 <div class="input-group-prepend">
@@ -57,16 +64,18 @@
             <div class="text-center">
               <button type="button" class="btn btn-primary my-4">Sign in</button>
             </div>
-          </form>
-        </div>
+          </form> %>
+        <%# </div> %>
       </div>
       <div class="row mt-3">
         <div class="col-6">
-          <a href="#" class="text-light"><small>Forgot password?</small></a>
+          <a href="https://dev-01936861.okta.com/signin/forgot-password" class="text-light"><small>Forgot password?</small></a>
         </div>
         <div class="col-6 text-right">
-          <a href="#" class="text-light"><small>Create new account</small></a>
-        </div>
+          <%= link_to  user_oktaoauth_omniauth_authorize_path, method: :post, :class => "text-light" do %>
+          <small>Create new account</small>
+          <% end %>
+         
       </div>
     </div>
   </div>

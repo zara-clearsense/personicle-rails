@@ -4,6 +4,10 @@
       <div class="col">
         
         <h5 class="h3 text-black mb-0">Daily Sleep durations</h5>
+         <%= form_with url: pages_sleep_path, local: true, method: :post do  %>
+          <input type="hidden" name="refresh" value="hard_refresh">
+          <button  class="btn btn-primary" style="float: right;" type="submit">Refresh</button>
+        <% end %>
       </div>
       
     </div>
