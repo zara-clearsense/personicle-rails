@@ -19,6 +19,14 @@
     </div>
     
   </div>
+
+  <div class="row">
+    <div class="col" background-color="white">
+        <%=render 'pages/sleep/charts/exercise_compare', exercise_data: @exercise_sleep_count, other_data: @other_sleep_count %>
+      
+    </div>
+    
+  </div>
   
 
   <%= render 'pages/footer' %>
