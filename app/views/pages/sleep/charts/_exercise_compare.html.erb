@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header bg-transparent">
+    <div class="row align-items-center">
+      <div class="col">
+        
+        <h5 class="h3 text-black mb-0">Compare changes in sleep durations</h5>
+         <%= form_with url: pages_sleep_path, local: true, method: :post do  %>
+          <input type="hidden" name="refresh" value="hard_refresh">
+          <button  class="btn btn-primary" style="float: right;" type="submit">Refresh</button>
+        <% end %>
+      </div>
+      
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- Chart -->
+    <div class="chart">
+      
+      <% if exercise_data.length() != 0 %>
+         
+         <%#= column_chart user_data, points:false, round: 2, loading: "Loading...",
+            xtitle: "Date", ytitle: "Total Sleep"
+          %>
+          <%= line_chart [
+              {
+                  name: "Sleep (Exercise)", type: "line", data: exercise_data
+              },
+              {
+                  name: "Sleep (No Exercise)", type: "line", data: other_data 
+              }
+          ], suffix: "",points:false, round: 3, loading: "Loading...", xtitle: "Sleep Duration (mins)", ytitle: "Density" %>
+      <%else%>
+        <h3 style="color:white;">No data for the past 3 months</h3>
+      <%end%>
+     
+      <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
+    </div>
+  </div>
+</div>
