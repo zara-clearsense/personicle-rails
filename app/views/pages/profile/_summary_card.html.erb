@@ -34,11 +34,39 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete your Personicle account?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete your personicle account? <br>
+        All your data will be deleted from personicle servers.
+      </div>
+      <%= form_with url: pages_profile_path, local: true, method: :post do  %>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="delete_account" value="delete" class="btn btn-danger">Delete my account</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
     <div class="text-center">
       <h5 class="h3">
         <%= session[:oktastate]["info"]["name"]%><span class="font-weight-light"></span>
+   
       </h5>
       <div class="h5 font-weight-300">
+           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">
+               Delete Account
+           </button>
+
         <%# <i class="ni location_pin mr-2"></i>Bucharest, Romania %>
       </div>
       <div class="h5 mt-4">
