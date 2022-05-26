@@ -16,7 +16,7 @@ class DashboardController < ApplicationController
   # end
 
   def index
-    puts session[:oktastate]['credentials']['token']
+    # puts session[:oktastate]['credentials']['token']
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
       @response = FetchData.get_events(session,event_type=false,hard_refresh=true)
@@ -25,7 +25,7 @@ class DashboardController < ApplicationController
       @response = FetchData.get_events(session,event_type=false,hard_refresh=false)
     end 
     
-    if @response
+    if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
       # last_week_total_sleep, last_week_sleep_events

@@ -15,9 +15,11 @@
  
   <div class="row">
     <div class="col" background-color="white">
-        <%= render 'pages/mobility/charts/day_of_week', user_data: @processed_steps_data.map { |day_of_week, per_minute_data|
-            {name: day_of_week, data: per_minute_data}
-        } %>
+     <% @data = !@processed_steps_data.nil? ? @processed_steps_data.map { |day_of_week, per_minute_data|
+            {name: day_of_week, data: per_minute_data} 
+        } : []
+      %>
+        <%= render 'pages/mobility/charts/day_of_week', user_data:@data %>
       
     </div>
     

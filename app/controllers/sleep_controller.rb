@@ -19,8 +19,8 @@ class SleepController < ApplicationController
             @response_run = FetchData.get_events(session, event_type="Running", hard_refresh=false)
           end 
 
-        if @response
-        
+        if !@response.empty?
+            puts @response.class
             daily_sleep = @response.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
             max_date = daily_sleep.max {|rec| rec['date']}['date']
@@ -44,17 +44,15 @@ class SleepController < ApplicationController
             @daily_sleep_summary = []
         end
 
-        if @response_bike
+        if !@response_bike.empty?
             bike_days = @response_bike.map {|event| event['end_time'].to_datetime.to_date.next_day(1)}
-
-
         else
             bike_days = []
         end
-        # puts "bike days"
-        # puts bike_days
+        puts "bike days"
+        puts bike_days
 
-        if @response_run
+        if !@response_run.empty?
             run_days = @response_run.map {|event| event['end_time'].to_datetime.to_date.next_day(1)}
 
         else
@@ -85,8 +83,8 @@ class SleepController < ApplicationController
         # puts "exercise sleep count"
         # puts @exercise_sleep_count
 
-        other_days = (min_date..max_date).select {|v| !bike_days.include? v}
-        other_days = other_days.select {|v| !run_days.include? v}
+        other_days = !bike_days.empty? ? (min_date..max_date).select {|v| !bike_days.include? v} : []
+        other_days = !run_days.empty? ? other_days.select {|v| !run_days.include? v} : []
 
         @other_days_sleep = []
         other_days.each do |d|
