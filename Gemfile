@@ -74,6 +74,5 @@ gem 'jquery-rails'
 gem 'font-awesome-rails'
 
 group :production do
-  # gem 'rails_12factor'
-  gem 'pg'
+  gem 'rails_12factor'
 end
