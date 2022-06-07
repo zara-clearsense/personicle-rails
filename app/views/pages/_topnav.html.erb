@@ -153,11 +153,7 @@ end
               <span>Support</span>
             </a>
             <div class="dropdown-divider"></div>
-            <%# <%= link_to  ENV['OKTA_URL'] + "/login/signout?fromURI=http://localhost:3000/logout", :class => "dropdown-item" do %>
-              <%# <i class="ni ni-user-run"></i>
-              <span>Logout</span>
-            <% end %> 
-            <%= link_to  ENV['OKTA_URL'] + "/login/signout?fromURI=https://personicle.herokuapp.com/logout", :class => "dropdown-item" do %>
+            <%= link_to  ENV['OKTA_URL'] + "/login/signout?fromURI=http://localhost:3000/logout", :class => "dropdown-item" do %>
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
             <% end %>
