@@ -80,7 +80,7 @@
 # # 
 # production:
 #   <<: *default
-#   url: <%= ENV['DATABASE_URL'] %>
+  # url: <%= ENV['DATABASE_URL'] %>/
 # SQLite. Versions 3.8.0 and up are supported.
 #   gem install sqlite3
 #
@@ -105,7 +105,11 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  url: <%= ENV['DATABASE_URL'] %>
+
+# production:
+#   <<: *default
+#   database: db/production.sqlite3
 
 
 # # PostgreSQL. Versions 9.1 and up are supported.
