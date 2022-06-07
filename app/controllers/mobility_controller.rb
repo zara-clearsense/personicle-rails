@@ -14,7 +14,9 @@ class MobilityController < ApplicationController
       puts "not hard refresh"
       @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
     end 
-   
+  #  puts @response
+  #  puts "hello"
+
     if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
@@ -30,7 +32,7 @@ class MobilityController < ApplicationController
 
       weekday_grouped_data = @steps_data_raw.group_by { |rec| rec['weekday']}.to_h
       
-    #   puts weekday_grouped_data['Monday']
+      # puts weekday_grouped_data['Monday']
 
       @processed_steps_data = {}
       all_days.each { |week_day|

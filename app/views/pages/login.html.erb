@@ -1,3 +1,4 @@
+<%# <% if session[:oktastate].nil? %> 
 
 <% content_for(:title) { 'Welcome to Personicle!' } %>
 <% content_for(:subtitle) { "Personicle is a person centric healthcare and lifestyle data platform"} %>
@@ -22,10 +23,20 @@
 
             <%= link_to  user_oktaoauth_omniauth_authorize_path, method: :post, :class => "btn btn-neutral btn-icon" do %>
              <%# <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
-            
+              <%# <%= puts session[:oktastate] %> 
              <span class="btn-inner--text">Sign in with email</span>
             <% end %>
-          
+            
+            <%# <%= link_to  user_oktaoauth_omniauth_authorize_path(:login_type => "physician"), method: :post, :class => "btn btn-neutral btn-icon mt-2" do %>
+             <%# <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
+              <%# <%= puts session[:oktastate] %> 
+             <%# <span class="btn-inner--text">Physician sign in </span>
+            <% end %> 
+           <%# <%= link_to user_oktaoauth_omniauth_authorize_path, method: :post, :class => "btn btn-neutral btn-icon" do %>
+             <%# <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
+            <%# user_oktaoauth_physician_omniauth_callback %>
+             <%# <span class="btn-inner--text">Physician login</span>
+            <% end %> 
             <%# Add google idp here %>
             <%# <a  class="btn btn-neutral btn-icon">
               <span class="btn-inner--icon"><%= image_tag 'icons/common/google.svg' %></span>
@@ -34,37 +45,59 @@
                <%# <%= react_component("HelloWorld", { greeting: "Hello from react-rails." }) %> 
           </div>
         </div>
-        <%# <div class="card-body px-lg-5 py-lg-5"> %>
+        <%# <div class="card-body px-lg-5 py-lg-5">  %>
           <%# <div class="text-center text-muted mb-4">
-            <small>Or sign in with credentials</small>
-          </div> %>
-          <%# <form role="form">
+            <h3>Create a physician account </h3>
+          </div>  %>
+          <%# <form role="form" method="post" action=<%= pages_physician_create_account_path %>
+            <%# <%= form_with url: pages_create_physician_account_path , local: true, method: :post do  %>
+             <%# <div class="form-group mb-3">
+              <div class="input-group input-group-merge input-group-alternative"> %> 
+                <%# <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                </div> %>
+<%#                 
+                <input class="form-control"  name="first_name" placeholder="First Name"  required>
+              </div>
+            </div>
+             <div class="form-group mb-3">
+              <div class="input-group input-group-merge input-group-alternative"> %>
+                <%# <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                </div> %>
+                
+                <%# <input class="form-control"  name="last_name" placeholder="Last Name"  required>
+              </div>
+            </div>
             <div class="form-group mb-3">
               <div class="input-group input-group-merge input-group-alternative">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                </div>
-                <input class="form-control" placeholder="Email" type="email">
+                </div> %>
+<%#                 
+                <input class="form-control"  name="email" placeholder="Email" type="email" required>
               </div>
-            </div>
-            <div class="form-group">
+            </div> %>
+           
+            <%# <div class="form-group">
               <div class="input-group input-group-merge input-group-alternative">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                 </div>
                 <input class="form-control" placeholder="Password" type="password">
               </div>
-            </div>
-            <div class="custom-control custom-control-alternative custom-checkbox">
+            </div> %>
+            <%# <div class="custom-control custom-control-alternative custom-checkbox">
               <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
               <label class="custom-control-label" for=" customCheckLogin">
                 <span class="text-muted">Remember me</span>
               </label>
+            </div> %>
+            <%# <div class="text-center">
+              <button type="submit" class="btn btn-primary my-4">Create physician account</button>
             </div>
-            <div class="text-center">
-              <button type="button" class="btn btn-primary my-4">Sign in</button>
-            </div>
-          </form> %>
+          <% end %> 
+          <%# </form>  %>
         <%# </div> %>
       </div>
       <div class="row mt-3">
@@ -80,3 +113,4 @@
     </div>
   </div>
 </div>
+<%# <% end %> 

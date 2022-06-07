@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   root to: 'pages#login'
 
   get 'pages/dashboard', :to => 'dashboard#index'
+  get 'pages/dashboard/physician', :to =>'physician#index'
+  # post 'pages/physician-create-account', :to =>'physician#create_account'
   post 'pages/dashboard', :to => 'dashboard#index'
   get 'pages/connections', :to => 'connection#index'
   get 'pages/profile', :to => 'profile#index'
@@ -27,6 +29,7 @@ Rails.application.routes.draw do
   post 'pages/sleep', :to => 'sleep#index'
   # get 'pages/foodlog/recipes', :to => 'foodlog#render'
   get 'pages/login'
-  get 'pages/register'
+  post 'pages/create-physician-account', :to => 'pages#create_physician_account'
+  # get 'pages/register'
   # get 'pages/recipes'
 end
