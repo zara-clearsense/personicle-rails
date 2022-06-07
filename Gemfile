@@ -72,7 +72,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'jquery-rails'
 gem 'font-awesome-rails'
-gem "sqlite3", "~> 1.4"
+
 group :production do
   gem 'rails_12factor'
+  gem "sqlite3", "~> 1.4"
 end
