@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   post 'pages/dashboard', :to => 'dashboard#index'
   get 'pages/connections', :to => 'connection#index'
   get 'pages/profile', :to => 'profile#index'
-  post 'pages/profile', :to => 'profile#index'
+  post 'pages/profile/add_physician', :to=>'profile#add_physician'
+  # post 'pages/profile', :to => 'profile#index'
   get 'pages/foodlog', :to => 'foodlog#index'
   get 'pages/foodlog/data', :to => 'foodlog#get_edamam_data' , :as => 'get_edamam_data' 
   post 'pages/foodlog/log', :to => 'foodlog#log_food', :as => 'log_food'
@@ -32,4 +33,7 @@ Rails.application.routes.draw do
   post 'pages/create-physician-account', :to => 'pages#create_physician_account'
   # get 'pages/register'
   # get 'pages/recipes'
+  post 'pages/profile/remove_physician', :to=>'profile#remove_physician'
+
+
 end
