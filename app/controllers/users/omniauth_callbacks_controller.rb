@@ -53,7 +53,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           puts "user is physician"
           @user.is_physician = true
           @user.save
-          @physician = Physician.create(user_id: session[:oktastate]["uid"] ,name: session[:oktastate]["info"]["name"], last_name: session[:oktastate]["info"]["lastName"],first_name: session[:oktastate]["info"]["firstName"])
+          @physician = Physician.create(user_id: session[:oktastate]["uid"] ,name: session[:oktastate]["info"]["name"], last_name: session[:oktastate]["info"]["last_name"],first_name: session[:oktastate]["info"]["first_name"])
           return redirect_to pages_dashboard_physician_path
         end
         redirect_to pages_dashboard_path

@@ -17,14 +17,15 @@ class DashboardController < ApplicationController
 
   def index
     puts session[:oktastate]['credentials']['token']
+    puts session[:oktastate]
 
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    @user = User.find_by(user_id: session[:oktastate]['uid'])
-    puts "hello"
-     @user.physicians.each do |phy|
-      puts  phy.name
-     end
+    # @user = User.find_by(user_id: session[:oktastate]['uid'])
+    # puts "hello"
+    #  @user.physicians.each do |phy|
+    #   puts  phy.name
+    #  end
     # @physicians.map {|phy| puts phy.email}
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
