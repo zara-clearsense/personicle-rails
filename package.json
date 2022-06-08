@@ -1,6 +1,35 @@
 {
   "name": "personicle",
   "private": true,
+  "scripts": {
+    "yarn test": "jest",
+    "yarn install": "yarn install --check-files",
+    "rails assets:precompile": "yarn install --check-files; rails assets:precompile",
+    "rails server": "rails server",
+    "webpack-dev-server": "./bin/webpack-dev-server"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/app/javascript/parts/$1"
+    },
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(vueonrails)/)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/config/webpack/"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ]
+  },
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
     "@popperjs/core": "^2.11.4",
@@ -26,6 +55,13 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@vue/test-utils": "^2.0.0",
+    "babel-jest": "^28.1.0",
+    "jest": "^28.1.0",
+    "jest-serializer-vue": "^2.0.2",
+    "vue-i18n": "^9.1.10",
+    "vue-jest": "^3.0.7",
+    "vueonrails": "^1.0.1",
     "webpack-dev-server": "^3"
   }
 }

@@ -16,15 +16,26 @@ class DashboardController < ApplicationController
   # end
 
   def index
-    # puts session[:oktastate]['credentials']['token']
+    puts session[:oktastate]['credentials']['token']
+    puts session[:oktastate]
+
+    st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    # @physician = Physician.find_by(user_id: session[:oktastate]['uid'])
+    # puts "hello"
+    #  @physician.users.each do |u|
+    #   puts  u.name
+    #  end
+    # @physicians.map {|phy| puts phy.email}
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
-      @response = FetchData.get_events(session,event_type=false,hard_refresh=true)
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true)
     else
       puts "not hard refresh"
-      @response = FetchData.get_events(session,event_type=false,hard_refresh=false)
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false)
     end 
-    
+    # @is_physician = session["physician"] 
+    # puts @is_physician
     if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
@@ -39,7 +50,8 @@ class DashboardController < ApplicationController
       
       @last_week_average_sleep = @last_week_sleep_event>0? @last_week_total_sleep/@last_week_sleep_event:0
       @last_month_average_sleep = @last_month_sleep_event>0? @last_month_total_sleep/@last_month_sleep_event:0
-      
+     
+   
     end
     
   end

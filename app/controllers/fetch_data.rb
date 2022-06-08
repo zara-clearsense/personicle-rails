@@ -1,9 +1,8 @@
 class FetchData
 
-    def self.get_events(ses=session,event=event_type,is_hard_refresh=refresh)
-        three_months_ago = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        current_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time
+    def self.get_events(ses=session,event=event_type,start_time=st,end_time=et,is_hard_refresh=refresh)
+       
+        url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time
         
         if !is_hard_refresh # if reload is not hard refresh
             if event # if event type is specified
@@ -12,7 +11,7 @@ class FetchData
                 elsif Rails.cache.fetch([:events,ses[:oktastate]['uid'],event])# look for particular event sin cache
                     Rails.cache.fetch([:events,ses[:oktastate]['uid'],event]).select {|e| e['event_name'] == event}
                 else
-                    url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time+"&event_type="+event
+                    url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&event_type="+event
                     JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                 end
             else # no event is specifed
@@ -22,12 +21,13 @@ class FetchData
             end
         else # if hard refresh, make api call to get all events
             if event
-                url = ENV['EVENTS_ENDPOINT']+"?startTime="+three_months_ago+"&endTime="+current_time+"&event_type="+event
+                url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&event_type="+event
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                 Rails.cache.write([:events,ses[:oktastate]['uid'],event],res)
                 res
             else
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                # puts url
                 Rails.cache.write([:events,ses[:oktastate]['uid'],"all_events"],res)
                 res
             end

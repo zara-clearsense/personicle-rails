@@ -205,7 +205,9 @@ Devise.setup do |config|
     :auth_server_id => ENV['OKTA_AUTH_SERVER_ID'],
     :issuer => ENV['OKTA_ISSUER'],
     :strategy_class => OmniAuth::Strategies::Oktaoauth)
-  
+    
+
+
    config.omniauth(:google_oauth2, ENV["OKTA_CLIENT_ID"], ENV["OKTA_CLIENT_SECRET"],
     :scope => 'openid profile email',
     :fields => ['profile', 'email'],

@@ -7,16 +7,18 @@ class SleepController < ApplicationController
     def index
         # url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+current_time+"&event_type=Sleep"
         # res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
+        st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
         if params[:refresh]=="hard_refresh"
             puts "hard refresh"
-            @response = FetchData.get_events(session,event_type="Sleep",hard_refresh=true)
-            @response_bike = FetchData.get_events(session, event_type="Biking", hard_refresh=true)
-            @response_run = FetchData.get_events(session, event_type="Running", hard_refresh=true)
+            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true)
+            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=true)
+            @response_run = FetchData.get_events(session, event_type="Running", st,et,hard_refresh=true)
           else
             puts "not hard refresh"
-            @response = FetchData.get_events(session,event_type="Sleep",hard_refresh=false)
-            @response_bike = FetchData.get_events(session, event_type="Biking", hard_refresh=false)
-            @response_run = FetchData.get_events(session, event_type="Running", hard_refresh=false)
+            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false)
+            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=false)
+            @response_run = FetchData.get_events(session, event_type="Running",st,et, hard_refresh=false)
           end 
 
         if !@response.empty?

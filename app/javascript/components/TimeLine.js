@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import sample_events from "../sample_data/sample_events"
+// import sample_events from "../sample_data/sample_events"
 import useGoogleCharts from './useGoogleCharts'
 
 function TimelineChart ({user_data}) {
@@ -39,7 +39,7 @@ function TimelineChart ({user_data}) {
         return formattedDate
      }
      
-     let events = sample_events["sample_events"];
+    //  let events = sample_events["sample_events"];
     //  let currEvent = data
 
      function GFG_Fun(endDateInMS) {
