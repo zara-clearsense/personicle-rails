@@ -99,13 +99,27 @@
             <%= form_with url: pages_profile_path, local: true, method: :post do  %>
                 <select name="physicians[]" multiple>
                       <% @physicians.each do |phy| %>
-                        <option value=<%= phy.user_id %> > <%=phy.name%> </option>
+                      <%# <% if !@user.physicians.exists?(phy.user_id)%> 
+                             <option value=<%= phy.user_id %> > <%=phy.name%> </option>
+                      <%# <% end %> 
+                     
                       <% end %>   
                 </select>
             <br>
             <button type="submit" class="btn btn-primary mt-3">Add</button>
             <% end %>
             </div>   
+<div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label" for="input-address">Your Physicians</label>
+               <% @user.physicians.each do |phy| %>
+                  <option value=<%= phy.user_id %> > <%=phy.name%> </option>
+              <% end %>   
+            </div>
+          </div>
+        </div>
+
     <% end %>
     <% if session[:oktastate]["physician"]%>
       <h6 class="heading-small text-muted mb-4">Your Patients</h6>
