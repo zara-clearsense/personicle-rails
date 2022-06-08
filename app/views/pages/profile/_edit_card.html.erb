@@ -98,9 +98,6 @@
             <% @physicians = Physician.all %>
             <%= form_with url: pages_profile_path, local: true, method: :post do  %>
                 <select name="physicians[]" multiple>
-                        <%# <option value="">Select your physicians</option> %>
-                      
-
                       <% @physicians.each do |phy| %>
                         <option value=<%= phy.user_id %> > <%=phy.name%> </option>
                       <% end %>   
@@ -115,15 +112,8 @@
       <div class="pl-lg-4">
       <div class="row">
           <div class="col-lg-6">
-            <%# <div class="form-group">
-              <label class="form-control-label" for="input-username">Username</label>
-              <input type="text" id="input-username" class="form-control" placeholder="Username" value="">
-            </div> %>
-         
             <%= form_with url: pages_profile_path, method: :get do  %>
                 <select name="users" >
-                        <%# <option value="">Select your physicians</option> %>
-                      
                       <% @physician.users.each do |u| %>
                         <option value=<%= u.user_id %> > <%=u.name%>, <%=u.email%> </option>
                       <% end %>   
