@@ -21,10 +21,10 @@ class DashboardController < ApplicationController
 
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    # @user = User.find_by(user_id: session[:oktastate]['uid'])
+    # @physician = Physician.find_by(user_id: session[:oktastate]['uid'])
     # puts "hello"
-    #  @user.physicians.each do |phy|
-    #   puts  phy.name
+    #  @physician.users.each do |u|
+    #   puts  u.name
     #  end
     # @physicians.map {|phy| puts phy.email}
     if params[:refresh]=="hard_refresh"

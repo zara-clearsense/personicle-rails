@@ -3,9 +3,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   # devise :database_authenticatable, :registerable,
   #        :recoverable, :rememberable, :validatable
+  self.primary_key = 'user_id'
   validates_uniqueness_of :user_id
-  has_many :physician_users, primary_key: 'user_id'
-  has_many :physicians, :through => :physician_users
+  has_many :physician_users,foreign_key: 'user_user_id'
+  has_many :physicians, :through => :physician_users, foreign_key: 'user_user_id'
+
   devise :omniauthable, omniauth_providers: [:oktaoauth, :google_oauth2]
 
   def self.from_omniauth(auth)

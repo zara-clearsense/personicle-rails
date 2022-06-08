@@ -65,31 +65,9 @@
           </li>
           <% end %>
 
-          <% if !session[:oktastate]["physician"]%>
-          <li class="nav-item">
-            <%# <a class="nav-link" href=<%="https://personicle-physician.herokuapp.com/?auth=#{session[:oktastate]['credentials']['token']}" %>
-              <%# <i class="fa-solid fa-user-doctor"></i> %>
-              <span class="iconify ml-4" data-icon="fa6-solid:user-doctor"></span>
-              <span  class="nav-link-text ml-2">
-              <% @physicians = User.where(is_physician: true)%>
-              <div class="ml-5">
-                <%= form_with url: pages_dashboard_path, local: true, method: :post do  %>
-                <select name="physicians" multiple>
-                    <option value="">Select your physicians</option>
-                  <% @physicians.each do |phy| %>
-                    <option value=<%= phy.user_id%> > <%=phy.name%> </option>
-                  <% end %>
-                </select>
-                
-                <%# <%= select_tag "physicians", options_for_select([ @physicians.map {|phy| phy.email}]), multiple: true, :required => true  %> 
-                <% end %>
-              </div>
-              
-              </span>
-              
-            <%# </a> %>
-          </li>
-          <% end %>
+          <%# <% if !session[:oktastate]["physician"]%>
+         
+          <%# <% end %> 
           <%# <li class="nav-item"> %>
             <%# <a class="nav-link" href="<%= pages_register_path %>
               <%# <i class="ni ni-circle-08 text-pink"></i> %>
