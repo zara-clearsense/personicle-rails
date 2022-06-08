@@ -7,6 +7,7 @@ class ProfileController < ApplicationController
           @phy = Physician.find_by(user_id: phy)
           @user.physicians.destroy(@phy)
         end
+        flash[:warning] = "Successfully removed physicians"
         redirect_to pages_profile_path
       end
     end
@@ -21,6 +22,7 @@ class ProfileController < ApplicationController
           puts"hello"
           @user.physicians << @phy
         end
+        flash[:success] = "Successfully added physicians"
         redirect_to pages_profile_path
       end
 
