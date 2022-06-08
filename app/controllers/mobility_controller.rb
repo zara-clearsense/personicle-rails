@@ -15,7 +15,7 @@ class MobilityController < ApplicationController
       @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
     end 
    
-    if @response
+    if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
     
@@ -39,6 +39,8 @@ class MobilityController < ApplicationController
         # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
         @processed_steps_data[week_day] = summarized_data
       }
+    else
+      processed_steps_data = {}
     end
   end
 end

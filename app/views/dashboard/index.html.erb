@@ -7,8 +7,8 @@
             breadcrumb_1: 'Dashboards',
             breadcrumb_2: 'Default'
       } %>
-      <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: @last_week_average_sleep,
-          avg_sleep_month: @last_month_average_sleep %>
+      <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: !@last_week_average_sleep.nil? ? @last_week_average_sleep : 0,
+          avg_sleep_month: !@last_month_average_sleep.nil? ? @last_month_average_sleep : 0%>
     </div>
   </div>
 </div>
