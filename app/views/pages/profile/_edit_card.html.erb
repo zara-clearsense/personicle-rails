@@ -120,11 +120,12 @@
               <input type="text" id="input-username" class="form-control" placeholder="Username" value="">
             </div> %>
          
-            <%= form_with url: "https://www.google.com", method: :get do  %>
+            <%= form_with url: pages_profile_path, method: :get do  %>
                 <select name="users" >
                         <%# <option value="">Select your physicians</option> %>
-                      
+                      <% puts "hello" %>
 
+                      <% puts @physician.users.length%>
                       <% @physician.users.each do |u| %>
                         <option value=<%= u.user_id %> > <%=u.name%> </option>
                       <% end %>   
