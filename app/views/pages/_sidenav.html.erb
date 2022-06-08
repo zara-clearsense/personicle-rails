@@ -77,7 +77,7 @@
                 <select name="physicians" multiple>
                     <option value="">Select your physicians</option>
                   <% @physicians.each do |phy| %>
-                    <option value=<%= phy.uid%> > <%=phy.name%> </option>
+                    <option value=<%= phy.user_id%> > <%=phy.name%> </option>
                   <% end %>
                 </select>
                 

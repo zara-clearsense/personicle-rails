@@ -20,9 +20,12 @@ class DashboardController < ApplicationController
 
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    @physicians = User.where(is_physician: true)
-
-    @physicians.map {|phy| puts phy.email}
+    @user = User.find_by(user_id: session[:oktastate]['uid'])
+    puts "hello"
+     @user.physicians.each do |phy|
+      puts  phy.name
+     end
+    # @physicians.map {|phy| puts phy.email}
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true)

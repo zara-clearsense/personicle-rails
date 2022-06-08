@@ -53,6 +53,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           puts "user is physician"
           @user.is_physician = true
           @user.save
+          @physician = Physician.create(user_id: session[:oktastate]["uid"] ,name: session[:oktastate]["info"]["name"], last_name: session[:oktastate]["info"]["lastName"],first_name: session[:oktastate]["info"]["firstName"])
           return redirect_to pages_dashboard_physician_path
         end
         redirect_to pages_dashboard_path
@@ -91,10 +92,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       if @user.present?
-        url = "https://dev-01936861.okta.com/api/v1/users/#{session[:oktastate]['uid']}"
-        res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "SSWS 00JRLUd-fyWojjhDad1Ask3S3DssMHR2T2nAOg1ogk"}, :method => :get ))
-        puts res["profile"]["physi"]
+        # url = "https://dev-01936861.okta.com/api/v1/users/#{session[:oktastate]['uid']}"
+        # res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: ENV['GET_USER_GROUP_TOKEN']}, :method => :get ))
+        # puts res["profile"]["physi"]
         # redirect_to user_path(session[:oktastate][:uid])
+        if is_physician?
+          puts "user is physician"
+          @user.is_physician = true
+          @user.save
+          return redirect_to pages_dashboard_physician_path
+        end
         redirect_to pages_dashboard_path
       end
       end
