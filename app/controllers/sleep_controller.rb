@@ -66,7 +66,9 @@ class SleepController < ApplicationController
         exercise_days = (run_days | bike_days)
         @exercise_days_sleep = []
         exercise_days.each do |d|
-            @exercise_days_sleep = @exercise_days_sleep.append(((@daily_sleep_summary[d]['duration']*60).to_i / sleep_window)*sleep_window)
+            if @daily_sleep_summary.key?(d)
+                @exercise_days_sleep = @exercise_days_sleep.append(((@daily_sleep_summary[d]['duration']*60).to_i / sleep_window)*sleep_window)
+            end
         end
         @exercise_days_sleep = @exercise_days_sleep.select{|v| v>0}
         @exercise_sleep_count = {}
