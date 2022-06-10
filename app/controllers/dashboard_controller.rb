@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
 
   def index
     puts session[:oktastate]['credentials']['token']
-    puts session[:oktastate]
+    
 
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")

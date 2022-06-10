@@ -1,5 +1,6 @@
 const { environment } = require('@rails/webpacker')
 
+
 const alias =  require('./alias/alias')
 
 const webpack = require("webpack")
