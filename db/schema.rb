@@ -28,13 +28,6 @@ ActiveRecord::Schema.define(version: 2022_06_08_160212) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "physicians_users_tables", force: :cascade do |t|
-    t.string "user_id"
-    t.string "physician_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"

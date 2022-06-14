@@ -22,7 +22,7 @@ class SleepController < ApplicationController
           end 
 
         if !@response.empty?
-            puts @response.class
+            # puts @response.class
             daily_sleep = @response.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
             max_date = daily_sleep.max {|rec| rec['date']}['date']
@@ -68,7 +68,9 @@ class SleepController < ApplicationController
         exercise_days = (run_days | bike_days)
         @exercise_days_sleep = []
         exercise_days.each do |d|
-            @exercise_days_sleep = @exercise_days_sleep.append(((@daily_sleep_summary[d]['duration']*60).to_i / sleep_window)*sleep_window)
+            if @daily_sleep_summary.key?(d)
+                @exercise_days_sleep = @exercise_days_sleep.append(((@daily_sleep_summary[d]['duration']*60).to_i / sleep_window)*sleep_window)
+            end
         end
         @exercise_days_sleep = @exercise_days_sleep.select{|v| v>0}
         @exercise_sleep_count = {}
