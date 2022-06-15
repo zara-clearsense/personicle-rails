@@ -34,9 +34,9 @@ class FetchData
         end
     end
 
-    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,is_hard_refresh=refresh)
-        start_date = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        end_date = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,start_date=st, end_date=et, is_hard_refresh=refresh)
+        # start_date = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        # end_date = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
         url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&source="+data_source+"&datatype="+datatype
         if !is_hard_refresh
             Rails.cache.fetch([:datastreams,ses[:oktastate]['uid']], expires_in: 20.minutes) do
