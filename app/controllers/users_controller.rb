@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
    before_action :user_is_logged_in?
     def index
+      @data = Mobility.group(:dateTime).count
+
+      respond_to do |format|
+        format.html
     end
   
     def show

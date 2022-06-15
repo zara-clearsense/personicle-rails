@@ -11,12 +11,13 @@
   </div>
   <div class="card-body">
   <div class="chart">
+
     <% if user_data.length() != 0 %>
       <%= react_component("ProgressionChart", { user_data: user_data}) %>
       
     <%else%>
       <h3 style="color:black;"> No activities for the past 3 months</h3>
-   <%end%>
+   <%end%> 
     <!-- Projects table -->
     <%# <table class="table align-items-center table-flush">
       <thead class="thead-light">

@@ -7,16 +7,20 @@
             breadcrumb_1: 'Dashboards',
             breadcrumb_2: 'Default'
       } %>
-      <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: @last_week_average_sleep,
-          avg_sleep_month: @last_month_average_sleep %>
+      <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: !@last_week_average_sleep.nil? ? @last_week_average_sleep : 0,
+          avg_sleep_month: !@last_month_average_sleep.nil? ? @last_month_average_sleep : 0%>
     </div>
   </div>
 </div>
 <div class="container-fluid mt--6">
   <% #<div class="row"> %>
     <div class="row">
+   
     <%# <% puts @response%>
-      <%= render 'pages/dashboard/charts/timeline', user_data: @response %>
+      <%# <% if @is_physician %> 
+          <%= render 'pages/dashboard/charts/timeline', user_data: @response%>
+      <%# <% end %> 
+   
     </div>
     <div class="row">
       <%= render 'pages/dashboard/charts/bar', user_data: @response %>
@@ -26,7 +30,7 @@
     <div class="row">
       <%= render 'pages/dashboard/charts/progression', user_data: @response %>
     </div>
-    
+    <%# <iframe src="http://localhost:3005/d-solo/jtd0-Lr7k/total-time-spent?orgId=1&from=1654185659608&to=1654207259608&theme=dark&panelId=2" width="700" height="500" frameborder="0"></iframe> %>
   <% #</div> %>
   <%= render 'pages/footer' %>
 </div>

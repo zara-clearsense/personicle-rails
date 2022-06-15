@@ -13,6 +13,12 @@ Rails.application.routes.draw do
   resources :users
   root to: 'pages#login'
 
+   # devise_for :dashboard
+   resources :dashboard
+   namespace :charts do
+    get "user-mobility"
+   end
+
   get 'pages/dashboard', :to => 'dashboard#index'
   get 'pages/connections', :to => 'connection#index'
   get 'pages/profile', :to => 'profile#index'
