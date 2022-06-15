@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :logged_in?, :require_user, :session_active?
+  helper_method :logged_in?, :require_user, :session_active?, :is_physician?
   
   def user_is_logged_in?
     if !session[:oktastate]
@@ -8,6 +8,36 @@ class ApplicationController < ActionController::Base
       root_path
     end
   end
+
+  def is_physician?
+    url = "https://dev-01936861.okta.com/api/v1/users/#{session[:oktastate]['uid']}/groups"
+    res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: ENV['GET_USER_GROUP_TOKEN']}, :method => :get ))
+      
+      for r in res
+        if r['id'] == ENV['PHYSICIAN_GROUP_ID']
+          session[:oktastate][:physician] = true
+          return true
+        end
+      end
+    return false
+
+  end
+  # def login_type_physician?
+  #   # puts "hello"
+  #   # puts session[:oktastate]
+  #   # puts session[:oktastate]["physician"]
+  #   if !session[:oktastate]["physician"]
+  #     flash[:danger] = "You do not have access to physician dashboard"
+  #     redirect_to pages_dashboard_path
+  #   end
+  # end
+
+  # def login_type_user?
+  #   if session[:oktastate]["physician"]
+  #     flash[:danger] = "You do not have access to user dashboard"
+  #     redirect_to pages_dashboard_physician_path
+  #   end
+  # end
 
   def session_active?
     if session[:oktastate]
@@ -25,6 +55,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def hard_refresh?
+    
+  end
 
   def logged_in?
     !session[:oktastate].nil?

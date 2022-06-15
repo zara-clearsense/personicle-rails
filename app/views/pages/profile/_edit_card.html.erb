@@ -1,4 +1,5 @@
 <div class="card">
+<%# <%= render 'layouts/messages' %> 
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col-8">
@@ -85,5 +86,92 @@
         </div>
       </div>
     </form>
+  
+    <% if !session[:oktastate]["physician"]%>
+      <h6 class="heading-small text-muted mb-4">Add physicians</h6>
+      <div class="pl-lg-4">
+        <div class="row">
+            <div class="col-lg-6">
+            
+              <% @physicians = Physician.all %>
+              <%= form_with url: pages_profile_add_physician_path, local: true, method: :post do  %>
+                  <select name="physicians[]" multiple>
+                        <% @physicians.each do |phy| %>
+                        <%# <% if !@user.physicians.exists?(phy.user_id)%> 
+                              <option value=<%= phy.user_id %> > <%=phy.name%> </option>
+                        <%# <% end %> 
+                        <% end %>   
+                  </select>
+                  <br>
+                  <button type="submit" class="btn btn-primary mt-3">Add</button>
+              <% end %>
+            </div>   
+            <div class="col-lg-6">
+        
+                <%# <label class="form-control-label" for="input-address">Your Physicians</label> %>
+              <h6 class="heading-small text-muted ">Your physicians</h6>
+              <%= form_with url: pages_profile_remove_physician_path, local: true, method: :post do  %>
+              <select name="remove_physicians[]" multiple>
+                  <% @user.physicians.each do |phy| %>
+                      <option value=<%= phy.user_id %> > <%=phy.name%> </option>
+                  <% end %>   
+              </select>
+                  <br>
+                  <button type="submit" class="btn btn-warning mt-3">Remove</button>
+              <% end %>
+            
+            </div>
+          </div>
+        </div>
+
+    <% end %>
+    <% if session[:oktastate]["physician"]%>
+      <h6 class="heading-small text-muted mb-4">Your Patients</h6>
+      <div class="pl-lg-4">
+      <div class="row">
+          <div class="col-lg-6">
+            <%= form_with url: pages_profile_path, method: :get do  %>
+                <select name="users" >
+                      <% @physician.users.each do |u| %>
+                        <option value=<%= u.user_id %> > <%=u.name%>, <%=u.email%> </option>
+                      <% end %>   
+                </select>
+            <br>
+            <button class="btn btn-primary mt-3">View selected patient's data</button>
+            <% end %>
+            </div>   
+    <% end %>
+    
+          <%# <div class="col-lg-6">
+            <div class="form-group">
+              <label class="form-control-label" for="input-email">Email address</label>
+              <input type="email" id="input-email" class="form-control" placeholder="<%= session[:oktastate]["info"]["email"]%>
+            <%# </div>
+          </div> %> 
+        </div>
+        <%# <div class="row"> %>
+          <%# <div class="col-lg-6"> %>
+            <%# <div class="form-group">
+              <label class="form-control-label" for="input-username">Username</label>
+              <input type="text" id="input-username" class="form-control" placeholder="Username" value="">
+            </div> %>
+          <%# </div> %>
+          <%# <div class="col-lg-6">
+            <div class="form-group">
+              <label class="form-control-label" for="input-email">Email address</label>
+              <input type="email" id="input-email" class="form-control" placeholder="<%= session[:oktastate]["info"]["email"]%>
+            <%# </div>
+          </div> %>
+        <%# </div> %>
+        
+          
+      <!-- Address -->
+      
+      </div>
+      
+      <!-- Description -->
+      
+ 
   </div>
+  
 </div>

@@ -8,7 +8,7 @@
       <div class="col">
         <ul class="nav nav-pills justify-content-end">
           <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
-            <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+             <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
               <span class="d-none d-md-block">Month</span>
               <span class="d-md-none">M</span>
             </a>
@@ -17,7 +17,11 @@
             <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
               <span class="d-none d-md-block">Week</span>
               <span class="d-md-none">W</span>
-            </a>
+            </a> 
+              <%= form_with url: pages_dashboard_path, local: true, method: :post do  %>
+                <input type="hidden" name="refresh" value="hard_refresh">
+                <button  class="btn btn-primary" type="submit">Refresh</button>
+              <% end %>
           </li>
         </ul>
       </div>
@@ -38,8 +42,7 @@
       <% if user_data.length() != 0 %> 
          <%= react_component("TimeLine", { user_data: user_data}) %>
       <%else%>
-        <h3 style="color:white;">No activities for the past 3 months</h3>
-        
+        <h3 style="color:black;">No activities for the past 3 months</h3>
       <%end%>
      
       <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>

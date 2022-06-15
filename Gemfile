@@ -7,9 +7,12 @@ ruby '2.7.1'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 # Use postgres as the database for Active Record
 gem 'pg'
-
+gem 'dalli'
+gem 'memcachier'
 gem 'devise'
 gem 'omniauth-oktaoauth'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
 gem 'activerecord-session_store'
 gem 'figaro'
 gem "chartkick"
@@ -30,6 +33,7 @@ gem 'webpacker'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
+gem 'vueonrails'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -50,7 +54,7 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '~> 3.2'
-   gem "sqlite3", "~> 1.4"
+  gem "sqlite3", "~> 1.4"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -69,6 +73,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'jquery-rails'
 gem 'font-awesome-rails'
+
 group :production do
   gem 'rails_12factor'
 end

@@ -59,7 +59,7 @@ class FoodlogController < ApplicationController
         start_time_millis = (Time.parse(start_time).to_f)*1000
         end_time_millis = (Time.parse(end_time).to_f)*1000
         duration = end_time_millis - start_time_millis
-        puts params[:ingredients]
+        # puts params[:ingredients]
         data = [{
             "individual_id": "#{session[:oktastate]["uid"]}",
             "start_time": "#{start_time}",
@@ -70,7 +70,7 @@ class FoodlogController < ApplicationController
             "parameters": "{\"recipe_name\": \"#{params[:recipe_name]}\", \"duration\": \"#{duration}\", \"servings\" : \"#{params[:servings]}\" , \"ingredients\": \"#{params[:ingredients]}\"}"
         }]
       
-        res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json},:verify_ssl => false)
+        res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
         # puts res
         # puts data.to_json
         if res

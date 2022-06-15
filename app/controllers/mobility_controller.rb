@@ -5,21 +5,22 @@ class MobilityController < ApplicationController
     before_action :require_user, :session_active?
 
   def index
-    puts session[:oktastate]['credentials']['token']
-    start_date = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-    end_date = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-
-    @source = 'google-fit'
-    @steps_data_type = 'com.personicle.individual.datastreams.step.count'
-    # @week_day = params[:day_of_week] || 'Monday'
-    # get steps data here
-    url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&source="+@source+"&datatype="+@steps_data_type
-    res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
     # add another request for specific data streams (step count)
     # use exercise for another chart
-    if res
-      @response = JSON.parse(res,object_class: OpenStruct)
+    if params.has_key?(:refresh) && params[:refresh]=="hard_refresh"
+      puts "hard refresh"
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=true)
+    else
+      puts "not hard refresh"
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
+    end 
+  #  puts @response
+  #  puts "hello"
+
+    if !@response.empty?
+      # @response = JSON.parse(res,object_class: OpenStruct)
     #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
+    
       @steps_data_raw = []
       @response.each { |record|
         timestamp_data = record['timestamp'].to_datetime
@@ -31,7 +32,7 @@ class MobilityController < ApplicationController
 
       weekday_grouped_data = @steps_data_raw.group_by { |rec| rec['weekday']}.to_h
       
-    #   puts weekday_grouped_data['Monday']
+      # puts weekday_grouped_data['Monday']
 
       @processed_steps_data = {}
       all_days.each { |week_day|
@@ -40,6 +41,8 @@ class MobilityController < ApplicationController
         # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
         @processed_steps_data[week_day] = summarized_data
       }
+    else
+      processed_steps_data = {}
     end
   end
 end

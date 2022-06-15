@@ -1,0 +1,36 @@
+
+<% content_for(:topnav_bg) { 'bg-default' } %>
+<div class="main-content" id="panel">
+  
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+
+  <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Select Patient
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Patient 1 </a>
+    <a class="dropdown-item" href="#">Patient 2</a>
+    <a class="dropdown-item" href="#">Patient 3</a>
+  </div>
+</div>
+      <div class="row mt-5">
+        <div class="col-xl-4 order-xl-1">
+          <%= render 'pages/profile/summary_card' %>
+        </div>
+        <div class="col-xl-8 order-xl-2">
+           <%= render 'pages/dashboard/metrics_summary', avg_sleep_week:  0,
+          avg_sleep_month: 0%>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+       
+        <div class="col-xl-12 order-xl-2">
+          <%= render 'pages/dashboard/charts/timeline', user_data: ""%>
+        </div>
+      </div>
+    <%= render 'pages/footer' %>
+  </div>

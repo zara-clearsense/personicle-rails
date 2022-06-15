@@ -7,7 +7,7 @@
           <div class="col">
             <h5 class="card-title text-uppercase text-muted mb-0">Average sleep</h5>
             <%if avg_sleep_week == 0%>
-            <%sleep_text = "No events found"%>
+            <%sleep_text = "No sleep events for past week"%>
             <%else%>
             <%sleep_text = "#{avg_sleep_week/60} h #{avg_sleep_week%60} m"%>
             <%end%>
