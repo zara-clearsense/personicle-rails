@@ -1,0 +1,43 @@
+<div class="card card-profile">
+  <%= image_tag "theme/img-1-1000x600.jpg", class: "card-img-top", alt: "Image placeholder" %>
+  <div class="row justify-content-center">
+    <div class="col-lg-3 order-lg-2">
+      <div class="card-profile-image">
+        <a >
+          <%= image_tag 'theme/sketch2.jpg', class: 'rounded-circle' %>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+    <%# <div class="d-flex justify-content-between">
+      <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
+      <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+    </div> %>
+  </div>
+  <div class="card-body pt-0 ">
+    <div class="text-center mt-4">
+      <h5 class="h3">
+        <%= User.find_by(user_id: user_id).name %><span class="font-weight-light"></span>
+      </h5>
+   </div>
+   
+    
+     <div class="row">
+            <div class="col-md-12">Age: <b>27</b></div>
+    </div> 
+    <div class="row">
+            <div class="col-md-12"> Weight: <b>160</b></div>
+    </div> 
+    <div class="row">
+            <div class="col-md-12">Height: <b>5'8"</b></div>
+    </div> 
+    <div class="row">
+            <div class="col-md-12">Race: <b>White</b></div>
+    </div>
+     <div class="row">
+            <div class="col-md-12">Region/City: <b>LA</b></div>
+    </div>
+    
+  </div>
+</div>
