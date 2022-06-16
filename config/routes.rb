@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   get '/login', :to => 'sessions#new', :as => :login
   resources :users
   root to: 'pages#login'
-
   get 'pages/dashboard', :to => 'dashboard#index'
   get 'pages/dashboard/physician', :to =>'physician#index'
   # post 'pages/physician-create-account', :to =>'physician#create_account'
@@ -20,6 +19,7 @@ Rails.application.routes.draw do
   get 'pages/connections', :to => 'connection#index'
   get 'pages/profile', :to => 'profile#index'
   post 'pages/profile/add_physician', :to=>'profile#add_physician'
+  post 'pages/profile/update_user_info', :to=>'profile#update_user_info'
   # post 'pages/profile', :to => 'profile#index'
   get 'pages/foodlog', :to => 'foodlog#index'
   get 'pages/foodlog/data', :to => 'foodlog#get_edamam_data' , :as => 'get_edamam_data' 

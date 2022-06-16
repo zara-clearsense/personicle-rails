@@ -28,6 +28,9 @@ class ProfileController < ApplicationController
 
     end
 
+    def update_user_info
+      
+    end
 
     def index
       
