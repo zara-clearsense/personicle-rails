@@ -35,6 +35,6 @@ Rails.application.routes.draw do
   # get 'pages/recipes'
   post 'pages/profile/remove_physician', :to=>'profile#remove_physician'
   post 'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'
-  get  'pages/dashboard/physician/get_user_data'
+  get  'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'
 
 end

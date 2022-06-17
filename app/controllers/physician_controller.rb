@@ -9,6 +9,10 @@ class PhysicianController < ApplicationController
     end
 
     def get_user_data
+        
+        if request.get?
+            return redirect_to pages_dashboard_physician_path
+        end
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
         start_time = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
         end_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
@@ -17,7 +21,7 @@ class PhysicianController < ApplicationController
         url_events = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&source=google-fit&datatype=com.personicle.individual.datastreams.step.count"+"&user_id="+params["data_for_user"]
       
         @user_events = JSON.parse(RestClient::Request.execute(:url => url_events, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        # puts @user_events
+
         if !@user_events.empty?
             daily_steps = @user_events.map {|event| {'date' => event['timestamp'].to_datetime.to_date, 'value' => event['value']}}
             tmp = daily_steps.group_by {|rec| rec['date']}.to_h

@@ -2,8 +2,21 @@
 .hidden {
     display: none;
 }
+.tab {
+  float: left;
+}
+
 </style>
-<div class="card">
+ <div id="chart_type" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
+              <label class="btn btn-secondary">
+                <input type="radio" name="charttype" value="sleep_chart" checked> Sleep
+              </label>
+              <label class="btn btn-secondary">
+                <input type="radio" name="charttype" value="activity_chart" > Activity
+              </label>
+        </div>
+<div class="card mr-1">
+
   <div class="card-header bg-transparent">
     <div class="row align-items-center">
       <div class="col">
@@ -12,18 +25,10 @@
       </div>
       <div class="col">
 
-       <div id="chart_type">
-                <div>
-                    <label><input type="radio" name="charttype" value="sleep_chart" checked/>Sleep</label>
-                    <label><input type="radio" name="charttype" value="activity_chart" />Activity</label>
-                </div>
-        </div>
         <ul  class="nav nav-pills justify-content-end">
           <li class="nav-item mr-2 mr-md-0" value="daily" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+          
           <div id="actions" class="btn-group btn-group-toggle" data-toggle="buttons">
-              <%# <label class="btn btn-secondary active">
-                <input type="radio" name="options" id="option1" checked> Active
-              </label> %>
               <label class="btn btn-secondary">
                 <input type="radio" name="chart" value="daily" checked> Daily
               </label>
@@ -39,14 +44,16 @@
       </div>
     </div>
   </div>
+  
   <div class="card-body">
+  
     <!-- Chart -->
     <div class="chart">
-      
+        
       <% if user_data.length() != 0 or user_events.length()!=0 %>
          
       <div id="charts">
-
+          
         <div id="activity_chart_daily" class="chart hidden">
 
             <%= column_chart [
@@ -93,6 +100,7 @@
      
       <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
     </div>
+        
   </div>
 </div>
 <script>
