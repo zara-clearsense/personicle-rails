@@ -28,6 +28,23 @@ class ProfileController < ApplicationController
 
     end
 
+    def update_user_info
+      puts params.except(:authenticity_token, :action, :controller)
+      @user = User.find_by(user_id: session[:oktastate]['uid'])
+      payload = {}
+      params.except(:authenticity_token, :action, :controller).each do |k,v|
+        if !v.blank?
+          payload[k] =  v
+        end
+      end
+      puts "hello"
+      puts payload
+      payload.each do |k,v|
+        @user.info[k] = v
+      end
+      @user.save
+      return redirect_to pages_profile_path
+    end
 
     def index
       
