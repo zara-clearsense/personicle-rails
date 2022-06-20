@@ -7,17 +7,17 @@ class MobilityController < ApplicationController
   def index
     # add another request for specific data streams (step count)
     # use exercise for another chart
+    st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     if params.has_key?(:refresh) && params[:refresh]=="hard_refresh"
-      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=true)
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true)
     else
-      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false)
     end 
  
 
     if !@response.empty?
-      # @response = JSON.parse(res,object_class: OpenStruct)
-    #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
-    
+
       @steps_data_raw = []
       @response.each { |record|
         timestamp_data = record['timestamp'].to_datetime
