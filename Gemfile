@@ -19,7 +19,6 @@ gem "chartkick"
 gem "groupdate"
 gem 'react-rails'
 gem 'jquery-turbolinks'
-gem 'omniauth-google-oauth2'
 gem 'will_paginate', '~> 3.3'
 gem 'bootstrap-will_paginate', '1.0.0'
 # Use Puma as the app server
