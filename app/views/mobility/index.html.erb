@@ -10,8 +10,20 @@
     </div>
   </div>
 </div>
+
 <!-- Page content -->
 <div class="container-fluid mt--6">
+ 
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@mobility_aggregated.nil? ? @mobility_aggregated: []
+      %>
+        <%= render 'pages/mobility/charts/bar_totalsteps_dayandweek.html.erb', user_data:@data %>
+      
+    </div>
+</div>
+
+<!-- Page content -->
  
   <div class="row">
     <div class="col" background-color="white">
