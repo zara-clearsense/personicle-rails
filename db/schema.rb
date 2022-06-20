@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_16_162734) do
+ActiveRecord::Schema.define(version: 2022_06_17_171919) do
 
   create_table "physician_users", force: :cascade do |t|
     t.string "user_user_id"
@@ -49,10 +49,7 @@ ActiveRecord::Schema.define(version: 2022_06_16_162734) do
     t.string "name"
     t.string "user_id", null: false
     t.boolean "is_physician", default: false, null: false
-    t.string "address", default: ""
-    t.string "city", default: ""
-    t.string "country", default: ""
-    t.string "postal_code", default: ""
+    t.json "info", default: {}
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -30,7 +30,7 @@
        <% if  local_assigns.has_key? :user_data %>
       <div class="row mt-5">
         <div class="col-xl-4 order-xl-1">
-          <%= render 'pages/profile/physician_user', user_id: user_id %>
+          <%= render 'pages/profile/physician_user', patient_id: user_id %>
         </div>
         <div class="col-xl-8 order-xl-2">
            <%= render 'pages/dashboard/metrics_summary', avg_sleep_week:  0,
@@ -41,7 +41,7 @@
       <div class="row mt-5">
   
             <div class="col-xl-12 order-xl-2">
-              <%= render 'pages/dashboard/charts/physician', user_id: user_id, user_events: user_events, daily_step_summary: daily_step_summary, weekly_step_summary: weekly_step_summary, user_data: user_data , weekly_sleep_summary: weekly_sleep_summary, daily_sleep_summary: daily_sleep_summary %>
+              <%= render 'pages/dashboard/charts/physician', last_two_weeks_min_hr: last_two_weeks_min_hr, last_two_weeks_max_hr: last_two_weeks_max_hr,user_id: user_id, user_events: user_events, daily_step_summary: daily_step_summary, weekly_step_summary: weekly_step_summary, user_data: user_data , weekly_sleep_summary: weekly_sleep_summary, daily_sleep_summary: daily_sleep_summary %>
              </div> 
             <%# <div id="actions">
                 <div>

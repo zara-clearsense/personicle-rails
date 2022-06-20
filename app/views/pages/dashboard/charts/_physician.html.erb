@@ -7,6 +7,30 @@
 }
 
 </style>
+
+
+<div class="card">
+  <div class="card-header">
+    Current Vitals
+  </div>
+  <div class="row">
+    <div class="card-body col-sm-4">
+      <h5 class="card-title text-center">Avg 24 Hours Heart Rate</h5>
+      <p class="card-text text-center"> to be computed</p>
+ 
+    </div>
+    <div class="card-body col-sm-4">
+      <h5 class="card-title text-center">Min 2 Weeks Heart Rate</h5>
+      <p class="card-text text-center"><%= last_two_weeks_min_hr %></p>
+ 
+    </div>
+    <div class="card-body col-sm-4">
+      <h5 class="card-title text-center">Max 2 Weeks Heart Rate</h5>
+      <p class="card-text text-center"><%= last_two_weeks_max_hr %> </p>
+   
+    </div>
+  </div>
+</div>
  <div id="chart_type" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
               <label class="btn btn-secondary">
                 <input type="radio" name="charttype" value="sleep_chart" checked> Sleep
@@ -106,12 +130,9 @@
 <script>
 
 function revealChartType(event) {
-   
     var chart_type = $(event.target).val(); 
     var chart = $('input[name="chart"]:checked').val();
-  
     $('#charts .chart').hide(); 
-   
     $('#' + chart_type +"_"+chart).show();  
 }
 $(function() {

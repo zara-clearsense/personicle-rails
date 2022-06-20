@@ -21,7 +21,25 @@ class PhysicianController < ApplicationController
         url_events = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&source=google-fit&datatype=com.personicle.individual.datastreams.step.count"+"&user_id="+params["data_for_user"]
       
         @user_events = JSON.parse(RestClient::Request.execute(:url => url_events, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-
+        url_hr = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&source=google-fit&datatype=com.personicle.individual.datastreams.heartrate"+"&user_id="+params["data_for_user"]
+        @user_hr= JSON.parse(RestClient::Request.execute(:url => url_hr, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+       
+        if !@user_hr.empty?
+            one_day_ago = @user_hr.select {|hr| hr['timestamp'] >= 1.day.ago}
+           
+            one_day_ago_max_hr =  !one_day_ago.empty? ? one_day_ago.max_by {|hr| hr['value']}.value : 0
+            one_day_ago_min_hr = !one_day_ago.empty? ? one_day_ago.min_by {|hr| hr['value']}.value : 0
+            
+            last_two_weeks = @user_hr.select {|hr| hr['timestamp'] >= 2.weeks.ago}
+            @last_two_weeks_max_hr = !last_two_weeks.empty? ? last_two_weeks.max_by {|hr| hr['value']}.value : 0
+            @last_two_weeks_min_hr = !last_two_weeks.empty? ? last_two_weeks.min_by {|hr| hr['value']}.value : 0
+            @avg_24_hour_hr = !one_day_ago.empty? ?  one_day_ago.sum {|hr| hr['value']}/one_day_ago.size : 0
+     
+        else
+            @last_two_weeks_max_hr= 0
+            @last_two_weeks_min_hr = 0
+            @avg_24_hour_hr = 0
+        end
         if !@user_events.empty?
             daily_steps = @user_events.map {|event| {'date' => event['timestamp'].to_datetime.to_date, 'value' => event['value']}}
             tmp = daily_steps.group_by {|rec| rec['date']}.to_h
@@ -48,12 +66,11 @@ class PhysicianController < ApplicationController
             end
             @daily_sleep_summary = @daily_sleep_summary.sort.to_h
             tmp2 = daily_sleep.group_by {|rec| rec['date'].strftime('%Y-%U')}.to_h
-            # puts daily_sleep
             @weekly_sleep_summary = tmp2.map {|k,v| [k , v.sum {|r| r['duration']}/ v.size]}.to_h
-            moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
+            # moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
                     
             (min_date..max_date).each do |d|
-                @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => moving_average_sleep[d]}
+                @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => 0}
             end
         else
             @daily_sleep_summary = []
@@ -63,7 +80,7 @@ class PhysicianController < ApplicationController
         # logger.info  @weekly_sleep_summary
         # redirect_to pages_dashboard_physician_path, userdata: @user_data
         respond_to do |format|
-            format.html {render :index, locals: {weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
+            format.html {render :index, locals: {last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
         end
     end
 
