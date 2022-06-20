@@ -36,11 +36,17 @@ class MobilityController < ApplicationController
 
       @processed_steps_data = {}
       all_days.each { |week_day|
-        current_day_data = weekday_grouped_data[week_day]
-        summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30}.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
-        # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
-        @processed_steps_data[week_day] = summarized_data
+        if weekday_grouped_data.key?(week_day)
+          current_day_data = weekday_grouped_data[week_day]
+          summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30}.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
+          # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
+          @processed_steps_data[week_day] = summarized_data
+        end
       }
+
+      temporary_steps = @response.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h 
+      @mobility_aggregated = temporary_steps.map {|k,v| {k => v.sum {|r| r['value']}}}
+      puts @mobility_aggregated
     else
       processed_steps_data = {}
     end
