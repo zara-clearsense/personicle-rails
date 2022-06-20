@@ -57,7 +57,7 @@
           </li>
           <% if session[:oktastate]["physician"]%>
           <li class="nav-item">
-            <a class="nav-link" href=<%="https://personicle-physician.herokuapp.com/?auth=#{session[:oktastate]['credentials']['token']}" %> target="_blank">
+            <a class="nav-link" href=<%= pages_dashboard_physician_path %> >
               <%# <i class="fa-solid fa-user-doctor"></i> %>
               <span class="iconify" data-icon="fa6-solid:user-doctor"></span>
               <span class="nav-link-text ml-3">Go to physician dashboard</span>

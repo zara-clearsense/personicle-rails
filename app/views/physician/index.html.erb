@@ -1,5 +1,6 @@
 
 <% content_for(:topnav_bg) { 'bg-default' } %>
+
 <div class="main-content" id="panel">
   
 
@@ -10,27 +11,51 @@
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Select Patient
   </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Patient 1 </a>
-    <a class="dropdown-item" href="#">Patient 2</a>
-    <a class="dropdown-item" href="#">Patient 3</a>
-  </div>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+     <%= form_with url: pages_dashboard_physician_get_user_data_path, local: true, method: :post do  %>
+     <% if  local_assigns.has_key? :physician %>
+        <% physician.users.each do |u|%>
+           <button class="dropdown-item" type="submit" name="data_for_user" value=<%=u.user_id%>> <%=u.name%>, <%=u.email%> </button> 
+        <% end %>
+      <% else %>
+         <% @physician.users.each do |u|%>
+           <button class="dropdown-item" type="submit" name="data_for_user" value=<%=u.user_id%>> <%=u.name%>, <%=u.email%> </button> 
+        <% end %>
+    <% end %>
+       
+    <%end%>
+   
+    </div>
 </div>
+       <% if  local_assigns.has_key? :user_data %>
       <div class="row mt-5">
         <div class="col-xl-4 order-xl-1">
-          <%= render 'pages/profile/summary_card' %>
+          <%= render 'pages/profile/physician_user', patient_id: user_id %>
         </div>
         <div class="col-xl-8 order-xl-2">
            <%= render 'pages/dashboard/metrics_summary', avg_sleep_week:  0,
-          avg_sleep_month: 0%>
+          avg_sleep_month: 0 , avg_steps_week: 0, avg_steps_month:0%>
         </div>
       </div>
 
       <div class="row mt-5">
-       
-        <div class="col-xl-12 order-xl-2">
-          <%= render 'pages/dashboard/charts/timeline', user_data: ""%>
-        </div>
+  
+            <div class="col-xl-12 order-xl-2">
+              <%= render 'pages/dashboard/charts/physician', avg_24_hour_hr: avg_24_hour_hr, last_two_weeks_min_hr: last_two_weeks_min_hr, last_two_weeks_max_hr: last_two_weeks_max_hr,user_id: user_id, user_events: user_events, daily_step_summary: daily_step_summary, weekly_step_summary: weekly_step_summary, user_data: user_data , weekly_sleep_summary: weekly_sleep_summary, daily_sleep_summary: daily_sleep_summary %>
+             </div> 
+            <%# <div id="actions">
+                <div>
+                    <label><input type="radio" name="chart" value="today" checked="checked"/>Daily</label>
+                    <label><input type="radio" name="chart" value="week"  />Weekly</label>
+                </div>
+            </div> %>
+<%# 
+            <div id="charts">
+                <div id="today" class="chart">Daily Chart</div>
+                <div id="week"  class="chart hidden">Weekly Chart</div>
+            </div> %>
+          
       </div>
-    <%= render 'pages/footer' %>
+        <% end %>
+    <%# <%= render 'pages/footer' %> 
   </div>

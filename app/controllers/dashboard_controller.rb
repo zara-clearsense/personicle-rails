@@ -18,7 +18,6 @@ class DashboardController < ApplicationController
   def index
     puts session[:oktastate]['credentials']['token']
     
-
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     # @physician = Physician.find_by(user_id: session[:oktastate]['uid'])
