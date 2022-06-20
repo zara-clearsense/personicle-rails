@@ -80,7 +80,7 @@ class PhysicianController < ApplicationController
         # logger.info  @weekly_sleep_summary
         # redirect_to pages_dashboard_physician_path, userdata: @user_data
         respond_to do |format|
-            format.html {render :index, locals: {last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
+            format.html {render :index, locals: {avg_24_hour_hr: @avg_24_hour_hr,last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
         end
     end
 
