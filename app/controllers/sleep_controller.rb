@@ -22,7 +22,7 @@ class SleepController < ApplicationController
           end 
 
         if !@response.empty?
-            puts @response.class
+            # puts @response.class
             daily_sleep = @response.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
             max_date = daily_sleep.max {|rec| rec['date']}['date']

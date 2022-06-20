@@ -67,8 +67,13 @@
       <div class="card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Total Productivity</h5>
-            <span class="h2 font-weight-bold mb-0">924</span>
+            <h5 class="card-title text-uppercase text-muted mb-0">Walking</h5>
+            <%if avg_steps_week == 0%>
+            <%steps_text = "No steps data"%>
+            <%else%>
+            <%steps_text = "#{avg_steps_week} steps per day"%>
+            <%end%>
+            <span class="h2 font-weight-bold mb-0"><%=steps_text%></span>
           </div>
           <div class="col-auto">
             <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -77,7 +82,18 @@
           </div>
         </div>
         <p class="mt-3 mb-0 text-sm">
-          <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 4.8%</span>
+          <%if avg_steps_month > avg_steps_week%>
+          <%steps_percent_change = (avg_steps_month>0)? 100*(avg_steps_month - avg_steps_week)/avg_steps_month: 0%>
+          <%arrow_direction = "fa-arrow-down"%>
+          <%text_color = "text-warning"%>
+          <%else%>
+          <%steps_percent_change = (avg_steps_month>0)? 100*(avg_steps_week - avg_steps_month)/avg_steps_month: 0%>
+          <%arrow_direction = "fa-arrow-up"%>
+          <%text_color = "text-success"%>
+          <%end%>
+        
+          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=steps_percent_change%>%</span>
+        
           <span class="text-nowrap">Since last month</span>
         </p>
       </div>

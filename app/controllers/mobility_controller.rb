@@ -7,20 +7,17 @@ class MobilityController < ApplicationController
   def index
     # add another request for specific data streams (step count)
     # use exercise for another chart
+    st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
     if params.has_key?(:refresh) && params[:refresh]=="hard_refresh"
-      puts "hard refresh"
-      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=true)
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true)
     else
-      puts "not hard refresh"
-      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",hard_refresh=false)
+      @response = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false)
     end 
-  #  puts @response
-  #  puts "hello"
+ 
 
     if !@response.empty?
-      # @response = JSON.parse(res,object_class: OpenStruct)
-    #   .map{|rec| rec['minute']=rec['timestamp'].to_datetime.minute}
-    
+
       @steps_data_raw = []
       @mobility_by_day= []
       @response.each { |record|
@@ -47,9 +44,11 @@ class MobilityController < ApplicationController
       all_days.each { |week_day|
         # puts week_day
         current_day_data = weekday_grouped_data[week_day]
-        summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30}.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
-        # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
-        @processed_steps_data[week_day] = summarized_data
+        if !current_day_data.nil? 
+          summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30}.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
+          # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
+          @processed_steps_data[week_day] = summarized_data
+        end
       }
     else
       processed_steps_data = {}
