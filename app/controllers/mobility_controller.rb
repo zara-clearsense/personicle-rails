@@ -27,11 +27,15 @@ class MobilityController < ApplicationController
         # puts record['value'].class
         # puts timestamp_data, timestamp_data.class, timestamp_data.to_date.class, type(record['timestamp'])
       }
-
+        # puts mobility_by_day
+        
       temporary_steps = @response.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
       @mobility_aggregated = temporary_steps.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
       puts @mobility_aggregated
-      # puts @mobility_by_day
+
+      weekly_steps = @response.group_by_week{|rec| rec['timestamp'].to_datetime}.to_h
+      @weekly_aggregated = weekly_steps.map {|k,v| [k, v.sum {|r| r['value']}]}
+      puts @weekly_aggregated
 
       all_minutes = [*0..1439]
       all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
