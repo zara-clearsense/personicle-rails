@@ -33,8 +33,10 @@
           <%= render 'pages/profile/physician_user', patient_id: user_id %>
         </div>
         <div class="col-xl-8 order-xl-2">
-           <%= render 'pages/dashboard/metrics_summary', avg_sleep_week:  0,
-          avg_sleep_month: 0 , avg_steps_week: 0, avg_steps_month:0%>
+            <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: !@last_week_average_sleep.nil? ? @last_week_average_sleep : 0,
+          avg_sleep_month: !@last_month_average_sleep.nil? ? @last_month_average_sleep : 0,
+          avg_steps_week: !@last_week_average_steps.nil? ? @last_week_average_steps : 0,
+          avg_steps_month: !@last_month_average_steps.nil? ? @last_month_average_steps : 0%>
         </div>
       </div>
 

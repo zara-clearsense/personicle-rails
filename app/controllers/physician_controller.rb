@@ -26,18 +26,8 @@ class PhysicianController < ApplicationController
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=false,uid=params["data_for_user"])
-            
-            
-            # @user_hr= JSON.parse(RestClient::Request.execute(:url => url_hr, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        end
-       
-
-        # url_events = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+st+"&endTime="+et+"&source=google-fit&datatype=com.personicle.individual.datastreams.step.count"+"&user_id="+params["data_for_user"]
       
-        # @user_events = JSON.parse(RestClient::Request.execute(:url => url_events, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        # url_hr = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+st+"&endTime="+et+"&source=google-fit&datatype=com.personicle.individual.datastreams.heartrate"+"&user_id="+params["data_for_user"]
-       puts "hello"
-        puts @user_events
+        end
        
         if !@user_hr.empty?
             one_day_ago = @user_hr.select {|hr| hr['timestamp'] >= 1.day.ago}
@@ -55,16 +45,30 @@ class PhysicianController < ApplicationController
             @last_two_weeks_min_hr = 0
             @avg_24_hour_hr = 0
         end
+        #step data
         if !@user_events.empty?
             daily_steps = @user_events.map {|event| {'date' => event['timestamp'].to_datetime.to_date, 'value' => event['value']}}
             tmp = daily_steps.group_by {|rec| rec['date']}.to_h
             @daily_step_summary = tmp.map {|k,v| [k , v.sum {|r| r['value']}]}.to_h
             tmp2 = @daily_step_summary.group_by{|rec| rec[0].strftime('%Y-%U')}.to_h
             @weekly_step_summary = tmp2.map {|k,v| [k , v.sum {|r| r[1]}/ v.size]}.to_h
+
+            tmp_steps = @user_events.select {|record| record['timestamp'].to_datetime > 30.days.ago}.map {|rec| [rec['timestamp'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+            @daily_steps = tmp_steps.map {|k,v| [k, v.sum {|r| r[1]}]}.to_h
+    
+      
+            @last_month_total_steps = @daily_steps.select {|k,v| k > 30.days.ago}.sum {|k,v| v}
+            @last_month_steps_days = @daily_steps.select {|k,v| k > 30.days.ago}.size
+            @last_week_total_steps = @daily_steps.select {|k,v| k > 7.days.ago}.sum {|k,v| v}
+            @last_week_steps_days = @daily_steps.select {|k,v| k > 7.days.ago}.size
+      
+            @last_week_average_steps = @last_week_steps_days>0? @last_week_total_steps/@last_week_steps_days:0
+            @last_month_average_steps = @last_month_steps_days>0? @last_month_total_steps/@last_month_steps_days:0
         else
             @daily_step_summary = []
             @weekly_step_summary  = []
         end
+        #sleep data 
         if !@user_data.empty?
 
             daily_sleep = @user_data.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
@@ -87,13 +91,21 @@ class PhysicianController < ApplicationController
             (min_date..max_date).each do |d|
                 @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => 0}
             end
+
+            @sleep_events = @user_data.select {|event| event['event_name'] == 'Sleep'}
+   
+            @last_month_total_sleep = @sleep_events.select {|event| event['start_time'].to_datetime > 30.days.ago}.sum {|event| event['parameters']['duration']}/(60*1000)
+            @last_month_sleep_event = @sleep_events.select {|event| event['start_time'].to_datetime > 30.days.ago}.size
+            @last_week_total_sleep = @sleep_events.select {|event| event['start_time'].to_datetime > 7.days.ago}.sum {|event| event['parameters']['duration']}/(60*1000)
+            @last_week_sleep_event = @sleep_events.select {|event| event['start_time'].to_datetime > 7.days.ago}.size
+            
+            @last_week_average_sleep = @last_week_sleep_event>0? @last_week_total_sleep/@last_week_sleep_event:0
+            @last_month_average_sleep = @last_month_sleep_event>0? @last_month_total_sleep/@last_month_sleep_event:0
         else
             @daily_sleep_summary = []
             @weekly_sleep_summary  = []
         end
-        
-        # logger.info  @weekly_sleep_summary
-        # redirect_to pages_dashboard_physician_path, userdata: @user_data
+
         respond_to do |format|
             format.html {render :index, locals: {avg_24_hour_hr: @avg_24_hour_hr,last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
         end
