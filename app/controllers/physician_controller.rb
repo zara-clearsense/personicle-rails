@@ -14,15 +14,30 @@ class PhysicianController < ApplicationController
             return redirect_to pages_dashboard_physician_path
         end
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
-        start_time = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        end_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&user_id="+params["data_for_user"]+"&event_type="+"Sleep"
-        @user_data = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        url_events = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&source=google-fit&datatype=com.personicle.individual.datastreams.step.count"+"&user_id="+params["data_for_user"]
+        st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+       
+        if params[:refresh]=="hard_refresh"
+            @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
+            @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
+            @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
+            
+        else
+            @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
+            @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
+            @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=false,uid=params["data_for_user"])
+            
+            
+            # @user_hr= JSON.parse(RestClient::Request.execute(:url => url_hr, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        end
+       
+
+        # url_events = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+st+"&endTime="+et+"&source=google-fit&datatype=com.personicle.individual.datastreams.step.count"+"&user_id="+params["data_for_user"]
       
-        @user_events = JSON.parse(RestClient::Request.execute(:url => url_events, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        url_hr = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&source=google-fit&datatype=com.personicle.individual.datastreams.heartrate"+"&user_id="+params["data_for_user"]
-        @user_hr= JSON.parse(RestClient::Request.execute(:url => url_hr, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        # @user_events = JSON.parse(RestClient::Request.execute(:url => url_events, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        # url_hr = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+st+"&endTime="+et+"&source=google-fit&datatype=com.personicle.individual.datastreams.heartrate"+"&user_id="+params["data_for_user"]
+       puts "hello"
+        puts @user_events
        
         if !@user_hr.empty?
             one_day_ago = @user_hr.select {|hr| hr['timestamp'] >= 1.day.ago}
