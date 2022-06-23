@@ -27,7 +27,7 @@ jobs:
               ForwardAgent yes
       - name: Adding Known Hosts
         run: |
-          ssh_host=$(echo ${{ secrets.SSH_HOST }}== | base64 --decode) 
+          ssh_host=$(echo ${{ secrets.SSH_HOST }} | base64 --decode) 
           ssh-keyscan -H $(echo $ssh_host)
 
       - uses: actions/checkout@v2
