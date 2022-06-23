@@ -14,6 +14,7 @@ class PagesController < ApplicationController
     # end
     case action_name
     when 'login', 'register'
+      redirect_to "https://app.personicle.org/"
       'authentication'
     else
       'dashboard'
