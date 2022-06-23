@@ -25,8 +25,8 @@ jobs:
               IdentityFile ~/.ssh/github-actions
               IdentitiesOnly yes
               ForwardAgent yes
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H 23.100.21.167
+#       - name: Adding Known Hosts
+#         run: ssh-keyscan -H 23.100.21.167
 
       - uses: actions/checkout@v2
       - name: Set up Ruby
