@@ -53,8 +53,8 @@ class DashboardController < ApplicationController
       
       @last_week_average_sleep = @last_week_sleep_event>0? @last_week_total_sleep/@last_week_sleep_event:0
       @last_month_average_sleep = @last_month_sleep_event>0? @last_month_total_sleep/@last_month_sleep_event:0
-      puts @response
-      puts @last_week_sleep_event
+      # puts @response
+      # puts @last_week_sleep_event
     end
 
     if !@response_step.empty?
@@ -63,8 +63,8 @@ class DashboardController < ApplicationController
       puts "Step Response"
       puts @response_step
       puts "Temp Steps"
-      puts tmp_steps # Empty array why?
-      puts @daily_steps # Empty array why? - looking for data in last 30 days (empty)
+      # puts tmp_steps # Empty array why?
+      # puts @daily_steps # Empty array why? - looking for data in last 30 days (empty)
      
       @last_month_total_steps = @daily_steps.select {|k,v| k > 30.days.ago}.sum {|k,v| v}
       @last_month_steps_days = @daily_steps.select {|k,v| k > 30.days.ago}.size
@@ -79,10 +79,10 @@ class DashboardController < ApplicationController
       puts @response_weight
       puts 'Weight Response'
       tmp_weight = @response_weight.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
-      puts tmp_weight
+      # puts tmp_weight
       @daily_weight = tmp_weight.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
       puts 'Daily Weight'
-      puts @daily_weight
+      # puts @daily_weight
       
 
     end
