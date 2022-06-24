@@ -23,7 +23,7 @@ class MobilityController < ApplicationController
       @response.each { |record|
         timestamp_data = record['timestamp'].to_datetime
         @steps_data_raw.push({'minute_value' => timestamp_data.minute + timestamp_data.hour * 60, 'weekday' => record['timestamp'].to_datetime.strftime("%A"), 'value' => record['value']})
-        @mobility_by_day.push({'timestamp' => timestamp_data.to_date, 'value' => record['value']})
+        # @mobility_by_day.push({'timestamp' => timestamp_data.to_date, 'value' => record['value']})
         # puts record['value'].class
         # puts timestamp_data, timestamp_data.class, timestamp_data.to_date.class, type(record['timestamp'])
       }
@@ -55,7 +55,8 @@ class MobilityController < ApplicationController
         end
       }
     else
-      processed_steps_data = {}
+      @processed_steps_data = {}
+      @mobility_aggregated = {}
     end
   end
 end
