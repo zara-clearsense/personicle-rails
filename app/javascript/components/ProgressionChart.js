@@ -41,6 +41,7 @@ function ProgressionChart ({user_data}) {
         var weeklyDurations = {};
         var uniqueActivities = new Set();
             
+        
             user_data.forEach(event => {
                 var weekNum = findWeekNum(event.table.start_time);
                 var yearNum = (new Date(event.table.start_time)).getFullYear();
@@ -79,6 +80,7 @@ function ProgressionChart ({user_data}) {
                     // console.log(year_week)
                     weeklyDurations[year_week] = totalDuration;
                 }
+                
             );
             // console.log(weeklyDurations)
             var data = new google.visualization.DataTable();

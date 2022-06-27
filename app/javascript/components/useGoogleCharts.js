@@ -12,11 +12,11 @@ function useGoogleCharts () {
         script = document.createElement('script');
         script.src = 'https://www.gstatic.com/charts/loader.js';
         script.id = 'googleChartsScript';
-        
+
           if (window.google || window.google.charts) {
-            window.google.charts.load('current', {'packages':['timeline', 'controls','corechart']});
+            window.google.charts.load('current', {'packages':['timeline', 'controls','corechart', 'line']});
             
-            window.google.charts.setOnLoadCallback(() => setGoogle(window.google))
+            window.google.charts.setOnLoadCallback(() => setGoogle(window.google));
           
           }
         
