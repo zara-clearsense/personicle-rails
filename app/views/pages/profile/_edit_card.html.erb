@@ -44,6 +44,15 @@
             <%# </div> %>
           </div>
         </div>
+         <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+            
+              <label class="form-control-label" for="input-dob">Date of Birth</label>
+             <input type="date" id="input-dob" value="<%= !@user.info['dob'].nil? ? @user.info['dob'] : '' %>" name="dob" onload="getDate()">
+            </div>
+          </div>
+          </div>
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
@@ -194,3 +203,10 @@
   </div>
   
 </div>
+<script>
+function getDate(){
+    var today = new Date();
+    document.getElementById("date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+}
+</script>
