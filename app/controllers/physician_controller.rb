@@ -10,7 +10,7 @@ class PhysicianController < ApplicationController
 
     def get_user_data
         
-        if request.get?
+        if request.get? && params["data_for_user"].blank?
             return redirect_to pages_dashboard_physician_path
         end
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])

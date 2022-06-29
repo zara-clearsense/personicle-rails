@@ -36,5 +36,5 @@ Rails.application.routes.draw do
   post 'pages/profile/remove_physician', :to=>'profile#remove_physician'
   post 'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'
   get  'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'
-
+  post 'question/create', :to => 'question#create'
 end
