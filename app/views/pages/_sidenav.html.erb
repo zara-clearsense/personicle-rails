@@ -38,17 +38,26 @@
           <li class="nav-item">
             <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_mobility_path %>">
               <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
-              <i class="fas fa-walking text-default"></i>
-              <span class="nav-link-text">Mobility</span>
+              <span class="iconify" data-icon="mdi:run-fast" data-width="30" data-height="30"></span>
+              <span class="nav-link-text ml-1">Mobility</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_sleep_path %>">
               <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
-              <i class="fas fa-walking text-default"></i>
+              <span class="iconify mr-1" data-icon="mdi:power-sleep" data-width="30" data-height="30"></span>
               <span class="nav-link-text">Sleep</span>
             </a>
           </li>
+          <% if !session[:oktastate]["physician"]%>
+           <li class="nav-item">
+            <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_dashboard_physician_questions_path %>">
+              <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
+              <span class="iconify" data-icon="mdi:frequently-asked-questions" data-width="24" data-height="24"></span>
+              <span class="nav-link-text ml-2">Physician Questions</span>
+            </a>
+          </li>
+          <% end %>
           <li class="nav-item">
             <a class="nav-link" href="<%= pages_login_path %>">
               <i class="ni ni-key-25 text-info"></i>

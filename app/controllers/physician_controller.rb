@@ -18,7 +18,7 @@ class PhysicianController < ApplicationController
         et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
        
         if params[:refresh]=="hard_refresh"
-            @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
+            @user_data =  FetchDatda.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
             
