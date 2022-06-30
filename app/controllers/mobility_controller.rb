@@ -23,7 +23,7 @@ class MobilityController < ApplicationController
       @response.each { |record|
         timestamp_data = record['timestamp'].to_datetime
         @steps_data_raw.push({'minute_value' => timestamp_data.minute + timestamp_data.hour * 60, 'weekday' => record['timestamp'].to_datetime.strftime("%A"), 'value' => record['value']})
-        @mobility_by_day.push({'timestamp' => timestamp_data.to_date, 'value' => record['value']})
+        # @mobility_by_day.push({'timestamp' => timestamp_data.to_date, 'value' => record['value']})
         # puts record['value'].class
         # puts timestamp_data, timestamp_data.class, timestamp_data.to_date.class, type(record['timestamp'])
       }
@@ -31,11 +31,11 @@ class MobilityController < ApplicationController
         
       temporary_steps = @response.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
       @mobility_aggregated = temporary_steps.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
-      puts @mobility_aggregated
+      # puts @mobility_aggregated
 
       weekly_steps = @response.group_by_week{|rec| rec['timestamp'].to_datetime}.to_h
       @weekly_aggregated = weekly_steps.map {|k,v| [k, v.sum {|r| r['value']}]}
-      puts @weekly_aggregated
+      # puts @weekly_aggregated
 
       all_minutes = [*0..1439]
       all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -55,7 +55,8 @@ class MobilityController < ApplicationController
         end
       }
     else
-      processed_steps_data = {}
+      @processed_steps_data = {}
+      @mobility_aggregated = {}
     end
   end
 end
