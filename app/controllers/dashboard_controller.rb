@@ -13,14 +13,14 @@ class DashboardController < ApplicationController
 
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
-      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true)
-      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true)
-      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true)
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
     else
       puts "not hard refresh"
-      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false)
-      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false)
-      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true)
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false,uid=session[:oktastate]['uid'])
+      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
+      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
     end 
 
     # @is_physician = session["physician"] 
