@@ -1,9 +1,8 @@
 
-<% content_for(:topnav_bg) { 'bg-default' } %>
+<% content_for(:topnav_bg) { 'bg-primary' } %>
 
 <div class="main-content" id="panel">
   
-
   <!-- Page content -->
   <div class="container-fluid mt--6">
 
@@ -30,30 +29,25 @@
        <% if  local_assigns.has_key? :user_data %>
       <div class="row mt-5">
         <div class="col-xl-4 order-xl-1">
-          <%= render 'pages/profile/physician_user', patient_id: user_id %>
+          <%# profile card %>
+          <%= render 'pages/profile/physician_user', patient_id: user_id %> 
         </div>
+        
         <div class="col-xl-8 order-xl-2">
-           <%= render 'pages/dashboard/metrics_summary', avg_sleep_week:  0,
-          avg_sleep_month: 0 , avg_steps_week: 0, avg_steps_month:0%>
+     
+            <%= render 'pages/dashboard/metrics_summary', avg_sleep_week: !@last_week_average_sleep.nil? ? @last_week_average_sleep : 0,
+          avg_sleep_month: !@last_month_average_sleep.nil? ? @last_month_average_sleep : 0,
+          avg_steps_week: !@last_week_average_steps.nil? ? @last_week_average_steps : 0,
+          avg_steps_month: !@last_month_average_steps.nil? ? @last_month_average_steps : 0%>
         </div>
       </div>
-
+           <%= render 'layouts/questionnaire', patient_id: user_id %>
       <div class="row mt-5">
-  
-            <div class="col-xl-12 order-xl-2">
-              <%= render 'pages/dashboard/charts/physician', avg_24_hour_hr: avg_24_hour_hr, last_two_weeks_min_hr: last_two_weeks_min_hr, last_two_weeks_max_hr: last_two_weeks_max_hr,user_id: user_id, user_events: user_events, daily_step_summary: daily_step_summary, weekly_step_summary: weekly_step_summary, user_data: user_data , weekly_sleep_summary: weekly_sleep_summary, daily_sleep_summary: daily_sleep_summary %>
-             </div> 
-            <%# <div id="actions">
-                <div>
-                    <label><input type="radio" name="chart" value="today" checked="checked"/>Daily</label>
-                    <label><input type="radio" name="chart" value="week"  />Weekly</label>
-                </div>
-            </div> %>
-<%# 
-            <div id="charts">
-                <div id="today" class="chart">Daily Chart</div>
-                <div id="week"  class="chart hidden">Weekly Chart</div>
-            </div> %>
+           
+        <div class="col-xl-12 order-xl-2">
+          <%= render 'pages/dashboard/charts/physician',patient_id: user_id, avg_24_hour_hr: avg_24_hour_hr, last_two_weeks_min_hr: last_two_weeks_min_hr, last_two_weeks_max_hr: last_two_weeks_max_hr,user_id: user_id, user_events: user_events, daily_step_summary: daily_step_summary, weekly_step_summary: weekly_step_summary, user_data: user_data , weekly_sleep_summary: weekly_sleep_summary, daily_sleep_summary: daily_sleep_summary %>
+          </div> 
+             
           
       </div>
         <% end %>

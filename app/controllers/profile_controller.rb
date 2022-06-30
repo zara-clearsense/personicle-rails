@@ -37,8 +37,7 @@ class ProfileController < ApplicationController
           payload[k] =  v
         end
       end
-      puts "hello"
-      puts payload
+
       payload.each do |k,v|
         @user.info[k] = v
       end
@@ -48,10 +47,10 @@ class ProfileController < ApplicationController
 
     def index
       
-      if session[:oktastate]["physician"] and not params[:users].blank?
-        redirect_to "https://personicle-physician.herokuapp.com/?auth=#{session[:oktastate]['credentials']['token']}&patient_id=#{params[:users]}", :target => "_blank" 
+      # if session[:oktastate]["physician"] and not params[:users].blank?
+      #   redirect_to "https://personicle-physician.herokuapp.com/?auth=#{session[:oktastate]['credentials']['token']}&patient_id=#{params[:users]}", :target => "_blank" 
 
-      end
+      # end
 
       if not params[:delete_account].blank? and params[:delete_account] == "delete"
         url = ENV['ACCOUNT_DELETE']
