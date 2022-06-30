@@ -13,12 +13,14 @@ class DashboardController < ApplicationController
 
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
-      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true, uid=session[:oktastate]['uid'])
-      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true)
+      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true)
+      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true)
     else
       puts "not hard refresh"
-      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false, uid=session[:oktastate]['uid'])
-      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
+      @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false)
+      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false)
+      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true)
     end 
 
     # @is_physician = session["physician"] 
@@ -37,6 +39,8 @@ class DashboardController < ApplicationController
       
       @last_week_average_sleep = @last_week_sleep_event>0? @last_week_total_sleep/@last_week_sleep_event:0
       @last_month_average_sleep = @last_month_sleep_event>0? @last_month_total_sleep/@last_month_sleep_event:0
+      # puts @response
+      # puts @last_week_sleep_event
     end
 
     if !@response_step.empty?
@@ -52,6 +56,18 @@ class DashboardController < ApplicationController
 
       @last_week_average_steps = @last_week_steps_days>0? @last_week_total_steps/@last_week_steps_days:0
       @last_month_average_steps = @last_month_steps_days>0? @last_month_total_steps/@last_month_steps_days:0
+    end
+
+    if !@response_weight.empty?
+      puts @response_weight
+      puts 'Weight Response'
+      tmp_weight = @response_weight.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
+      # puts tmp_weight
+      @daily_weight = tmp_weight.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
+      puts 'Daily Weight'
+      # puts @daily_weight
+      
+
     end
     
   end

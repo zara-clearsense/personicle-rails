@@ -30,9 +30,16 @@
   <div class="card-body">
     <!-- Chart -->
     <div class="chart">
+      <!-- Chart wrapper -->
+      <%# <% puts user_data %> 
+      <%# <%= timeline [
+        # obj
+        ["Washington", "1789-04-29", "1797-03-03"],
+        ["Adams", "1797-03-03", "1801-03-03"],
+        ["Jefferson", "1801-03-03", "1809-03-03"]
+      ] %> 
       
-      <% if user_data.length() != 0 %>
-         
+      <% if user_data.length() != 0 %> 
          <%= react_component("TimeLine", { user_data: user_data}) %>
       <%else%>
         <h3 style="color:black;">No activities for the past 3 months</h3>

@@ -34,5 +34,15 @@
     </div>
     
   <% #</div> %>
+
+  <%# Weight Chart %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @weight_data = !@daily_weight.nil? ? @daily_weight: []
+      %>
+        <%= render 'pages/dashboard/charts/weight', user_weight:@weight_data %>
+    </div>
+  </div>
+
   <%= render 'pages/footer' %>
 </div>

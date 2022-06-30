@@ -10,9 +10,13 @@
     </div>
   </div>
 </div>
+
+
 <!-- Page content -->
 <div class="container-fluid mt--6">
  
+<!-- Page content -->
+
   <div class="row">
     <div class="col" background-color="white">
      <% @data = !@processed_steps_data.nil? ? @processed_steps_data.map { |day_of_week, per_minute_data|
@@ -24,7 +28,18 @@
     </div>
     
   </div>
-  
+
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @daily_data = !@mobility_aggregated.nil? ? @mobility_aggregated: []
+      %>
+      <% @weekly_data = !@weekly_aggregated.nil? ? @weekly_aggregated: []
+      %>
+        <%= render 'pages/mobility/charts/bar_totalsteps_dayandweek.html.erb', daily_user_data:@daily_data, weekly_user_data:@weekly_data %>
+      
+    </div>
+    
+  </div>
 
   <%= render 'pages/footer' %>
 </div>

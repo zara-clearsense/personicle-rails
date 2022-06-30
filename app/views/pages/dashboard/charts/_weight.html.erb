@@ -1,0 +1,29 @@
+<div class="card">
+<div class="card-body">
+  
+    <!-- Chart -->
+    <div class="chart">
+        
+      <% if user_weight.length() != 0 %>
+         
+      <div id="charts">
+          
+        <div id="weight_chart_daily" class="chart hidden">
+
+            <%= line_chart [
+                  {
+                      name: "Daily Weight", type: "line", data: user_weight
+                  }
+              ], suffix: " kg",points:true, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Weight" %>
+
+        </div>
+          
+      <%else%>
+        <h3 style="color:black;">No activities for the past 3 months</h3>
+      <%end%>
+     
+      <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
+    </div>
+        
+  </div>
+  </div>
