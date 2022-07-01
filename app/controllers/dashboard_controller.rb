@@ -86,7 +86,7 @@ class DashboardController < ApplicationController
       
 
     end
-    
+    puts @response
   end
   
 

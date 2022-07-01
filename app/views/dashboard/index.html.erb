@@ -1,3 +1,8 @@
+<%# Import the jQuery JavaScript library and the jQuery 3Dot Context Menu plugin’s information into the online web page. %>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js">
+</script>
+<script src="context-menu.js"></script>
+<link href="context-menu.css" rel="stylesheet">
 
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
@@ -44,5 +49,148 @@
     </div>
   </div>
 
-  <%= render 'pages/footer' %>
+  <%# Data Table - User Events %>
+  <div class="card">
+  <div class="card-header border-0">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="mb-0">User Events</h3>
+      </div>
+      <div class="col text-right">
+        <a href="#!" class="btn btn-sm btn-primary">Delete Selected</a>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <!-- Projects table -->
+    <table class="table align-items-center table-flush">
+      <thead class="thead-light">
+        <tr>
+          <th><input type ="checkbox"></th>
+          <th scope="col">User ID</th>
+          <th scope="col">Start Time</th>
+          <th scope="col">End Time</th>
+          <th scope="col">Source</th>
+          <th scope="col">Event Name</th>
+          <th scope="col">List of Parameters</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+       <%# <% if user_data.length() != 0 %> 
+        <%# @response.each { |v| puts ""} %>
+        <tr>
+          <th class="context-menu" data-container-id="context-menu-items" scope="row">
+            <input type ="checkbox">
+          </th>
+          <td scope="row">
+            Facebook 
+          </td>
+          <td>
+            1,480
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="mr-2">60%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <th scope="row">
+            <input type ="checkbox">
+          </th>
+          <td scope="row">
+            Facebook
+          </td>
+          <td>
+            5,480
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="mr-2">70%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <input type ="checkbox">
+          </th>
+          <td scope="row">
+            Google
+          </td>
+          <td>
+            4,807
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="mr-2">80%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <input type ="checkbox">
+          </th>
+          <td scope="row">
+            Instagram
+          </td>
+          <td>
+            3,678
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="mr-2">75%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <input type ="checkbox">
+          </th>
+          <td scope="row">
+            twitter
+          </td>
+          <td>
+            2,645
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="mr-2">30%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+
+  <%= render 'pages/footer' %>
+
+
