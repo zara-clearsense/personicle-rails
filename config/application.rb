@@ -1,5 +1,4 @@
 require_relative 'boot'
-#require_relative '../app/controllers/dashboard_controller'
 
 require 'rails/all'
 

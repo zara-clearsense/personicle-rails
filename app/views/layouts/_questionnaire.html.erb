@@ -1,0 +1,135 @@
+<% patient = User.find_by(user_id: patient_id).name%>
+<% @physician = Physician.find_by(user_id: session[:oktastate]['uid']) %>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="<%= patient %>">Create Questions for <%= patient %></button>
+<%= form_with url: question_create_path, method: :post do  %>
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Patient:</label>
+            <input type="text" class="form-control" placeholder=<%= patient %> id="recipient-name" disabled>
+          </div>
+          <%# <div class="form-group">
+            <label for="message-text" class="col-form-label">Question:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div> %>
+          
+           <% if !@physician.questions.empty? %>
+              <div class="dropdown mb-3" >
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Your questions
+                </button>
+              
+                  <div id="myDropdown"  class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                          <% @physician.questions["questions"].each do |q|%>
+                             
+                             <li>
+                              <%=check_box_tag 'selected_questions[]', q['question']%>
+                              <%=q['question']%>
+                             </li>
+                          <% end %>
+                  </div>
+              </div>
+           <% end %>
+           
+           <div id="questions" name="questions"> 
+              <div id="tag" name="tag"> 
+              
+              </div> 
+            </div> 
+            <div id="options" name="options[]">
+              </div>
+              
+          <a href="javascript:;" id="addNewQuestion">Add New Question</a>
+        
+      </div>
+      <div class="modal-footer">
+        <input type="hidden"  name="patient_id" value="<%=patient_id %>">
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <%# <button type="submit" class="btn btn-primary" >Create</button> %>
+        <%= content_tag :button, :type => :submit, class: 'btn btn-primary' do %>
+          Create
+        <%end%>
+      </div>
+    </div>
+    <% end %>
+  </div>
+ 
+</div>
+
+<script>
+  $('#exampleModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var patient = button.data('whatever') 
+  var modal = $(this)
+  modal.find('.modal-title').text('Questions for ' + patient)
+  modal.find('.modal-body .form-group input').val(patient)
+  
+})
+
+$(document).ready(function(){
+  var count = 0;
+
+ $('#addNewQuestion').click(function(){ 
+
+ if (count == 0){
+   $('div#questions').append('<div class="input-group questionsForm mt-4"><textarea class="col-md-9" type="text" name="questions" placeholder="Your Question" class="form-control" required></textarea><input class="col-md-3" type="text" placeholder="Add Tag" name="tag" class="form-control" required>' +
+   ' <div class="input-group-append"> <button class="addOption btn btn-primary  btn-sm mt-2" type="button" >Add Option</button>'+
+    '<button class="removeNewQuestion btn btn-danger btn-sm mt-2" type="button">Remove Question</button></div>' + '</div>')
+ }  
+  count +=1;
+  $("#addNewQuestion").hide();
+
+ });
+$("div#questions").on('click', '.removeNewQuestion', function(){
+  $(this).closest('.questionsForm').remove();
+  $('.optionsForm').remove();
+   count -=1;
+   if (count == 0){
+         $("#addNewQuestion").show();
+    }
+});
+    
+$("div#questions").on('click', '.addOption', function(){
+ $('div#options').append('<div class="input-group optionsForm mt-4"><input class="col-md-8" type="text" name="options[]" placeholder="Your option" class="form-control" required>' +
+ '<div class="input-group-append"> <button class="removeNewOption btn btn-danger  btn-sm" type="button" >Remove Option</button></div>'
+ );
+ 
+});
+
+$("div#options").on('click', '.removeNewOption', function(){
+  $(this).closest('.optionsForm').remove();
+});
+
+});
+
+
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  console.log(filter)
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByClassName("existing-question");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>

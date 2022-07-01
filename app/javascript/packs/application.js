@@ -16,7 +16,7 @@ require("jquery-scrollLock.min.js")
 require("jquery.scrollbar.min.js")
 require("argon.js")
 
-import "chartkick/chart.js"
+
 //import "chartkick"
 
 //require("chartkick")
