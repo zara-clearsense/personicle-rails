@@ -6,10 +6,14 @@
 
     <div class='alert alert-<%="#{name}" %> ' >
 
-        <a href="#" class="close" data-dismiss="alert">&times</a>
+         <a href="#" class="close" data-dismiss="alert">&times</a>
 
-        <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
-
+        <%# <%= content_tag :div, msg, :class => "strong", :id => "flash_#{name}" if msg.is_a?(String) %> 
+        <div class="" id="flash_#<%=name%>" >
+                <p style="color:white;font-size:15px;text-align:center"><strong><%= msg %></strong></p>
+        </div>
+                
+  
     </div>
 
 <% end %>

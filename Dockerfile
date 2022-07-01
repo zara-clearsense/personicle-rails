@@ -11,3 +11,5 @@ COPY Gemfile.lock /personicle-frontend/Gemfile.lock
 RUN bundle install
 
 COPY . /personicle-frontend
+
+CMD ["rails", "server", "-e", "production", "-p", "3000","-b", "0.0.0.0"]
