@@ -61,6 +61,7 @@ class DashboardController < ApplicationController
     if !@response_weight.empty?
       tmp_weight = @response_weight.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
       @daily_weight = tmp_weight.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
+      puts @daily_weight
     end
     
   end
