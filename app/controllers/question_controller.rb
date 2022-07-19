@@ -23,7 +23,6 @@ class QuestionController < ApplicationController
                 @physician.questions['questions'] = [payload]
             else
                 tag_exists = @physician.questions['questions'].filter {|q| q['tag'] == tag}
-                # question_exists = @physician.questions['questions'].filter {|q| q['question'] == new_question}
 
                 if tag_exists.empty? #unique tag provided
                     @physician.questions['questions'].push(payload)
@@ -32,8 +31,8 @@ class QuestionController < ApplicationController
                     return redirect_to pages_dashboard_physician_get_user_data_path(data_for_user: patient_id)
                 end
             end
-      
-           
+
+            
             if @physician_patient.questions.empty?
                 @physician_patient.questions['questions'] = [payload]
             else
@@ -53,7 +52,12 @@ class QuestionController < ApplicationController
                 @physician_patient.questions['questions'] = get_exisitng_question_obj
             else
                 get_exisitng_question_obj.each do |ques|
-                    @physician_patient.questions['questions'].push(ques)
+                    tag_exists = @physician_patient.questions['questions'].filter {|q| q['tag'] == ques['tag']}
+                    if !tag_exists.empty?
+                        puts "question already exits"
+                        next
+                    end
+                     @physician_patient.questions['questions'].push(ques)
                 end
             end
             @physician_patient.save

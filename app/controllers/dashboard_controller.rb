@@ -68,7 +68,6 @@ class DashboardController < ApplicationController
       #puts @response_weight
       # puts 'Weight Response'
       tmp_weight = @response_weight.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h
-      # puts tmp_weight
       @daily_weight = tmp_weight.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
       # puts 'Daily Weight'
       # puts @daily_weight

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   # get 'pages/register'
   # get 'pages/recipes'
   get 'pages/dashboard/physician-questions', :to=> 'user_questions#index'
+  post 'pages/dashboard/physician-questions', :to=> 'user_questions#send_responses'
   post 'pages/profile/remove_physician', :to=>'profile#remove_physician'
   post 'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'
   get  'pages/dashboard/physician/get_user_data',  :to =>'physician#get_user_data'

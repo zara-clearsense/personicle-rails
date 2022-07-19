@@ -12,7 +12,6 @@ function TimelineChart ({user_data}) {
   })
   
   
-
   useEffect(() => {
     // console.log(user_data)
     if (google && !chart) {
