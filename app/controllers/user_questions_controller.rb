@@ -15,11 +15,10 @@ class UserQuestionsController < ApplicationController
     def send_responses   
         
         question_reponses = params.except(:authenticity_token,:controller, :action)
-        
-  
+
         physicians_questions_responses = {}
         question_reponses.each do |k,v|
-            puts  k.split(" ")[1] 
+            # puts  k.split(" ")[1] 
             payload = {"response": v , "tag": k.split(" ")[1] }
             if physicians_questions_responses.empty?
                 physicians_questions_responses[k.split(" ")[0]] = [ payload ]

@@ -1,7 +1,7 @@
 <% patient = User.find_by(user_id: patient_id).name%>
 <% @physician = Physician.find_by(user_id: session[:oktastate]['uid']) %>
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="<%= patient %>">Create Questions for <%= patient %></button>
+<% @physician_user = PhysicianUser.find_by(user_user_id: patient_id, physician_user_id: session[:oktastate]['uid']) %>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="<%= patient %>">Questions for <%= patient %></button>
 <%= form_with url: question_create_path, method: :post do  %>
 
 <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -29,11 +29,10 @@
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Your questions
                 </button>
-              
+               
                   <div id="myDropdown"  class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                       <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
                           <% @physician.questions["questions"].each do |q|%>
-                             
                              <li>
                               <%=check_box_tag 'selected_questions[]', q['question']%>
                               <%=q['question']%>
@@ -42,7 +41,27 @@
                   </div>
               </div>
            <% end %>
-           
+          
+              <% if !@physician_user.questions.empty? %>
+              
+                <div class="dropdown mb-3" >
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMesnuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Existing questions
+                    </button>
+                  <div id="myDropdown"  class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                      <% if !@physician_user.questions['questions'].empty? %>
+                          <button type="submit" class="btn btn-danger btn btn-sm">Remove selected</button>
+                      <% end %>
+                              <% @physician_user.questions["questions"].each do |q|%>
+                                <li>
+                                  <%=check_box_tag 'delete_selected_questions[]', q['question']%>
+                                  <%=q['question']%>
+                                </li>
+                              <% end %>
+                      </div>
+                  </div>
+              <% end %>
+      
            <div id="questions" name="questions"> 
               <div id="tag" name="tag"> 
               

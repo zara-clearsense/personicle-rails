@@ -6,6 +6,7 @@ class DashboardController < ApplicationController
 
 
   def index
+    puts params
     puts session[:oktastate]['credentials']['token']
     
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
@@ -63,7 +64,19 @@ class DashboardController < ApplicationController
       @daily_weight = tmp_weight.map {|k,v| [k, v.sum {|r| r['value']}]}.to_h
       puts @daily_weight
     end
-    
+    def delete_event
+      # url = "https://api.personicle.org/data/write/event/delete"?user_id=userid&event_id=some_event_id;another_event_id
+      # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
+      # params[:select-all] = select-all_value
+      events = params[:selected_events]
+      if !events.nil?
+        events = events.join(";")
+        url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+        res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+        redirect_to pages_dashboard_path, refresh: "hard_refresh"
+      end
+      
+    end
   end
   
 
