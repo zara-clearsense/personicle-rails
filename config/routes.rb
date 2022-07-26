@@ -41,6 +41,6 @@ Rails.application.routes.draw do
   post 'question/create', :to => 'question#create'
   post 'question/delete', :to => 'question#delete_questions'
   get  'image/upload', :to => 'image#upload'
-  post 'image/upload', :to => 'image#upload_image', :as => 'upload_image'
+  post 'image/send_packet', :to => 'image#send_packet', :as => 'send_packet'
   post 'pages/dashboard/delete-event', :to => 'dashboard#delete_event', :as => 'delete_user_events'
 end

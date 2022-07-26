@@ -36,7 +36,7 @@ class FetchData
         end
     end
 
-    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,start_date=st, end_date=et, is_hard_refresh=refresh, user_id = uid)
+    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,start_date=st, end_date=et, is_hard_refresh=hard_refresh, user_id = uid)
         if data_source.nil?
             
             url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&datatype="+datatype+"&user_id="+user_id
