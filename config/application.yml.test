@@ -1,0 +1,32 @@
+# For local dev
+OKTA_CLIENT_ID: "your-okta-client-id"
+OKTA_CLIENT_SECRET: "yout-okta-client-secret"
+PHYSICIAN_GROUP_ID: "okta-physician-group-id"
+GET_USER_GROUP_TOKEN: "SSWS {okta-api-token}"
+OKTA_ORG: "your-org"
+OKTA_DOMAIN: "okta"
+OKTA_URL: "https://{your-okta-domain}.okta.com"
+OKTA_ISSUER: "https://{your-okta-domain}/oauth2/default"
+OKTA_AUTH_SERVER_ID: "default"
+OKTA_REDIRECT_URI: "http://localhost:3000/users/auth/oktaoauth/callback" #must match with one specified in okta app
+GOOGLE_IDP: "your-google-idp-id"
+
+EVENTS_ENDPOINT: "https://api.personicle.org/data/read/events"
+
+FITBIT_CONNECTION: "https://personicle-ingestion-staging.azurewebsites.net/fitbit/connection"
+GOOGLEFIT_CONNECTION: "https://personicle-ingestion-staging.azurewebsites.net/google-fit/connection"
+OURA_CONNECTION: "https://personicle-ingestion-staging.azurewebsites.net/oura/connection"
+
+EVENT_UPLOAD: "https://api.personicle.org/data/write/event/upload"
+TOKEN_INTROSPECTION: "https://{your-okta-domain}/oauth2/default/v1/introspect"
+
+DATASTREAMS_ENDPOINT: "https://api.personicle.org/data/read/datastreams"
+ACCOUNT_DELETE: "https://api.personicle.org/data/write/account/delete"
+
+BASE_64_CLIENT: "genreate this using the command below"
+# echo -n <your-okta-client-id>:<your-okta-client-secret> | base64
+
+DB_HOST: "your-db-host-name"
+DB_DATABASE: "your-database-name"
+DB_USERNAME: "your-database-username"
+DB_PASSWORD: "your-database-password"

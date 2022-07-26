@@ -44,17 +44,43 @@
             <%# </div> %>
           </div>
         </div>
+         <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+
+              <label class="form-control-label" for="input-dob">Date of Birth</label>
+             <input type="date" id="input-dob" class="form-control"  max="<%= Time.now.strftime("%Y-%m-%d")%>" value="<%= !@user.info['dob'].nil? ? @user.info['dob'] : '' %>" name="dob" onload="getDate()">
+            </div>
+          </div>
+          </div>
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
-              <label class="form-control-label" for="input-height">Height</label>
-              <input type="text" id="input-height" class="form-control" placeholder="<%= !@user.info['height'].nil? ? @user.info['height'] : 'Enter height' %>" name="height">
+
+             <label class="form-control-label" for="input-height">Height</label>
+              <div class="input-group mb-3">
+                  
+                      <input type="text" id="input-height" class="form-control" placeholder="<%= !@user.info['height'].nil? ? @user.info['height'] : 'Enter height' %>" name="height">
+                  <div class="input-group-append">
+                    <span class="input-group-text">cm</span>
+                  </div>
+              </div>
+          
+            
+            
             </div>
           </div>
           <div class="col-lg-6">
             <div class="form-group">
-              <label class="form-control-label" for="input-weight">Weight</label>
-              <input type="text" id="input-weight" class="form-control" placeholder="<%= !@user.info['weight'].nil? ? @user.info['weight'] : 'Enter weight' %>" name="weight">
+            <label class="form-control-label" for="input-weight">Weight</label>
+              <div class="input-group mb-3">
+                  
+                <input type="text" id="input-weight" class="form-control" placeholder="<%= !@user.info['weight'].nil? ? @user.info['weight'] : 'Enter weight' %>" name="weight">
+                    <div class="input-group-append">
+                    <span class="input-group-text">lb</span>
+                  </div>
+              </div>
+              
             </div>
           </div>
         </div>
@@ -194,3 +220,11 @@
   </div>
   
 </div>
+<script>
+
+function getDate(){
+    var today = new Date();
+    document.getElementById("date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+}
+</script>

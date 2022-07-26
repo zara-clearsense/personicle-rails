@@ -11,14 +11,14 @@ class SleepController < ApplicationController
         et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
         if params[:refresh]=="hard_refresh"
             puts "hard refresh"
-            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true)
-            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=true)
-            @response_run = FetchData.get_events(session, event_type="Running", st,et,hard_refresh=true)
+            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
+            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
+            @response_run = FetchData.get_events(session, event_type="Running", st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
           else
             puts "not hard refresh"
-            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false)
-            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=false)
-            @response_run = FetchData.get_events(session, event_type="Running",st,et, hard_refresh=false)
+            @response = FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false,uid=session[:oktastate]['uid'])
+            @response_bike = FetchData.get_events(session, event_type="Biking", st,et,hard_refresh=false,uid=session[:oktastate]['uid'])
+            @response_run = FetchData.get_events(session, event_type="Running",st,et, hard_refresh=false,uid=session[:oktastate]['uid'])
           end 
 
         if !@response.empty?

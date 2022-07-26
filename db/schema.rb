@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_17_171919) do
+ActiveRecord::Schema.define(version: 2022_06_28_174104) do
 
   create_table "physician_users", force: :cascade do |t|
     t.string "user_user_id"
     t.string "physician_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "questions", default: {}
   end
 
   create_table "physicians", force: :cascade do |t|
@@ -26,6 +27,7 @@ ActiveRecord::Schema.define(version: 2022_06_17_171919) do
     t.string "last_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "questions", default: {}
   end
 
   create_table "sessions", force: :cascade do |t|

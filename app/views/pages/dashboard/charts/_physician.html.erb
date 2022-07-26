@@ -74,10 +74,15 @@
     <!-- Chart -->
     <div class="chart">
         
-      <% if user_data.length() != 0 or user_events.length()!=0 %>
+    
          
       <div id="charts">
-          
+            <%= form_with url: pages_dashboard_physician_get_user_data_path, local: true, method: :post do  %>
+                <input type="hidden" name="refresh" value="hard_refresh">
+                <input type="hidden" name="data_for_user" value=<%= patient_id %>>
+                <button  class="btn btn-primary" type="submit">Refresh</button>
+              <% end %>
+        <% if user_data.length() != 0 or user_events.length()!=0 %>
         <div id="activity_chart_daily" class="chart hidden">
 
             <%= column_chart [
