@@ -73,7 +73,13 @@
             </a>
           </li>
           <% end %>
-
+         <li class="nav-item">
+            <a class="nav-link" href=<%= image_upload_path %> >
+              <%# <i class="fa-solid fa-user-doctor"></i> %>
+              <span class="iconify" data-icon="bi:file-earmark-image"></span>
+              <span class="nav-link-text ml-3">Upload image</span>
+            </a>
+          </li>
           <%# <% if !session[:oktastate]["physician"]%>
          
           <%# <% end %> 
