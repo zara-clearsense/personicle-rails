@@ -16,20 +16,45 @@ class PhysicianController < ApplicationController
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
         st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
         et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        
+        # puts ((Time.now + 2.days).strftime("%Y-%m-%d %H:%M:%S.%6N")  )
        
         if params[:refresh]=="hard_refresh"
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
-            
+            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
         else
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=false,uid=params["data_for_user"])
-      
+            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
+            
         end
-       
-        if !@user_hr.empty?
+         
+         if !@user_responses.empty?
+            # puts @user_responses
+            responses_for_current_physician = @user_responses.filter {|resp| resp['source'].split(':')[1] == session[:oktastate]['uid']} 
+            timestamped_responses = []
+            responses_for_current_physician.each do |rec|
+                    current_timestamp = rec['timestamp']
+                    responses = rec['value']
+                    responses.each do |resp|
+                        timestamped_responses.push({'timestamp'=> current_timestamp, 'question_id'=> resp['question-id'], 'response' => resp['value']})
+                    end
+            end
+# [{timestamp=> <>, question_id => <>, response => <>}]
+            question_indexed_responses = timestamped_responses.group_by {|rec| [rec['question_id'], rec['timestamp'].to_date, rec['response']]}.to_h
+            # @response_count = question_indexed_responses.map{|k,v| [k, v.size()]}
+             @patient_responses = question_indexed_responses.map{|k,v| [k, v.size()]}
+            # [[question-id, date, response], count]
+            # puts @response_count    
+            # unique_questions 
+            @unique_tags  = @patient_responses.uniq{|rec| rec[0][0]}.collect{|rec| rec[0][0]}
+           
+        end
+
+         if !@user_hr.empty?
             one_day_ago = @user_hr.select {|hr| hr['timestamp'] >= 1.day.ago}
            
             one_day_ago_max_hr =  !one_day_ago.empty? ? one_day_ago.max_by {|hr| hr['value']}.value : 0
@@ -107,7 +132,7 @@ class PhysicianController < ApplicationController
         end
 
         respond_to do |format|
-            format.html {render :index, locals: {avg_24_hour_hr: @avg_24_hour_hr,last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
+            format.html {render :index, locals: {unique_question_tags: @unique_tags, patient_responses: @patient_responses,avg_24_hour_hr: @avg_24_hour_hr,last_two_weeks_min_hr: @last_two_weeks_min_hr,last_two_weeks_max_hr: @last_two_weeks_max_hr,weekly_step_summary: @weekly_step_summary, daily_step_summary: @daily_step_summary, user_events: @user_events, daily_sleep_summary: @daily_sleep_summary, weekly_sleep_summary: @weekly_sleep_summary, user_data: @user_data, physician: @physician, user_id: params["data_for_user"]} }
         end
     end
 

@@ -3,7 +3,9 @@ class QuestionController < ApplicationController
     def index
         
     end
-
+    def delete_questions
+        puts params
+    end
     def create
         @physician = Physician.find_by(user_id: session[:oktastate]['uid'])
         # puts params.except(:authenticity_token, :action, :controller)
@@ -13,24 +15,38 @@ class QuestionController < ApplicationController
         options = params[:options].to_a
         tag = params[:tag]
         @physician_patient = PhysicianUser.find_by(user_user_id: patient_id, physician_user_id: session[:oktastate]['uid'] )
-        if !new_question.blank?
-            payload = {
-                "question": new_question,
-                "tag": tag.gsub(/\s+/, ""),
-                "options": options,
-            }
-            if @physician.questions.empty?
-                @physician.questions['questions'] = [payload]
-            else
-                tag_exists = @physician.questions['questions'].filter {|q| q['tag'] == tag}
 
-                if tag_exists.empty? #unique tag provided
-                    @physician.questions['questions'].push(payload)
-                else
-                    flash[:warning] = "Tag already exists. Please provide a different Tag."
-                    return redirect_to pages_dashboard_physician_get_user_data_path(data_for_user: patient_id)
-                end
+        delete_questions = params[:delete_selected_questions]
+       
+
+        if !delete_questions.nil?
+            updated_questions = @physician_patient.questions['questions'].filter {|q| delete_questions.include?(q['question']) == false}
+            puts "hello"
+            puts updated_questions.class
+            @physician_patient.questions['questions'] = updated_questions
+
+            @physician_patient.save
+          
+        end
+
+        if !new_question.blank?
+        payload = {
+            "question": new_question,
+            "tag": tag.gsub(/\s+/, ""),
+            "options": options,
+        }
+        if @physician.questions.empty?
+            @physician.questions['questions'] = [payload]
+        else
+            tag_exists = @physician.questions['questions'].filter {|q| q['tag'] == tag}
+
+            if tag_exists.empty? #unique tag provided
+                @physician.questions['questions'].push(payload)
+            else
+                flash[:warning] = "Tag already exists. Please provide a different Tag."
+                return redirect_to pages_dashboard_physician_get_user_data_path(data_for_user: patient_id)
             end
+        end
 
             
             if @physician_patient.questions.empty?
