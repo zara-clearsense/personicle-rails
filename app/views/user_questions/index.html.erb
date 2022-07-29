@@ -2,10 +2,9 @@
 <h1 class="ml-3 mb-3">
     Questionnaire
 </h1>
-<%= form_with url: pages_dashboard_physician_questions_path , method: :post do  %>
+<%= form_with url: pages_dashboard_physician_questions_path , multipart: true, method: :post do  %>
 <div class="accordion mt-2" id="accordionExample">
     <% @questions.each do |key,value|%>
-        
         <%id = key[1].gsub(/\s+/, "")+key[0]%> 
         <%# unique id for each accordion %>
         <div class="card">
@@ -16,25 +15,54 @@
                     </button>
                 </h2>
             </div>
-
+            <div class="spinner-border text-primary" 
+                id="spinner-questionnaire" role="status" style="margin:0 auto;display:none;">
+                <span class="sr-only">Loading...</span>
+            </div>
             <div id="<%= id %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
                     <% value['questions'].each do |q|%>
-        
+                        <%# <%= puts q['response_type']=='image' %> 
                     <ul>
                         <li class="<%=q['question'] %>">
                         <p><%=q['question']%></p>
-                            <% q['options'].each do |option|%>
+                         <% if q['response_type'] == 'image' %>
+                            <div> 
+                                <fieldset class="my-2">
+                                   
+                                    <%= file_field_tag :picture , :multiple => true, name: "#{key[0] + ' ' + q['tag'] + ' ' + 'image'}[]" %>
+                                </fieldset>
+                            </div>    
+                         <% elsif q['response_type'] == 'string' %>
+                         <div>
+                            <fieldset class="my-2">
+                                <input class="" type="text" name="<%=key[0]%> <%=q['tag']%> string" >
+                            </fieldset>
+                            </div>
+                         
+                         <% elsif q['response_type'] == 'numeric' %>
+                            <div>
+                            <fieldset class="my-2">
+                                <input class="" type="number" name="<%=key[0]%> <%=q['tag']%> numeric" >
+                            </fieldset>
+                            </div>
+                         
+                         <% else %>
+                             <% q['options'].each do |option|%>
                                 
                                     <div class="form-check" id ="<%=q['tag'] %>">
-                                        <input class="form-check-input" type="radio" name="<%=key[0]%> <%=q['tag'] %>" value="<%=option%>">
+                                       
+                                        <input class="form-check-input" type="radio" name="<%=key[0]%> <%=q['tag']%> survey" value="<%=option%>">
                                         <label class="form-check-label" for="<%=q['tag']%> % ">
                                             <%= option %>
                                         </label>
                                     </div>
                             
                             <% end %>
-                            <textarea class="form-control col-md-6" id="exampleFormControlTextarea1"  placeholder="Additional response (Optional)" rows="1"></textarea>
+
+                         <% end%>
+                           
+                             <textarea class="form-control col-md-6" id="exampleFormControlTextarea1"  placeholder="Additional response (Optional)" rows="1"></textarea> 
                         </li>
                     </ul>
                     

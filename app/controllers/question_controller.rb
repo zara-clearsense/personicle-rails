@@ -17,7 +17,7 @@ class QuestionController < ApplicationController
         @physician_patient = PhysicianUser.find_by(user_user_id: patient_id, physician_user_id: session[:oktastate]['uid'] )
 
         delete_questions = params[:delete_selected_questions]
-       
+        
 
         if !delete_questions.nil?
             updated_questions = @physician_patient.questions['questions'].filter {|q| delete_questions.include?(q['question']) == false}
@@ -34,6 +34,7 @@ class QuestionController < ApplicationController
             "question": new_question,
             "tag": tag.gsub(/\s+/, ""),
             "options": options,
+            "response_type": params[:response_type]
         }
         if @physician.questions.empty?
             @physician.questions['questions'] = [payload]
