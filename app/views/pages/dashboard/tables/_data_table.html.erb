@@ -46,10 +46,10 @@
      <% if !@response.empty? %>
         <div class="accordion mt-2" id="accordionExample">
             <% @response.each do |record|%>
-            <% puts record['parameters'].to_json %> 
+           
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
-            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" onClick="handleSelect(this)"/>
+            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all"/>
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
@@ -69,7 +69,7 @@
           <%=record['event_name']%>
           </td>
           <td scope="row">
-            <a href="#" class="overflow" data-toggle="popover" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName%> Version: <%=record['parameters'].source_device.version%>  Details URL: <%=record['parameters'].source_device.detailsUrl%>  ">Click to see Details</a>
+            <a href="#" class="overflow" data-animation="true" data-toggle="popover" data-trigger="hover click"  title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName%> Version: <%=record['parameters'].source_device.version%>  Details URL: <%=record['parameters'].source_device.detailsUrl%>  ">Click to see Details</a>
           </td>
         </tr>
         <% end %> 
@@ -112,18 +112,18 @@ $( "a" ).click(function( event ) {
 });
 
 // Handle Select
-function handleSelect(source) {
-  console.log($(source).attr('id'))
-  if(document.getElementById($(source).attr('id')).checked) {
-      console.log("Adding event id" + $(source).attr('id'))
-      eventIDs.push($(source).attr('id').replace("row-check-",""))
-   } else {
-      console.log("Removing event id" + $(source).attr('id'))
-      eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
-;});
-   }
+// function handleSelect(source) {
+//   console.log($(source).attr('id'))
+//   if(document.getElementById($(source).attr('id')).checked) {
+//       console.log("Adding event id" + $(source).attr('id'))
+//       eventIDs.push($(source).attr('id').replace("row-check-",""))
+//    } else {
+//       console.log("Removing event id" + $(source).attr('id'))
+//       eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
+// ;});
+//    }
 
-}
+// }
 
 // Pop-Up Box for Parameters
 $(document).ready(function(){
