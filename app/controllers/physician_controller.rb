@@ -38,18 +38,42 @@ class PhysicianController < ApplicationController
                     current_timestamp = rec['timestamp']
                     responses = rec['value']
                     responses.each do |resp|
-                        timestamped_responses.push({'timestamp'=> current_timestamp, 'question_id'=> resp['question-id'], 'response' => resp['value']})
+                        timestamped_responses.push({'timestamp'=> current_timestamp, 'question_id'=> resp['question-id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
                     end
             end
 # [{timestamp=> <>, question_id => <>, response => <>}]
-            question_indexed_responses = timestamped_responses.group_by {|rec| [rec['question_id'], rec['timestamp'].to_date, rec['response']]}.to_h
+            question_indexed_responses = timestamped_responses.group_by {|rec| [rec['question_id'], rec['timestamp'].to_date, rec['response'], rec['response_type']]}.to_h
+            image_responses = timestamped_responses.filter {|rec| rec['response_type'] == 'image'}.group_by{|rec| rec['question_id']}.to_h
             # @response_count = question_indexed_responses.map{|k,v| [k, v.size()]}
              @patient_responses = question_indexed_responses.map{|k,v| [k, v.size()]}
             # [[question-id, date, response], count]
             # puts @response_count    
             # unique_questions 
             @unique_tags  = @patient_responses.uniq{|rec| rec[0][0]}.collect{|rec| rec[0][0]}
-           
+            
+            @images =  @patient_responses.select{|rec| rec[0][3] == 'image'}
+            # puts "hello images"
+            # puts image_responses
+            @image_urls = []
+            # image_keys_array = []
+            image_responses.each do |k,v|
+                v.each do |val|
+                    image_keys = val['response'].split(";")
+                        image_keys.each do |key|
+                        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                        @image_urls.push([k, val['timestamp'], res['image_url']])
+                    end
+                end
+            end
+            @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
+            # @images.each do |i|
+            #     image_keys = i[0][2].split(";")
+            #     image_keys.each do |key|
+            #         # image_keys_array.push(key)
+            #      res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            #      @image_urls.push(res['image_url'])
+            #     end
+            # end
         end
 
          if !@user_hr.empty?

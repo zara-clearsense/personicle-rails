@@ -86,6 +86,8 @@ class UserQuestionsController < ApplicationController
     end
 
     def send_responses   
+        puts "hello"
+        puts params
         question_reponses = params.except(:authenticity_token,:controller, :action)
         physicians_questions_responses = {}
         question_reponses.each do |k,v|
@@ -143,22 +145,25 @@ class UserQuestionsController < ApplicationController
             final_data_packet.append(image_response_packet) if !image_response_packet.empty?
 
             final_data_packet =  final_data_packet.flatten!
-            # puts "final data packet"
-            # puts final_data_packet
-             data = {"streamName": "com.personicle.individual.datastreams.subjective.physician_questionnaire", "individual_id": "#{session[:oktastate]["uid"]}",
-                     "source": "Personicle:#{key}", "unit": "", "confidence": 100, "dataPoints":[{ "timestamp": Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N"), "value": final_data_packet }]
-                    }
-           
-             res = RestClient::Request.execute(:url => ENV['DATASTREAM_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
-            #  puts res  
             
-               if res.code == 200
+            
+            if !final_data_packet.nil?
+                data = {"streamName": "com.personicle.individual.datastreams.subjective.physician_questionnaire", "individual_id": "#{session[:oktastate]["uid"]}",
+                        "source": "Personicle:#{key}", "unit": "", "confidence": 100, "dataPoints":[{ "timestamp": Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N"), "value": final_data_packet }]
+                        }
+            
+                res = RestClient::Request.execute(:url => ENV['DATASTREAM_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
+                if res.code == 200
                     flash[:success] = "Your responses are recorded"
-                    redirect_to pages_dashboard_physician_questions_path(responses_send: true)
+                    return redirect_to pages_dashboard_physician_questions_path(responses_send: true)
                 else
                     flash[:warning] = "Something went wrong. Please try again"
-                    redirect_to pages_dashboard_physician_questions_path(responses_send: false)
+                    return redirect_to pages_dashboard_physician_questions_path(responses_send: false)
                 end
+            end
+            flash[:warning] = "Something went wrong. Please try again"
+            return  redirect_to pages_dashboard_physician_questions_path(responses_send: false)
+              
             end
       
     end

@@ -2,8 +2,19 @@
 <h1 class="ml-3 mb-3">
     Questionnaire
 </h1>
+<style>
+</style>
+
 <%= form_with url: pages_dashboard_physician_questions_path , multipart: true, method: :post do  %>
+
 <div class="accordion mt-2" id="accordionExample">
+    <div class="overlay d-flex justify-content-center align-items-center  text-center">
+  <div class="">  
+    <div class="spinner-grow text-primary" id="spinner-questionnaire" role="status" style="width: 3rem; height: 3rem; z-index: 20;">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
     <% @questions.each do |key,value|%>
         <%id = key[1].gsub(/\s+/, "")+key[0]%> 
         <%# unique id for each accordion %>
@@ -15,10 +26,7 @@
                     </button>
                 </h2>
             </div>
-            <div class="spinner-border text-primary" 
-                id="spinner-questionnaire" role="status" style="margin:0 auto;display:none;">
-                <span class="sr-only">Loading...</span>
-            </div>
+           
             <div id="<%= id %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
                     <% value['questions'].each do |q|%>
@@ -67,7 +75,7 @@
                     </ul>
                     
                     <% end %>
-                   <button type="submit" class="btn btn-primary ml-4 mt-2">Respond</button>
+                   <button type="submit" id='submit-responses' class="btn btn-primary ml-4 mt-2">Respond</button>
                 </div>
             </div>
         </div>
@@ -76,3 +84,12 @@
 <% end %>
 
 <% end %>
+<script type="text/javascript">
+
+$('form').on('submit', function() {
+   document.getElementById('spinner-questionnaire').style.display = 'block';
+   document.getElementById('submit-responses').disabled = true;
+});
+   document.getElementById('spinner-questionnaire').style.display = 'none';
+
+</script>

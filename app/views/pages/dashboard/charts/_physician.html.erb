@@ -25,7 +25,6 @@
     <div class="card-body col-sm-4">
       <h5 class="card-title text-center">Max 2 Weeks Heart Rate</h5>
       <p class="card-text text-center"><%= last_two_weeks_max_hr %> </p>
-   
     </div>
   </div>
 </div>
@@ -84,23 +83,64 @@
                 <input type="hidden" name="data_for_user" value=<%= patient_id %>>
                 <button  class="btn btn-primary" type="submit">Refresh</button>
               <% end %>
-        <% if user_data.length() != 0 or user_events.length()!=0 or patient_responses.length() !=0%>
+   
 
+        <% if user_data.length() != 0 or user_events.length()!=0 or patient_responses.length() !=0%>
+         <% 
+           @numeric_responses =  patient_responses.filter {|rec| rec[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
+
+          
+          # puts @numeric_responses
+         %>
         <% unique_question_tags.each do |tag|%>
           <div id="<%=tag%>_chart_daily" class="chart hidden">
            <%
               @patient_responses=  patient_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1]}
-              @data = []
+              numeric_responses = []
+              avg_numeric_responses=[]
+              @numeric_responses_data = []
+              show_numeric_chart = false
+              show_image_chart = false
+
+          
+                 @data = []
                  @patient_responses.each do |k,v|
+
+                  numeric_responses = v.filter {|r| r[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
+                  image_responses = v.filter {|r| r[0][3] == "image"}.group_by {|rec| rec[0][1]}
+                  avg_numeric_responses = numeric_responses.map {|k,v|  [k, v.sum {|r| r[1] * r[0][2].to_i}/v.sum{ |r| r[1]}] }
+                  if !avg_numeric_responses.empty?
+                      avg_numeric_responses.each do |k,v|
+                        @numeric_responses_data.push(
+                          [k,v] 
+                        )
+                       end
+                    show_numeric_chart = true
+                  elsif !image_responses.empty?
+                    show_image_chart = true 
+                  else
                       v.each do |key,val|
                         @data.push({
                           name: key[2], data: [ [k,val] ]
                         })
-                        
                       end
+                  end
                  end
            %> 
-           <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>
+            
+               <% if show_numeric_chart == true %> 
+                <%# <% puts @numeric_responses_data %>
+                <%# <% puts @data %> 
+
+                <%= line_chart  @numeric_responses_data,points:false, title: tag, round: 2, loading: "Loading...",
+                    xtitle: "", ytitle: ""
+                  %>
+                <% elsif show_image_chart == true%>
+                  <%= react_component("ImageVisualization", {user_id: user_id, image_urls: image_urls, tag: tag, auth: session[:oktastate]['credentials']['token']}) %>
+              <% else %> 
+                <%# <% puts @data %>  
+                  <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
+                <%end%>  
           </div>
 
           <div id="<%=tag%>_chart_weekly" class="chart hidden">
