@@ -6,6 +6,7 @@ class DashboardController < ApplicationController
 
 
   def index
+    puts params
     puts session[:oktastate]['credentials']['token']
     
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")

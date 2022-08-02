@@ -36,19 +36,23 @@ class FetchData
         end
     end
 
-    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,start_date=st, end_date=et, is_hard_refresh=refresh, user_id = uid)
-
-        url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&source="+data_source+"&datatype="+datatype+"&user_id="+user_id
-        if !is_hard_refresh
+    def self.get_datastreams(ses=session,data_source=source, datatype=data_type,start_date=st, end_date=et, is_hard_refresh=hard_refresh, user_id = uid)
+        if data_source.nil?
             
-            Rails.cache.fetch([:datastreams,datatype,user_id], expires_in: 20.minutes) do
-                JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-            end
+            url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&datatype="+datatype+"&user_id="+user_id
         else
-            res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-            Rails.cache.write([:datastreams,datatype,user_id],res)
-            res
+            url = ENV['DATASTREAMS_ENDPOINT']+"?startTime="+start_date+"&endTime="+end_date+"&source="+data_source+"&datatype="+datatype+"&user_id="+user_id
         end
+        
+            if !is_hard_refresh
+                Rails.cache.fetch([:datastreams,datatype,user_id], expires_in: 20.minutes) do
+                    JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                end
+            else
+                res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                Rails.cache.write([:datastreams,datatype,user_id],res)
+                res
+            end
 
     end
 end

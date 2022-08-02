@@ -7,8 +7,6 @@
 }
 
 </style>
-
-
 <div class="card">
   <div class="card-header">
     Current Vitals
@@ -38,7 +36,13 @@
               <label class="btn btn-secondary">
                 <input type="radio" name="charttype" value="activity_chart" > Activity
               </label>
-        </div>
+              <% unique_question_tags.each do |tag| %>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="charttype" value="<%=tag%>_chart"> <%=tag%>
+                </label>
+              <% end %>
+  </div>
+
 <div class="card mr-1">
 
   <div class="card-header bg-transparent">
@@ -52,14 +56,14 @@
         <ul  class="nav nav-pills justify-content-end">
           <li class="nav-item mr-2 mr-md-0" value="daily" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
           
-          <div id="actions" class="btn-group btn-group-toggle" data-toggle="buttons">
-              <label class="btn btn-secondary">
-                <input type="radio" name="chart" value="daily" checked> Daily
-              </label>
-              <label class="btn btn-secondary">
-                <input type="radio" name="chart" value="weekly" > Weekly
-              </label>
-          </div>
+           <div id="actions" class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                  <input type="radio" name="chart" value="daily" checked> Daily
+                </label>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="chart" value="weekly" > Weekly
+                </label>
+            </div>
            
           </li>
           <li class="nav-item"  data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
@@ -74,25 +78,55 @@
     <!-- Chart -->
     <div class="chart">
         
-    
-         
       <div id="charts">
             <%= form_with url: pages_dashboard_physician_get_user_data_path, local: true, method: :post do  %>
                 <input type="hidden" name="refresh" value="hard_refresh">
                 <input type="hidden" name="data_for_user" value=<%= patient_id %>>
                 <button  class="btn btn-primary" type="submit">Refresh</button>
               <% end %>
-        <% if user_data.length() != 0 or user_events.length()!=0 %>
+        <% if user_data.length() != 0 or user_events.length()!=0 or patient_responses.length() !=0%>
+
+        <% unique_question_tags.each do |tag|%>
+          <div id="<%=tag%>_chart_daily" class="chart hidden">
+           <%
+              @patient_responses=  patient_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1]}
+              @data = []
+                 @patient_responses.each do |k,v|
+                      v.each do |key,val|
+                        @data.push({
+                          name: key[2], data: [ [k,val] ]
+                        })
+                        
+                      end
+                 end
+           %> 
+           <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>
+          </div>
+
+          <div id="<%=tag%>_chart_weekly" class="chart hidden">
+           <%
+              @patient_responses=  patient_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
+              @data = []
+                 @patient_responses.each do |k,v|
+                      v.each do |key,val|
+                        @data.push({
+                          name: key[2], data: [ [k,val] ]
+                        })
+                        
+                      end
+                 end
+           %> 
+           <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
+          </div>
+        <%end%>
         <div id="activity_chart_daily" class="chart hidden">
 
             <%= column_chart [
                   {
                       name: "Daily Steps", type: "column", data: daily_step_summary
                   }
-              ], suffix: " steps",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Steps" %>
-
+              ], suffix: " steps",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Steps" %> 
         </div>
-
 
         <div id="activity_chart_weekly" class="chart hidden">
 
