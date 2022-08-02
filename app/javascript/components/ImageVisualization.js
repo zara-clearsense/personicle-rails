@@ -25,8 +25,8 @@ const images = urls_array
 return (
   <div className="mt-2" >
     <SimpleImageSlider
-      width="90%"
-      height="90%"
+      width="95%"
+      height="68%"
       images={images}
       showBullets={true}
       showNavs={true}
