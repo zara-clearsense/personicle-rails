@@ -56,11 +56,11 @@
        <%# <% if user_data.length() != 0  %>
         <%# @response.each { |v| puts ""} %>
     <div class="row">
-    <div class="col" background-color="white">
-     <% @data_table = !@response.nil? ? @response: []
-      %>
-        <%= render 'pages/dashboard/tables/data_table', user_data_table:@data_table %>
-    </div>
+      <div class="col" background-color="white">
+      <% @data_table = !@response.nil? ? @response: []
+        %>
+          <%= render 'pages/dashboard/tables/data_table', user_data_table:@data_table %>
+      </div>
   </div> 
 
 <%# Footer %>
