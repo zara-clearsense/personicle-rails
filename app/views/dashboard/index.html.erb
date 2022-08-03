@@ -59,7 +59,7 @@
     <div class="col" background-color="white">
      <% @data_table = !@response.nil? ? @response: []
       %>
-        <%= render 'pages/dashboard/tables/data_table', user_data_table:@data_table %>
+        <%= render 'pages/dashboard/tables/data_table', user_data_table:@response %>
     </div>
   </div> 
 
