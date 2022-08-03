@@ -54,6 +54,10 @@ class MobilityController < ApplicationController
           @processed_steps_data[week_day] = summarized_data
         end
       }
+
+      temporary_steps = @response.group_by_day{|rec| rec['timestamp'].to_datetime}.to_h 
+      @mobility_aggregated = temporary_steps.map {|k,v| {k => v.sum {|r| r['value']}}}
+      puts @mobility_aggregated
     else
       @processed_steps_data = {}
       @mobility_aggregated = {}

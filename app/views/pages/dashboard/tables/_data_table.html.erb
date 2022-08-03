@@ -1,9 +1,9 @@
+
 <%# CSS and JavaScript for Pagination %>
- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>  
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
 
-<%#  %>
 <%# Data Table - User Events %>
   <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %> 
   <div class="card">
@@ -23,13 +23,17 @@
     <table id="delete-table" class="table align-items-center table-flush">
       <thead class="thead-light">
         <tr>
+
           <th><input type="checkbox" class="form-check-input" name="select-all" id="select-all" value="select-all_value" /></th>
+
           <th scope="col">Event ID</th>
           <th scope="col">Start Time</th>
           <th scope="col">End Time</th>
           <th scope="col">Source</th>
           <th scope="col">Event Name</th>
           <th scope="col">List of Parameters</th>
+          <th scope="col"></th>
+
         </tr>
       </thead>
       <tbody>
@@ -44,6 +48,7 @@
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
+
           </td>
           <td id="second">
             <%=record['start_time']%>
@@ -51,6 +56,7 @@
           <td>
             <div class="d-flex align-items-center">
               <span class="mr-2"><%=user_data_table[0]['end_time']%></span>
+
             </div>
           </td>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
@@ -76,6 +82,7 @@
 <script language="JavaScript">
 
 // Select All CheckBoxes
+
 $('#select-all').click(function(event) {   
     if(this.checked) {
         // Iterate each checkbox
@@ -89,10 +96,12 @@ $('#select-all').click(function(event) {
     }
 }); 
 
+
 //  Delete Row 
 $("#delete-button").on("click", function(e) {
   $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
 });
+
 
 // Prevent Page Refresh When Click Element Parameters In Table
 // $( "a" ).click(function( event ) {
@@ -101,6 +110,12 @@ $("#delete-button").on("click", function(e) {
 //     .append( "default " + event.type + " prevented" )
 //     .appendTo( "#log" );
 // });
+
+// Prevent Page Refresh When Deleting Element from Table
+//$("#submit").click(function () {
+// event.preventDefault();
+//});
+
 
 // Handle Select
 // function handleSelect(source) {
@@ -116,6 +131,7 @@ $("#delete-button").on("click", function(e) {
 
 // }
 
+
 // Pop-Up Box for Parameters
 $(document).ready(function(){
   $('[data-toggle="popover"]').popover();
@@ -130,3 +146,4 @@ $(document).ready( function () {
 } );
 
 </script>
+

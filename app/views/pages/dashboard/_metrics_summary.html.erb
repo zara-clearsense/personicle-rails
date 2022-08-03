@@ -71,7 +71,7 @@
             <%if avg_steps_week == 0%>
             <%steps_text = "No steps data"%>
             <%else%>
-            <%steps_text = "#{avg_steps_week} steps per day"%>
+            <%steps_text = "#{number_with_delimiter(avg_steps_week, :delimiter => ',')} steps per day"%>
             <%end%>
             <span class="h2 font-weight-bold mb-0"><%=steps_text%></span>
           </div>
