@@ -47,7 +47,7 @@
     <div class="col" background-color="white">
      <% @weight_data = !@daily_weight.nil? ? @daily_weight: []
       %>
-        <%= render 'pages/dashboard/charts/data_table', user_data_table:@response %>
+        <%= render 'pages/dashboard/tables/data_table', user_data_table:@response %>
     </div>
   </div>
   <%= render 'pages/footer' %>
