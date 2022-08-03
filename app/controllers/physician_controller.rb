@@ -21,7 +21,7 @@ class PhysicianController < ApplicationController
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
-            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
+            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=true,uid=params["data_for_user"])
         else
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
