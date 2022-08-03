@@ -1,17 +1,9 @@
-<%# JQuery  %>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-<%# JavaScript for Bootstrap %>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <%# CSS and JavaScript for Pagination %>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
 
-<%#  %>
 <%# Data Table - User Events %>
   <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %> 
   <div class="card">
@@ -31,13 +23,17 @@
     <table id="delete-table" class="table align-items-center table-flush">
       <thead class="thead-light">
         <tr>
-          <th><input type="checkbox" class="form-check-input" name="select-all" id="select-all" value="select-all_value" onClick="toggle(this)"/></th>
+
+          <th><input type="checkbox" class="form-check-input" name="select-all" id="select-all" value="select-all_value" /></th>
+
           <th scope="col">Event ID</th>
           <th scope="col">Start Time</th>
           <th scope="col">End Time</th>
           <th scope="col">Source</th>
           <th scope="col">Event Name</th>
           <th scope="col">List of Parameters</th>
+          <th scope="col"></th>
+
         </tr>
       </thead>
       <tbody>
@@ -46,13 +42,13 @@
      <% if !@response.empty? %>
         <div class="accordion mt-2" id="accordionExample">
             <% @response.each do |record|%>
-            <% puts record['parameters'].to_json %> 
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
-            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" onClick="handleSelect(this)"/>
+            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" />
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
+
           </td>
           <td id="second">
             <%=record['start_time']%>
@@ -60,6 +56,7 @@
           <td>
             <div class="d-flex align-items-center">
               <span class="mr-2"><%=user_data_table[0]['end_time']%></span>
+
             </div>
           </td>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
@@ -69,7 +66,7 @@
           <%=record['event_name']%>
           </td>
           <td scope="row">
-            <a href="#" class="overflow" data-toggle="popover" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName%> Version: <%=record['parameters'].source_device.version%>  Details URL: <%=record['parameters'].source_device.detailsUrl%>  ">Click to see Details</a>
+            <a tabindex="0" href="#" role="button"  data-toggle="popover" data-animation="true" data-trigger="hover click" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName if !record['parameters'].source_device.nil? %> Version: <%=record['parameters'].source_device.version if !record['parameters'].source_device.nil? %>  Details URL: <%=record['parameters'].source_device.detailsUrl if !record['parameters'].source_device.nil?%>  ">See Details</a>
           </td>
         </tr>
         <% end %> 
@@ -85,6 +82,7 @@
 <script language="JavaScript">
 
 // Select All CheckBoxes
+
 $('#select-all').click(function(event) {   
     if(this.checked) {
         // Iterate each checkbox
@@ -98,38 +96,49 @@ $('#select-all').click(function(event) {
     }
 }); 
 
+
 //  Delete Row 
 $("#delete-button").on("click", function(e) {
   $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
 });
 
+
 // Prevent Page Refresh When Click Element Parameters In Table
-$( "a" ).click(function( event ) {
-  event.preventDefault();
-  $( "<div>" )
-    .append( "default " + event.type + " prevented" )
-    .appendTo( "#log" );
-});
+// $( "a" ).click(function( event ) {
+//   event.preventDefault();
+//   $( "<div>" )
+//     .append( "default " + event.type + " prevented" )
+//     .appendTo( "#log" );
+// });
+
+// Prevent Page Refresh When Deleting Element from Table
+//$("#submit").click(function () {
+// event.preventDefault();
+//});
+
 
 // Handle Select
-function handleSelect(source) {
-  console.log($(source).attr('id'))
-  if(document.getElementById($(source).attr('id')).checked) {
-      console.log("Adding event id" + $(source).attr('id'))
-      eventIDs.push($(source).attr('id').replace("row-check-",""))
-   } else {
-      console.log("Removing event id" + $(source).attr('id'))
-      eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
-;});
-   }
+// function handleSelect(source) {
+//   console.log($(source).attr('id'))
+//   if(document.getElementById($(source).attr('id')).checked) {
+//       console.log("Adding event id" + $(source).attr('id'))
+//       eventIDs.push($(source).attr('id').replace("row-check-",""))
+//    } else {
+//       console.log("Removing event id" + $(source).attr('id'))
+//       eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
+// ;});
+//    }
 
-}
+// }
+
 
 // Pop-Up Box for Parameters
 $(document).ready(function(){
   $('[data-toggle="popover"]').popover();
 });
-
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
 
 // Pagination Table
 $(document).ready( function () {
@@ -137,3 +146,4 @@ $(document).ready( function () {
 } );
 
 </script>
+
