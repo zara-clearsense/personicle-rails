@@ -36,11 +36,11 @@ class ExposomeController < ApplicationController
             # can pass object specific for temperature
             # In chart, use time stamp and value fields to generate the chart. 
         else   
-            @response = FetchData.get_datastreams(session,source="org.personicle.exposome",data_type=datastream,start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+            @response = FetchData.get_datastreams(session,source="org.personicle.exposome",data_type=datastream,start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
             @exposome_streams_hash[datastream] = @response
         end
     }
-    puts @exposome_streams_hash
+    # puts @exposome_streams_hash
     # One chart contains all values for nitrogen compounds, one chart for carbon based compounds, one for sulphur based compounds, one for temperature
     # When the data type is temperature, add that data to a hash object
 
