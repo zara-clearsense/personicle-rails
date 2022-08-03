@@ -31,7 +31,7 @@ class PhysicianController < ApplicationController
         end
          
          if !@user_responses.empty?
-            # puts @user_responses
+            # puts @user_responses/
             responses_for_current_physician = @user_responses.filter {|resp| resp['source'].split(':')[1] == session[:oktastate]['uid']} 
             timestamped_responses = []
             responses_for_current_physician.each do |rec|
