@@ -1,0 +1,166 @@
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <%= render partial: 'pages/header', locals: {
+            icon: 'home',
+            breadcrumb_1: 'Logging',
+            breadcrumb_2: 'Logging'
+      } %>
+    </div>
+  </div>
+</div>
+
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+ 
+<!-- Page content -->
+
+<%# Temperature Chart %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.temp"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/temperature', user_data:@data %>   
+    </div>
+  </div>
+
+<%# Air Quality Index Chart %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.aqi"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/air_quality_index', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Nitrogen Oxide - NO %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.no"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/nitrogen_oxide', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Nitrogen Dioxide - NO2 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.no2"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/nitrogen_dioxide', user_data:@data %>
+    </div>
+  </div>
+
+<%# Ozone - O3 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.03"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/ozone', user_data:@data %>
+    </div>
+  </div>
+
+<%# Sulphur Dioxide - SO2 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.so2"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/sulphur_dioxide', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Atmospheric Particulate Matter - PM2.5 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.pm2_5"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/atmospheric_particulate_matter', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Particulate Matter 10 - PM10 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.pm10"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/particulate_matter_10', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Ammonia - NH3 %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.nh3"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/ammonia', user_data:@data %>
+    </div>
+  </div>
+
+  <%# Feels Like %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.feels_like"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/feels_like', user_data:@data %>
+    </div>
+  </div>
+
+ <%# Pressure %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.pressure"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/pressure', user_data:@data %>
+    </div>
+  </div>
+
+ <%# Humidity %>
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.humidity"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/humidity', user_data:@data %>
+    </div>
+  </div>
+
+ <%# Ultraviolet Index (UVI) %>
+  
+  <div class="row">
+    <div class="col" background-color="white">
+     <% @data = !@exposome_streams_hash.nil? ? @exposome_streams_hash["com.personicle.individual.datastreams.exposome.uvi"].map { |record|
+           [record.timestamp, record.value]
+        } : []
+      %>
+        <%= render 'pages/exposome/charts/ultraviolet_index', user_data:@data %>
+    </div>
+  </div>
+
+  <%= render 'pages/footer' %>
+</div>
+
+
