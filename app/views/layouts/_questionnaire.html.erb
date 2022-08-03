@@ -1,7 +1,7 @@
 <% patient = User.find_by(user_id: patient_id).name%>
 <% @physician = Physician.find_by(user_id: session[:oktastate]['uid']) %>
 <% @physician_user = PhysicianUser.find_by(user_user_id: patient_id, physician_user_id: session[:oktastate]['uid']) %>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="<%= patient %>">Questions for <%= patient %></button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-name="<%= patient %>">Questions for <%= patient %></button>
 <%= form_with url: question_create_path, method: :post do  %>
 
 <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -53,7 +53,7 @@
                           <button type="submit" class="btn btn-danger btn btn-sm">Remove selected</button>
                       <% end %>
                               <% @physician_user.questions["questions"].each do |q|%>
-                                <li>
+                              
                                   <%=check_box_tag 'delete_selected_questions[]', q['question']%>
                                   <%=q['question']%>
                                 </li>
@@ -61,14 +61,31 @@
                       </div>
                   </div>
               <% end %>
-      
+              <br>
+            <div class="dropdown" id="response-type-dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Expected response type
+              </button>
+              <p class ="ml-1 mt-1" id="selected_response_type"></P>
+              <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton">
+                <li>
+                   <ul><%=radio_button_tag 'response_type', 'survey', :checked => true %>  Survey </ul>
+                    <ul> <%=radio_button_tag 'response_type', 'numeric'%> Numeric </ul>
+                    <ul><%=radio_button_tag 'response_type', 'string'%> String</ul>
+                    <ul><%=radio_button_tag 'response_type', 'image'%> Image </ul>
+                </li>
+              </div>
+            </div>
+            <%# <div> <p>hello</p></div> %>
+           
            <div id="questions" name="questions"> 
               <div id="tag" name="tag"> 
-              
               </div> 
             </div> 
+
             <div id="options" name="options[]">
-              </div>
+            </div>
+            
               
           <a href="javascript:;" id="addNewQuestion">Add New Question</a>
         
@@ -91,25 +108,48 @@
 <script>
   $('#exampleModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget) 
-  var patient = button.data('whatever') 
+  var patient = button.data('name') 
   var modal = $(this)
   modal.find('.modal-title').text('Questions for ' + patient)
   modal.find('.modal-body .form-group input').val(patient)
-  
 })
 
+$('#response-type-dropdown input').on('change', function() {
+   var selected_response_type = document.getElementById("selected_response_type");
+  selected_response_type.innerHTML = $('input[name=response_type]:checked').val();
+  var response_type= $('input[name=response_type]:checked').val();
+  if(response_type != 'survey'){
+    $('#questions .addOption').hide();
+    $('#options').hide();
+  } else {
+    $('#questions button').show();
+    $('#options').show();
+
+  }
+});
+
 $(document).ready(function(){
+  var selected_response_type = document.getElementById("selected_response_type");
+selected_response_type.innerHTML = $('input[name=response_type]:checked').val();
+  // document.getElementById('response-type-dropdown').style.display = 'none';
+  $('#response-type-dropdown').hide();
   var count = 0;
 
  $('#addNewQuestion').click(function(){ 
-
  if (count == 0){
+    $('#response-type-dropdown').show();
    $('div#questions').append('<div class="input-group questionsForm mt-4"><textarea class="col-md-9" type="text" name="questions" placeholder="Your Question" class="form-control" required></textarea><input class="col-md-3" type="text" placeholder="Add Tag" name="tag" class="form-control" required>' +
    ' <div class="input-group-append"> <button class="addOption btn btn-primary  btn-sm mt-2" type="button" >Add Option</button>'+
     '<button class="removeNewQuestion btn btn-danger btn-sm mt-2" type="button">Remove Question</button></div>' + '</div>')
+    
  }  
+ if($('input[name=response_type]:checked').val() != 'survey'){
+    $('#questions .addOption').hide();
+    $('#options').hide();
+ }
   count +=1;
   $("#addNewQuestion").hide();
+  // $('#response-type-dropdown').hide();
 
  });
 $("div#questions").on('click', '.removeNewQuestion', function(){
@@ -118,6 +158,7 @@ $("div#questions").on('click', '.removeNewQuestion', function(){
    count -=1;
    if (count == 0){
          $("#addNewQuestion").show();
+        $('#response-type-dropdown').hide();
     }
 });
     
@@ -151,4 +192,6 @@ function filterFunction() {
     }
   }
 }
+
+
 </script>

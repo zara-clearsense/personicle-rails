@@ -22,6 +22,7 @@ class ImageController < ApplicationController
         # puts params.except(:authenticity_token, :individual_id,:controller, :action)
         # data = params.except(:authenticity_token, :individual_id,:controller, :action)
         # puts  data.to_json
+  
         res = RestClient::Request.execute(:url => ENV['DATASTREAM_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
         puts res.code
         # puts res
