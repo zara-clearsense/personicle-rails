@@ -51,7 +51,6 @@ class FetchData
             else
                
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                puts "here"
                 Rails.cache.write([:datastreams,datatype,user_id],res)
                 res
             end

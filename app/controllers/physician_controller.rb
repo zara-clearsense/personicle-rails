@@ -56,14 +56,15 @@ class PhysicianController < ApplicationController
             # puts image_responses
             @image_urls = []
             # image_keys_array = []
+           
             image_responses.each do |k,v|
-                v.each do |val|
-                    image_keys = val['response'].split(";")
-                        image_keys.each do |key|
-                        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                        @image_urls.push([k, val['timestamp'], res['image_url']])
+                    v.each do |val|
+                        image_keys = val['response'].split(";")
+                            image_keys.each do |key|
+                            res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                            @image_urls.push([k, val['timestamp'], res['image_url']])
+                        end
                     end
-                end
             end
             @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
             # @images.each do |i|
