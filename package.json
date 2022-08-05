@@ -13,7 +13,6 @@
       "js",
       "vue"
     ],
-    
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/app/javascript/parts/$1"
     },
@@ -39,7 +38,7 @@
     "@hotwired/turbo-rails": "^7.1.3",
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.8.3",
-    "@mui/material": "^5.8.3",
+    "@mui/material": "^5.9.3",
     "@popperjs/core": "^2.11.4",
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",

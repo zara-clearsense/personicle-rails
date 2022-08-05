@@ -106,7 +106,7 @@ development:
 test:
   <<: *default
   database: db/test.sqlite3
-  
+
 # production:
 #   <<: *default
 #   database: db/production.sqlite3
@@ -191,7 +191,7 @@ production:
 
 #   # The TCP port the server listens on. Defaults to 5432.
 #   # If your server runs on a different port number, change accordingly.
-  
+
 # # As with config/secrets.yml, you never want to store sensitive information,
 # # like your database password, in your source code. If your source code is
 # # ever seen by anyone, they now have access to your database.
