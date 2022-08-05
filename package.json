@@ -13,6 +13,7 @@
       "js",
       "vue"
     ],
+    
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/app/javascript/parts/$1"
     },
