@@ -87,10 +87,10 @@ const ImageModal = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
            Time: {modalData.time}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
            Patient description: 
-          </Typography>
-          <Image src={modalData.url} />
+          </Typography> */}
+          <Image src={modalData.url} style={{ border: '3px solid #5e72e4'}}/>
           {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}> */}
             {/* {modalData} */}
           {/* </Typography> */}

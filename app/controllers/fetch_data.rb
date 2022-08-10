@@ -14,7 +14,7 @@ class FetchData
                 else
                     url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&event_type="+event+"&user_id="+user_id
                     res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                    Rails.cache.write([:events,user_id,event],res)
+                    Rails.cache.write([:events,user_id,event],res, expires_in: 20.minutes)
                     res
                 end
             else # no event is specifed
@@ -26,11 +26,11 @@ class FetchData
             if event
                 url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+end_time+"&event_type="+event+"&user_id="+user_id
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                Rails.cache.write([:events,user_id,event],res)
+                Rails.cache.write([:events,user_id,event],res, expires_in: 20.minutes)
                 res
             else
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                Rails.cache.write([:events,user_id,"all_events"],res)
+                Rails.cache.write([:events,user_id,"all_events"],res, expires_in: 20.minutes)
                 res
             end
         end
@@ -51,7 +51,7 @@ class FetchData
             else
                
                 res = JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{ses[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                Rails.cache.write([:datastreams,datatype,user_id],res)
+                Rails.cache.write([:datastreams,datatype,user_id],res, expires_in: 20.minutes)
                 res
             end
 

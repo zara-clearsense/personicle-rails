@@ -48,7 +48,7 @@ class PhysicianController < ApplicationController
              @patient_responses = question_indexed_responses.map{|k,v| [k, v.size()]}
             # [[question-id, date, response], count]
             # puts @response_count    
-            # unique_questions 
+        # unique_questions 
             @unique_tags  = @patient_responses.uniq{|rec| rec[0][0]}.collect{|rec| rec[0][0]}
             
             @images =  @patient_responses.select{|rec| rec[0][3] == 'image'}
@@ -56,8 +56,10 @@ class PhysicianController < ApplicationController
             # puts image_responses
             @image_urls = []
             # image_keys_array = []
-           
-            image_responses.each do |k,v|
+            if params[:refresh]!="hard_refresh" && Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
+                @image_urls = Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
+            else
+                image_responses.each do |k,v|
                     v.each do |val|
                         image_keys = val['response'].split(";")
                             image_keys.each do |key|
@@ -65,8 +67,13 @@ class PhysicianController < ApplicationController
                             @image_urls.push([k, val['timestamp'], res['image_url']])
                         end
                     end
+                 end
+                 @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
+
+                 Rails.cache.write([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']],@image_urls, expires_in: 12.minutes)
             end
-            @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
+            
+            
             # @images.each do |i|
             #     image_keys = i[0][2].split(";")
             #     image_keys.each do |key|
