@@ -7,6 +7,7 @@
 }
 
 </style>
+<% if !@user_responses.nil? || !@user_responses_physician.nil?%>
 <div class="accordion" id="userResponsesAccordion">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -147,6 +148,9 @@
   </div>
  </div>
   <%= render 'user_responses/physican_responses', image_urls_physician: @image_urls_physician, unique_physicians: @unique_physicians, user_responses_physician: @user_responses_physician%>
+<% else %>
+<p>No responses to visualize</p>
+<% end %>
 <script>
 
 function revealChartType(event) {

@@ -24,10 +24,8 @@ class UserResponsesController < ApplicationController
             image_urls = []
 
             if params[:refresh]!="hard_refresh" && Rails.cache.fetch([:images,data_type,session[:oktastate]['uid']])
-                puts "cached"
                 image_urls = Rails.cache.read([:images,data_type,session[:oktastate]['uid']])
             else
-                puts "not cached"
                 image_responses.each do |k,v|
                     v.each do |val|
                         image_keys = val['response'].split(";")
