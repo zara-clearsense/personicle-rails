@@ -49,5 +49,8 @@ Rails.application.routes.draw do
   get 'pages/user/create_question', :to => 'create_user_questions#index'
   post 'pages/user/create_question', :to => 'create_user_questions#create'
   post 'pages/user/send_responses', :to => 'create_user_questions#send_responses'
+  get 'pages/user/responses', :to => 'user_responses#index'
+  post 'pages/user/responses', :to => 'user_responses#index'
+
 
 end

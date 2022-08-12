@@ -41,21 +41,17 @@ class PhysicianController < ApplicationController
                         timestamped_responses.push({'timestamp'=> current_timestamp, 'question_id'=> resp['question-id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
                     end
             end
-# [{timestamp=> <>, question_id => <>, response => <>}]
+
             question_indexed_responses = timestamped_responses.group_by {|rec| [rec['question_id'], rec['timestamp'].to_date, rec['response'], rec['response_type']]}.to_h
             image_responses = timestamped_responses.filter {|rec| rec['response_type'] == 'image'}.group_by{|rec| rec['question_id']}.to_h
-            # @response_count = question_indexed_responses.map{|k,v| [k, v.size()]}
              @patient_responses = question_indexed_responses.map{|k,v| [k, v.size()]}
-            # [[question-id, date, response], count]
-            # puts @response_count    
-        # unique_questions 
+            
             @unique_tags  = @patient_responses.uniq{|rec| rec[0][0]}.collect{|rec| rec[0][0]}
             
             @images =  @patient_responses.select{|rec| rec[0][3] == 'image'}
-            # puts "hello images"
-            # puts image_responses
+           
             @image_urls = []
-            # image_keys_array = []
+           
             if params[:refresh]!="hard_refresh" && Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
                 @image_urls = Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
             else

@@ -1,8 +1,8 @@
 class CreateUserQuestionsController < ApplicationController
     before_action :require_user, :session_active?
+    
     def index
         @user_questions = User.find_by(user_id: session[:oktastate]['uid']).questions
-        
     end
 
     def send_responses
