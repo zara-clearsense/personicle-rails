@@ -21,8 +21,8 @@ class QuestionController < ApplicationController
 
         if !delete_questions.nil?
             updated_questions = @physician_patient.questions['questions'].filter {|q| delete_questions.include?(q['question']) == false}
-            puts "hello"
-            puts updated_questions.class
+            # puts "hello"
+            # puts updated_questions.class
             @physician_patient.questions['questions'] = updated_questions
 
             @physician_patient.save

@@ -7,42 +7,27 @@
 }
 
 </style>
-<div class="card">
-  <div class="card-header">
-    Current Vitals
-  </div>
-  <div class="row">
-    <div class="card-body col-sm-4">
-      <h5 class="card-title text-center">Avg 24 Hours Heart Rate</h5>
-      <p class="card-text text-center"> <%= avg_24_hour_hr %></p>
- 
+<% if !@user_responses.nil? || !@user_responses_physician.nil?%>
+<div class="accordion" id="userResponsesAccordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseUserResponses" aria-expanded="true" aria-controls="collapseUserResponses">
+         Your responses
+        </button>
+      </h2>
     </div>
-    <div class="card-body col-sm-4">
-      <h5 class="card-title text-center">Min 2 Weeks Heart Rate</h5>
-      <p class="card-text text-center"><%= last_two_weeks_min_hr %></p>
- 
-    </div>
-    <div class="card-body col-sm-4">
-      <h5 class="card-title text-center">Max 2 Weeks Heart Rate</h5>
-      <p class="card-text text-center"><%= last_two_weeks_max_hr %> </p>
-    </div>
-  </div>
-</div>
- <div id="chart_type" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
-              <label class="btn btn-secondary">
-                <input type="radio" name="charttype" value="sleep_chart" checked> Sleep
-              </label>
-              <label class="btn btn-secondary">
-                <input type="radio" name="charttype" value="activity_chart" > Activity
-              </label>
-              <% unique_question_tags.each do |tag| %>
+    <div id="collapseUserResponses" class="collapse" aria-labelledby="headingOne" data-parent="#userResponsesAccordion">
+      <div class="card-body">
+        <div id="chart_type_user" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
+              <% @unique_tags.each do |tag| %>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="charttype" value="<%=tag%>_chart"> <%=tag%>
-                </label>
+                  <input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
+                </label>    
               <% end %>
   </div>
 
-<div class="card mr-1" style="width:82%;height:600px">
+<div class="card mr-1" style="width:82%;height:500px">
 
   <div class="card-header bg-transparent">
     <div class="row align-items-center">
@@ -77,25 +62,17 @@
     <!-- Chart -->
     <div class="chart">
         
-      <div id="charts">
-            <%= form_with url: pages_dashboard_physician_get_user_data_path, local: true, method: :post do  %>
+      <div id="user_charts">
+             <%= form_with url: pages_user_responses_path, local: true, method: :post do  %>
                 <input type="hidden" name="refresh" value="hard_refresh">
-                <input type="hidden" name="data_for_user" value=<%= patient_id %>>
-                <button  class="btn btn-primary" type="submit">Refresh</button>
-              <% end %>
-   
-
-        <% if user_data.length() != 0 or user_events.length()!=0 or patient_responses.length() !=0%>
-         <% 
-           @numeric_responses =  patient_responses.filter {|rec| rec[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
-
-          
-          # puts @numeric_responses
-         %>
-        <% unique_question_tags.each do |tag|%>
+                <%# <input type="hidden" name="data_for_user" value=<%= session[:oktastate]['uid'] %> 
+                 <button  class="btn btn-primary" type="submit">Refresh</button>
+              <% end %> 
+    
+        <% @unique_tags.each do |tag|%>
           <div id="<%=tag%>_chart_daily" class="chart hidden">
            <%
-              @patient_responses=  patient_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1]}
+              @tag_responses=  @user_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1]}
               numeric_responses = []
               avg_numeric_responses=[]
               @numeric_responses_data = []
@@ -104,7 +81,7 @@
 
           
                  @data = []
-                 @patient_responses.each do |k,v|
+                 @tag_responses.each do |k,v|
 
                   numeric_responses = v.filter {|r| r[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
                   image_responses = v.filter {|r| r[0][3] == "image"}.group_by {|rec| rec[0][1]}
@@ -136,7 +113,7 @@
                     xtitle: "", ytitle: ""
                   %>
                 <% elsif show_image_chart == true%>
-                  <%= react_component("ImageVisualization", {user_id: user_id, image_urls: image_urls, tag: tag, auth: session[:oktastate]['credentials']['token']}) %>
+                  <%= react_component("ImageVisualization", {user_id: session[:oktastate]['uid'], image_urls: @image_urls, tag: tag, auth: session[:oktastate]['credentials']['token']}) %>
               <% else %> 
                 <%# <% puts @data %>  
                   <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
@@ -145,9 +122,9 @@
 
           <div id="<%=tag%>_chart_weekly" class="chart hidden">
            <%
-              @patient_responses=  patient_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
+              @tag_responses=  @user_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
               @data = []
-                 @patient_responses.each do |k,v|
+                 @tag_responses.each do |k,v|
                       v.each do |key,val|
                         @data.push({
                           name: key[2], data: [ [k,val] ]
@@ -159,70 +136,38 @@
            <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
           </div>
         <%end%>
-        <div id="activity_chart_daily" class="chart hidden">
 
-            <%= column_chart [
-                  {
-                      name: "Daily Steps", type: "column", data: daily_step_summary
-                  }
-              ], suffix: " steps",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Steps" %> 
-        </div>
-
-        <div id="activity_chart_weekly" class="chart hidden">
-
-            <%= column_chart [
-                  {
-                      name: "Weekly Steps", type: "column", data: weekly_step_summary
-                  }
-              ], suffix: " steps",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Steps" %>
-
-        </div>
-
-        <div id="sleep_chart_daily" class="chart">
-
-            <%= column_chart [
-                  {
-                      name: "Daily Sleep", type: "column", data: daily_sleep_summary.map {|k,v| [k, v['duration']]} 
-                  }
-              ], suffix: " h",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Sleep Duration (hours)" %>
-
-        </div>
-          <div id="sleep_chart_weekly"  class="chart hidden">
-                <%= column_chart [
-                    {
-                        name: "Weekly Sleep", type: "column", data: weekly_sleep_summary
-                    }
-                ], suffix: " h",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Sleep Duration (hours)" %> 
-            
-          </div>
       </div> 
-          
-      <%else%>
-        <h3 style="color:black;">No activities for the past 3 months</h3>
-      <%end%>
-     
       <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
     </div>
         
   </div>
 </div>
+      </div>
+    </div>
+  </div>
+ </div>
+  <%= render 'user_responses/physican_responses', image_urls_physician: @image_urls_physician, unique_physicians: @unique_physicians, user_responses_physician: @user_responses_physician%>
+<% else %>
+<p>No responses to visualize</p>
+<% end %>
 <script>
 
 function revealChartType(event) {
     var chart_type = $(event.target).val(); 
     var chart = $('input[name="chart"]:checked').val();
-    $('#charts .chart').hide(); 
+    $('#user_charts .chart').hide(); 
     $('#' + chart_type +"_"+chart).show();  
 }
 $(function() {
-    $('#chart_type input').click(revealChartType);
+    $('#chart_type_user input').click(revealChartType);
 });
 
 // to reveal daily or weekly chart
 function revealChart(event) {
     var chart = $(event.target).val(); 
-    var chart_type = $('input[name="charttype"]:checked').val();
-    $('#charts .chart').hide(); 
+    var chart_type = $('input[name="user_chart_type"]:checked').val();
+    $('#user_charts .chart').hide(); 
     $('#' + chart_type +"_"+chart).show();  
 }
 $(function() {

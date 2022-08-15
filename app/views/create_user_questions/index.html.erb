@@ -1,0 +1,182 @@
+<% puts session[:oktastate]['uid']%>
+<button type="button" class="btn btn-primary mt-2 ml-2" data-toggle="modal" data-target="#create_user_question_modal">Create new question</button>
+<div class="overlay d-flex justify-content-center align-items-center  text-center">
+  <div class="">  
+    <div class="spinner-grow text-primary" id="spinner_user_questionnaire" role="status" style="width: 3rem; height: 3rem; z-index: 20;">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<%= form_with url: pages_user_create_question_path , method: :post do  %>
+<div class="modal fade" id="create_user_question_modal" tabindex="-1" role="dialog" aria-labelledby="create_user_question_modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="create_user_question_modalLabel">Create Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="dropdown" id="user-question-response-type-dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Expected response type
+              </button>
+               <p class ="ml-1 mt-1" id="user_selected_response_type">survey</p> 
+              <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton">
+                <li>
+                   <ul><%=radio_button_tag 'user_response_type', 'survey', :checked => true %>  Survey </ul>
+                    <ul> <%=radio_button_tag 'user_response_type', 'numeric'%> Numeric </ul>
+                    <ul><%=radio_button_tag 'user_response_type', 'string'%> String</ul>
+                    <ul><%=radio_button_tag 'user_response_type', 'image'%> Image </ul>
+                </li>
+              </div>
+        </div>
+
+        <div id="user_questions" name="user_questions"> 
+              <div id="user_tag" name="user_tag"> 
+              </div> 
+        </div> 
+
+        <div id="user_options" name="user_options[]">
+        </div>
+     <a href="javascript:;" id="addNewQuestion">Add New Question</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <%= content_tag :button, :type => :submit, class: 'btn btn-primary' do %>
+          Create
+        <%end%>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<%= form_with url: pages_user_send_responses_path , id: "user_response_form", multipart: true, method: :post do  %>
+<% if !@user_questions.nil? && !@user_questions.empty? %>
+<% if !@user_questions['questions'].empty?%>
+<div class="accordion mt-2 ml-2" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Your Questions
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+
+            <% @user_questions['questions'].each do |q|%>
+            <ul>
+                <li class="<%=q['question'] %>">
+                <p><%=q['question']%></p>
+                    <% if q['response_type'] == 'image' %>
+                        <div> 
+                            <fieldset class="my-2">
+                                <%= file_field_tag :picture , :multiple => true, name: "#{session[:oktastate]['uid'] + ' ' + q['tag'] + ' ' + 'image'}[]" %>
+                            </fieldset>
+                        </div>    
+
+                    <% elsif q['response_type'] == 'string' %>
+                        <div>
+                                <fieldset class="my-2">
+                                    <input class="" type="text" name="<%= session[:oktastate]['uid'] + ' ' + q['tag']%> string" >
+                                </fieldset>
+                        </div>
+
+                    <% elsif q['response_type'] == 'numeric' %>
+                        <div>
+                            <fieldset class="my-2">
+                                <input class="" type="number" name="<%= session[:oktastate]['uid'] + ' ' + q['tag']%> numeric" >
+                            </fieldset>
+                        </div>
+
+                    <% else %>
+                        <% q['options'].each do |option|%>
+                                        
+                            <div class="form-check" id ="<%=q['tag'] %>">
+                                
+                                <input class="form-check-input" type="radio" name="<%= session[:oktastate]['uid'] + ' ' + q['tag']%> survey" value="<%=option%>">
+                                <label class="form-check-label" for="<%=q['tag']%> % ">
+                                    <%= option %>
+                                </label>
+                            </div>
+                                    
+                        <% end %>
+                    <% end %>
+                </li>
+            </ul>
+            <% end %>      
+        <% end %>
+         <button type="submit" id='submit_user_questions_responses' class="btn btn-primary ml-4 mt-2">Respond</button>
+      <% end %>
+      <% end %> <%#form end%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$('#user-question-response-type-dropdown input').on('change', function() {
+   var selected_response_type = document.getElementById("user_selected_response_type");
+  selected_response_type.innerHTML = $('input[name=user_response_type]:checked').val();
+  var response_type= $('input[name=user_response_type]:checked').val();
+  if(response_type != 'survey'){
+    $('#user_questions .addUserOption').hide();
+    $('#user_options').hide();
+  } else {
+    $('#user_questions button').show();
+    $('#user_options').show();
+  }
+});
+ $('#user-question-response-type-dropdown').hide();
+  var count = 0;
+
+ $('#addNewQuestion').click(function(){ 
+ if (count == 0){
+    $('#user-question-response-type-dropdown').show();
+   $('div#user_questions').append('<div class="input-group UserQuestionsForm mt-4"><textarea class="col-md-9" type="text" name="user_questions" placeholder="Your Question" class="form-control" required></textarea><input class="col-md-3" type="text" placeholder="Add Tag" name="user_tag" class="form-control" required>' +
+   ' <div class="input-group-append"> <button class="addUserOption btn btn-primary  btn-sm mt-2" type="button" >Add Option</button>'+
+    '<button class="removeNewUserQuestion btn btn-danger btn-sm mt-2" type="button">Remove Question</button></div>' + '</div>')
+    
+ }  
+ if($('input[name=user_response_type]:checked').val() != 'survey'){
+    $('#user_questions .addUserOption').hide();
+    $('#user_options').hide();
+ }
+  count +=1;
+  $("#addNewQuestion").hide();
+  // $('#response-type-dropdown').hide();
+
+ });
+
+ $("div#user_questions").on('click', '.removeNewUserQuestion', function(){
+  $(this).closest('.UserQuestionsForm').remove();
+  $('.UserOptionsForm').remove();
+   count -=1;
+   if (count == 0){
+         $("#addNewQuestion").show();
+        $('#user-question-response-type-dropdown').hide();
+    }
+});
+
+$("div#user_questions").on('click', '.addUserOption', function(){
+ $('div#user_options').append('<div class="input-group UserOptionsForm mt-4"><input class="col-md-8" type="text" name="user_options[]" placeholder="Your option" class="form-control" required>' +
+ '<div class="input-group-append"> <button class="removeNewUserOption btn btn-danger  btn-sm" type="button" >Remove Option</button></div>'
+ );
+ 
+});
+$("div#user_options").on('click', '.removeNewUserOption', function(){
+  $(this).closest('.UserOptionsForm').remove();
+});
+
+$('#user_response_form').on('submit', function() {
+   document.getElementById('spinner_user_questionnaire').style.display = 'block';
+   document.getElementById('submit_user_questions_responses').disabled = true;
+});
+   document.getElementById('spinner_user_questionnaire').style.display = 'none';
+</script>

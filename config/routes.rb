@@ -45,4 +45,12 @@ Rails.application.routes.draw do
   post 'pages/dashboard/delete-event', :to => 'dashboard#delete_event', :as => 'delete_user_events'
   get 'pages/exposome', :to => 'exposome#index'
   post 'pages/exposome', :to => 'exposome#index'
+  
+  get 'pages/user/create_question', :to => 'create_user_questions#index'
+  post 'pages/user/create_question', :to => 'create_user_questions#create'
+  post 'pages/user/send_responses', :to => 'create_user_questions#send_responses'
+  get 'pages/user/responses', :to => 'user_responses#index'
+  post 'pages/user/responses', :to => 'user_responses#index'
+
+
 end

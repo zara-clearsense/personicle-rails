@@ -22,7 +22,7 @@ class SleepController < ApplicationController
           end 
 
         if !@response.empty?
-            # puts @response.class
+            puts @response
             daily_sleep = @response.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
             max_date = daily_sleep.max {|rec| rec['date']}['date']
@@ -34,7 +34,9 @@ class SleepController < ApplicationController
                 end
             end
             @daily_sleep_summary = @daily_sleep_summary.sort.to_h
-            moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
+            # @days_with_sleep_events =  @daily_sleep_summary.each_cons(7).map {|recs| recs.sum { |r| (r[1]>0)?1:0}}
+            # puts @days_with_sleep_events
+            moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/ recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
                 
             (min_date..max_date).each do |d|
                 @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => moving_average_sleep[d]}
