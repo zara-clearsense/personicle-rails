@@ -70,6 +70,8 @@ class UserResponsesController < ApplicationController
         if !user_physician_responses.empty?
             @user_responses_physician, @unique_tags_physician, @image_urls_physician  = format_data_to_visualize(user_physician_responses,"com.personicle.individual.datastreams.subjective.physician_questionnaire",true)
             @unique_physicians = @user_responses_physician.uniq {|rec| rec[0][4]}.collect{|rec| rec[0][4]}
+            puts "hello"
+            puts @unique_physicians
         end
        
     end #index end
