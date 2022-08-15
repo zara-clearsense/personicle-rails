@@ -30,8 +30,16 @@ class UserResponsesController < ApplicationController
                     v.each do |val|
                         image_keys = val['response'].split(";")
                             image_keys.each do |key|
-                            res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                            image_urls.push([k, val['timestamp'], res['image_url']])
+                                begin
+                                    
+                                    res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                                    # puts key
+                                    image_urls.push([k, val['timestamp'], res['image_url']])
+                                rescue => exception
+                                    puts "deleted key " + key
+                                    next
+                                end
+                            
                         end
                     end
                 end
@@ -55,11 +63,12 @@ class UserResponsesController < ApplicationController
 
         end
         # puts user_responses
-        if !user_responses.empty?
+        if !user_responses.empty? 
          @user_responses, @unique_tags, @image_urls  = format_data_to_visualize(user_responses,"com.personicle.individual.datastreams.subjective.user_questionnaire",false)
-         @user_responses_physician, @unique_tags_physician, @image_urls_physician  = format_data_to_visualize(user_physician_responses,"com.personicle.individual.datastreams.subjective.physician_questionnaire",true)
-         @unique_physicians = @user_responses_physician.uniq {|rec| rec[0][4]}.collect{|rec| rec[0][4]}
-            
+        end
+        if !user_physician_responses.empty?
+            @user_responses_physician, @unique_tags_physician, @image_urls_physician  = format_data_to_visualize(user_physician_responses,"com.personicle.individual.datastreams.subjective.physician_questionnaire",true)
+            @unique_physicians = @user_responses_physician.uniq {|rec| rec[0][4]}.collect{|rec| rec[0][4]}
         end
        
     end #index end

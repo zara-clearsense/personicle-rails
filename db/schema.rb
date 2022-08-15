@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_08_223620) do
+ActiveRecord::Schema.define(version: 2022_08_12_172205) do
+
+  create_table "insights", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "life_aspect", default: "", null: false
+    t.string "impact", default: "", null: false
+    t.string "insight_text", default: "", null: false
+    t.datetime "expiry_time"
+    t.boolean "viewed", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "physician_users", force: :cascade do |t|
     t.string "user_user_id"
