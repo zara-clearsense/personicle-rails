@@ -58,9 +58,15 @@ class PhysicianController < ApplicationController
                 image_responses.each do |k,v|
                     v.each do |val|
                         image_keys = val['response'].split(";")
-                            image_keys.each do |key|
-                            res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                            @image_urls.push([k, val['timestamp'], res['image_url']])
+                            begin
+                                image_keys.each do |key|
+                                    res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                                    @image_urls.push([k, val['timestamp'], res['image_url']])
+                            rescue => exception
+                                if exception.response.code == 404
+                                    next
+                                end
+                            end
                         end
                     end
                  end

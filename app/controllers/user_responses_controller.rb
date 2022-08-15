@@ -31,13 +31,14 @@ class UserResponsesController < ApplicationController
                         image_keys = val['response'].split(";")
                             image_keys.each do |key|
                                 begin
-                                    
                                     res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                                     # puts key
                                     image_urls.push([k, val['timestamp'], res['image_url']])
                                 rescue => exception
                                     puts "deleted key " + key
-                                    next
+                                    if exception.response.code == 404
+                                        next
+                                    end
                                 end
                             
                         end
