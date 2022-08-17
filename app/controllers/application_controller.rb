@@ -1,7 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :logged_in?, :require_user, :session_active?, :is_physician?
+  helper_method :logged_in?, :require_user, :session_active?, :is_physician?, :get_user_notifications
   
+
+  def get_user_notifications
+     @current_user = User.find_by(user_id: session[:oktastate]['uid'])
+     @notifications = @current_user.notifications.unread
+     return @notifications
+  end
+
   def user_is_logged_in?
     if !session[:oktastate]
       # redirect_to user_oktaoauth_omniauth_authorize_path

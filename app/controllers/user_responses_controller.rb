@@ -1,5 +1,5 @@
 class UserResponsesController < ApplicationController
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
     # format data for chart
     # args: user_repsonses, data_type (physician_questionnaire or user_questionnaire, physician_response: bool)
     def format_data_to_visualize(user_responses,data_type,physician_responses)

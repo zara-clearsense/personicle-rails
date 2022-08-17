@@ -2,7 +2,7 @@ class ChartsController < ApplicationController
 require 'json'
 require 'ostruct'
 require 'date'
-before_action :require_user
+before_action :require_user, :session_active?, :get_user_notifications
 
     def user_mobility
         url = 'http://localhost:3000/steps.json'

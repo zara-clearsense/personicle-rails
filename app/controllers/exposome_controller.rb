@@ -2,25 +2,32 @@ class ExposomeController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
-    before_action :require_user, :session_active?
-
+    before_action :require_user, :session_active?, :get_user_notifications
+    
    def index
         # Create array of exposomes
-   @exposome_streams = [
-    "com.personicle.individual.datastreams.exposome.aqi",
-    "com.personicle.individual.datastreams.exposome.no",
-    "com.personicle.individual.datastreams.exposome.no2",
-    "com.personicle.individual.datastreams.exposome.03",
-    "com.personicle.individual.datastreams.exposome.so2",
-    "com.personicle.individual.datastreams.exposome.pm2_5",
-    "com.personicle.individual.datastreams.exposome.pm10",
-    "com.personicle.individual.datastreams.exposome.nh3",
-    "com.personicle.individual.datastreams.exposome.temp",
-    "com.personicle.individual.datastreams.exposome.feels_like",
-    "com.personicle.individual.datastreams.exposome.pressure",
-    "com.personicle.individual.datastreams.exposome.humidity",
-    "com.personicle.individual.datastreams.exposome.uvi"
-   ]
+        
+        
+        # if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+        #     @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+        # end
+    # 
+    # @notification_read.save
+    @exposome_streams = [
+        "com.personicle.individual.datastreams.exposome.aqi",
+        "com.personicle.individual.datastreams.exposome.no",
+        "com.personicle.individual.datastreams.exposome.no2",
+        "com.personicle.individual.datastreams.exposome.03",
+        "com.personicle.individual.datastreams.exposome.so2",
+        "com.personicle.individual.datastreams.exposome.pm2_5",
+        "com.personicle.individual.datastreams.exposome.pm10",
+        "com.personicle.individual.datastreams.exposome.nh3",
+        "com.personicle.individual.datastreams.exposome.temp",
+        "com.personicle.individual.datastreams.exposome.feels_like",
+        "com.personicle.individual.datastreams.exposome.pressure",
+        "com.personicle.individual.datastreams.exposome.humidity",
+        "com.personicle.individual.datastreams.exposome.uvi"
+    ]
 
     # Loop over array of exposomes and make request to API to get that data from the loop
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")

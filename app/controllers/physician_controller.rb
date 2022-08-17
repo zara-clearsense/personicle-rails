@@ -1,7 +1,9 @@
 class PhysicianController < ApplicationController
     before_action :require_user, :session_active?, :is_user_physician?, except: [:create_account]
+    before_action :get_user_notifications
     
     def index
+        
         logger.info session[:oktastate]['credentials']['token']
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
     end

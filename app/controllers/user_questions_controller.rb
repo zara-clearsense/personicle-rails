@@ -1,5 +1,5 @@
 class UserQuestionsController < ApplicationController
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
     def index
         @questions = {}
         @user = User.find_by(user_id: session[:oktastate]['uid'])

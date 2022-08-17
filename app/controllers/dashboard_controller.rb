@@ -2,13 +2,15 @@ class DashboardController < ApplicationController
   require 'json'
   require 'ostruct'
   require 'date'
-  before_action :require_user, :session_active?
+  before_action :require_user, :session_active?, :get_user_notifications
 
 
   def index
-    puts params
+    # puts params
     puts session[:oktastate]['credentials']['token']
-    
+    # if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+    #   @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+    # end
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
 
@@ -23,9 +25,7 @@ class DashboardController < ApplicationController
       @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
       @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
     end 
-
-    # @is_physician = session["physician"] 
-    # puts @is_physician
+   
     if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events

@@ -2,13 +2,18 @@ class FoodlogController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
     
     def index
+        if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+            @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+        end
         
     end
     
     def get_edamam_data
+    @notifications = UserNotification.get_notifications(session[:oktastate]['uid'])
+
         required = [:q, :mealType, :cuisineType]
       
         form_complete = true

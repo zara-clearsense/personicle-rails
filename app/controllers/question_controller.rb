@@ -1,5 +1,5 @@
 class QuestionController < ApplicationController
-    before_action :require_user, :session_active?, :is_user_physician?
+    before_action :require_user, :session_active?, :is_user_physician?, :get_user_notifications
     def index
         
     end

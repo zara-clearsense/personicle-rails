@@ -1,5 +1,5 @@
 class ProfileController < ApplicationController
-  before_action :require_user, :session_active?
+  before_action :require_user, :session_active?, :get_user_notifications
     def remove_physician
       if not params[:remove_physicians].blank? and !session[:oktastate]["physician"]
         @user = User.find_by(user_id: session[:oktastate]["uid"])
