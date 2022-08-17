@@ -1,6 +1,4 @@
 const { environment } = require('@rails/webpacker')
-const coffee =  require('./loaders/coffee')
-
 
 const alias =  require('./alias/alias')
 
@@ -12,5 +10,4 @@ environment.plugins.append("Provide", new webpack.ProvidePlugin({
   }))
 
 environment.config.merge(alias)
-environment.loaders.prepend('coffee', coffee)
 module.exports = environment
