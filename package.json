@@ -50,8 +50,6 @@
     "bootstrap": "^4.5.2",
     "chart.js": "^3.9.1",
     "chartkick": "^4.2.0",
-    "coffee-loader": "^4.0.0",
-    "coffeescript": "1.12.7",
     "jquery": "^3.5.1",
     "material-ui-image": "^3.3.2",
     "popper.js": "^1.16.1",
