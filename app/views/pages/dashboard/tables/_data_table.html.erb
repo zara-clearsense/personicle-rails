@@ -38,7 +38,7 @@
      <% if !@response.empty? %>
         <div class="accordion mt-2" id="accordionExample">
             <% @response.each do |record|%>
-            <%# <% puts record['parameters'].to_json %>  
+             <% puts record %>  
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
             <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" />
@@ -51,7 +51,7 @@
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <span class="mr-2"><%=user_data_table[0]['end_time']%></span>
+              <span class="mr-2"><%=record['end_time']%></span>
             </div>
           </td>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
