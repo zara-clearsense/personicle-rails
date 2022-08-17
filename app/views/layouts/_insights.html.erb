@@ -1,0 +1,78 @@
+<style>
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+.carousel-control-next /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+</style>
+<% user_notifications = User.find_by(user_id: session[:oktastate]['uid']).notifications.newest_first.take(5) %>
+<% user_notif = user_notifications.filter {|rec| rec.params[:message]['life_aspect'] == notification_type}%>
+<div class="row" >
+<div class="col-xl-3"></div>
+  <div class="col-xl-6 col-md-6">
+    <div class="card card-stats">
+      <!-- Card body -->
+      <div class="card-body" >
+        <div class="row">
+          <div class="col">
+            <h5 class="card-title text-uppercase text-muted mb-0">Insights</h5>
+          </div>
+          <div class="col-auto">
+            <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+              <i class="ni ni-chart-pie-35"></i>
+            </div>
+          </div>
+        </div>
+        <p class="mt-3 mb-0 text-sm">
+        <% if user_notif.length > 0%>
+              <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner" role="listbox">
+                
+                  <% user_notif.each_with_index do |notif,i| %>
+                      <% if notif.params[:message]['impact'] == "positive" %>
+                          <%arrow_direction = "fa-arrow-up"%>
+                          <%text_color = "text-success"%>
+                      <% elsif notif.params[:message]['impact'] == "negative"%>
+                          <%arrow_direction = "fa-arrow-down"%>
+                          <%text_color = "text-warning"%>
+                      <% else %>
+                          <%arrow_direction = "-solid fa-dash"%>
+                          <%text_color = "text-primary"%>
+                      <% end %>
+
+                      <% if i == 0 %>
+                          <div class="carousel-item active">
+                            <span class="<%=text_color%> ml-6"><i class="<%="fa #{arrow_direction}"%> mr-2"></i><%= notif.params[:message]['insight_text'] %></span>
+                          </div>
+                      <% else %>
+                          <div class="carousel-item">
+                            <span class="<%=text_color%> ml-6"><i class="<%="fa #{arrow_direction}"%> mr-2"></i><%= notif.params[:message]['insight_text'] %></span>
+                          </div>
+                      <% end %>
+                  <% end %>
+              </div>
+              <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" style="color: black;" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+        <% else %>
+           <span class="ml-1"><strong>No new insights</strong></span>
+
+        <% end %>
+       
+
+
+
+        </p>
+      </div>
+    </div>
+  </div>
+<div class="col-xl-3"></div>
+
+</div>

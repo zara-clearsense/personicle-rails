@@ -3,6 +3,7 @@ json.array! @notifications do |notification|
     json.insight_text notification.params[:message]['insight_text']
     json.life_aspect  notification.params[:message]['life_aspect']
     json.created_at notification.created_at
+    json.impact notification.params[:message]['impact']
     if notification.params[:message]['life_aspect'].downcase  == "sleep"
         json.url pages_sleep_path
     elsif notification.params[:message]['life_aspect'].downcase  == "exposome"
