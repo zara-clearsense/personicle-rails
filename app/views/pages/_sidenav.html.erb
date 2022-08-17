@@ -52,8 +52,8 @@
           <li class="nav-item">
             <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_exposome_path %>">
               <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
-              <span class="iconify" data-icon="iconoir:oil-industry" data-width="24" data-height="24"></span>
-              <span class="nav-link-text"> Exposome</span>
+              <span class="iconify mr-1" data-icon="iconoir:oil-industry" data-width="24" data-height="24"></span>
+              <span class="nav-link-text ml-1"> Exposome</span>
             </a>
           </li>
           <% if !session[:oktastate]["physician"]%>
@@ -87,6 +87,21 @@
               <span class="nav-link-text ml-3">Upload image</span>
             </a>
           </li>
+           <li class="nav-item">
+            <a class="nav-link" href=<%= pages_user_create_question_path %> >
+              <%# <i class="fa-solid fa-user-doctor"></i> %>
+              <%# <span class="iconify" data-icon="bi:file-earmark-image"></span> %>
+              <span class="nav-link-text ml-3">Create Questions</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href=<%=  pages_user_responses_path %> >
+              <%# <i class="fa-solid fa-user-doctor"></i> %>
+              <%# <span class="iconify" data-icon="bi:file-earmark-image"></span> %>
+              <span class="nav-link-text ml-3">View responses</span>
+            </a>
+          </li>
+   
           <%# <% if !session[:oktastate]["physician"]%>
          
           <%# <% end %> 
