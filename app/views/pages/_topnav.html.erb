@@ -184,8 +184,6 @@ function removeNotification(notif_id){
     //  $("[data-behavior='unread-count']").html(total_notif - 1);
   })
 }
-const make_plural = (count, noun, suffix = 's') =>
-  `${count} ${noun}${count !== 1 ? suffix : ''}`;
 function handleSuccess(data){
   
   var s=[]
