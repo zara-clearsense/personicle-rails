@@ -174,30 +174,51 @@ end
   </div>
 </nav>
 <script>
+
 function removeNotification(notif_id){
-  // console.log(notif_id)
     $.ajax({
     url : `/pages/notifications/mark_notification_as_read?notif_id=${notif_id}`,
     dataType: "JSON",
     method: "POST",
     success: get_notif()
     //  $("[data-behavior='unread-count']").html(total_notif - 1);
-    
   })
 }
-
-//  var notif_id = $("[data-behavior='notification-link']").onclick()
-//  console.log(notif_id)
-//   if (notif_id){
-//  removeNotification(notif_id,s.length)
-//   }
+const make_plural = (count, noun, suffix = 's') =>
+  `${count} ${noun}${count !== 1 ? suffix : ''}`;
 function handleSuccess(data){
   
   var s=[]
   var notif_count = 0
   var items = $.map(data, function(notification,i) {
+    var display_time_ago = ""
+    var current = new Date().getTime();
+    var created = new Date(notification.created_at).getTime();
+    var time_diff = current - created
+    var time_ago = Math.floor(time_diff / 1000 / 60 / 60);
+
+    if(time_ago < 1){
+      time_ago = Math.floor(time_diff / 1000 / 60 );
+      if (time_ago < 1){
+        time_ago = Math.floor(time_diff / 1000 );
+        display_time_ago = time_ago + " seconds ago"
+      } else {
+        if(time_ago == 1){
+           display_time_ago = time_ago + " min ago"
+        }else {
+           display_time_ago = time_ago + " mins ago"
+        }
+      }
+   
+    } else if (time_ago == 1){
+      display_time_ago = time_ago + " hr ago"
+    } else {
+      display_time_ago = time_ago + " hrs ago"
+    }
     // console.log(`<a class='dropdown-item' href='${notification.url}'>${notification.insight_text}</a>`);
-    s.push(`<a class='dropdown-item' data-behavior='notification-link' onclick='removeNotification(${notification.id});'value='${notification.id}' href='${notification.url}'>${notification.insight_text}</a>`)
+    s.push(`<a class='dropdown-item' data-behavior='notpification-link' onclick='removeNotification(${notification.id});'value='${notification.id}' href='${notification.url}'>${notification.insight_text} <small class="text-muted">${display_time_ago}</small></a>
+      
+    `)
   });
   $("[data-behavior='unread-count']").html(s.length)
   $("[data-behavior='notification-items']").html(s)

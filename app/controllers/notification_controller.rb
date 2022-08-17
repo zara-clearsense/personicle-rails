@@ -3,7 +3,7 @@ class NotificationController < ApplicationController
 
     def index
         @current_user = User.find_by(user_id: session[:oktastate]['uid'])
-        @notifications = @current_user.notifications.unread
+        @notifications = @current_user.notifications.unread.newest_first
         # puts @notifications
     end
 
