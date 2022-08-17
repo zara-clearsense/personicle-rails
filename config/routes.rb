@@ -54,3 +54,4 @@ Rails.application.routes.draw do
   get 'pages/user/responses', :to => 'user_responses#index'
   post 'pages/user/responses', :to => 'user_responses#index'
 end
+

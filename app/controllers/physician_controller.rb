@@ -21,7 +21,7 @@ class PhysicianController < ApplicationController
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=true, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
-            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
+            @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=true,uid=params["data_for_user"])
         else
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
@@ -31,7 +31,7 @@ class PhysicianController < ApplicationController
         end
          
          if !@user_responses.empty?
-            # puts @user_responses
+            # puts @user_responses/
             responses_for_current_physician = @user_responses.filter {|resp| resp['source'].split(':')[1] == session[:oktastate]['uid']} 
             timestamped_responses = []
             responses_for_current_physician.each do |rec|
@@ -41,31 +41,35 @@ class PhysicianController < ApplicationController
                         timestamped_responses.push({'timestamp'=> current_timestamp, 'question_id'=> resp['question-id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
                     end
             end
-# [{timestamp=> <>, question_id => <>, response => <>}]
+
             question_indexed_responses = timestamped_responses.group_by {|rec| [rec['question_id'], rec['timestamp'].to_date, rec['response'], rec['response_type']]}.to_h
             image_responses = timestamped_responses.filter {|rec| rec['response_type'] == 'image'}.group_by{|rec| rec['question_id']}.to_h
-            # @response_count = question_indexed_responses.map{|k,v| [k, v.size()]}
              @patient_responses = question_indexed_responses.map{|k,v| [k, v.size()]}
-            # [[question-id, date, response], count]
-            # puts @response_count    
-            # unique_questions 
+            
             @unique_tags  = @patient_responses.uniq{|rec| rec[0][0]}.collect{|rec| rec[0][0]}
             
             @images =  @patient_responses.select{|rec| rec[0][3] == 'image'}
-            # puts "hello images"
-            # puts image_responses
+           
             @image_urls = []
-            # image_keys_array = []
-            image_responses.each do |k,v|
-                v.each do |val|
-                    image_keys = val['response'].split(";")
-                        image_keys.each do |key|
-                        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                        @image_urls.push([k, val['timestamp'], res['image_url']])
+           
+            if params[:refresh]!="hard_refresh" && Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
+                @image_urls = Rails.cache.fetch([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
+            else
+                image_responses.each do |k,v|
+                    v.each do |val|
+                        image_keys = val['response'].split(";")
+                            image_keys.each do |key|
+                            res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                            @image_urls.push([k, val['timestamp'], res['image_url']])
+                        end
                     end
-                end
+                 end
+                 @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
+
+                 Rails.cache.write([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']],@image_urls, expires_in: 12.minutes)
             end
-            @image_urls = @image_urls.group_by {|rec| rec[0]}.to_h
+            
+            
             # @images.each do |i|
             #     image_keys = i[0][2].split(";")
             #     image_keys.each do |key|

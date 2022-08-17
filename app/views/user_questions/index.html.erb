@@ -5,7 +5,7 @@
 <style>
 </style>
 
-<%= form_with url: pages_dashboard_physician_questions_path , multipart: true, method: :post do  %>
+<%= form_with url: pages_dashboard_physician_questions_path , id: "physician_response_form", multipart: true, method: :post do  %>
 
 <div class="accordion mt-2" id="accordionExample">
     <div class="overlay d-flex justify-content-center align-items-center  text-center">
@@ -47,7 +47,7 @@
                                 <input class="" type="text" name="<%=key[0]%> <%=q['tag']%> string" >
                             </fieldset>
                             </div>
-                         
+                         <%# user_questionnaire %>
                          <% elsif q['response_type'] == 'numeric' %>
                             <div>
                             <fieldset class="my-2">
@@ -86,7 +86,7 @@
 <% end %>
 <script type="text/javascript">
 
-$('form').on('submit', function() {
+$('#physician_response_form').on('submit', function() {
    document.getElementById('spinner-questionnaire').style.display = 'block';
    document.getElementById('submit-responses').disabled = true;
 });

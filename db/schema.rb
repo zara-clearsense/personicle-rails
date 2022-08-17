@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_28_174104) do
+ActiveRecord::Schema.define(version: 2022_08_12_172205) do
+
+  create_table "insights", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "life_aspect", default: "", null: false
+    t.string "impact", default: "", null: false
+    t.string "insight_text", default: "", null: false
+    t.datetime "expiry_time"
+    t.boolean "viewed", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "physician_users", force: :cascade do |t|
     t.string "user_user_id"
@@ -52,6 +63,7 @@ ActiveRecord::Schema.define(version: 2022_06_28_174104) do
     t.string "user_id", null: false
     t.boolean "is_physician", default: false, null: false
     t.json "info", default: {}
+    t.json "questions", default: {}
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

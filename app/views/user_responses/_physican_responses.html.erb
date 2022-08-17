@@ -1,0 +1,188 @@
+<style>
+.hidden {
+    display: none;
+}
+.tab {
+  float: left;
+}
+
+</style>
+<% unique_physicians.each do |phy| %>
+ <% @tags = user_responses_physician.filter {|rec| rec[0][4] == phy}.uniq {|rec| rec[0][0]}.collect {|rec| rec[0][0]} %>
+<% phy_name = Physician.find_by(user_id: phy).name %>
+<div class="accordion" id="physicianResponsesAccordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapsePhysicianResponses<%=phy%>" aria-expanded="true" aria-controls="collapsePhysicianResponses<%=phy%>">
+
+         <%=phy_name%> responses
+        </button>
+      </h2>
+    </div>
+    <div id="collapsePhysicianResponses<%=phy%>" class="collapse" aria-labelledby="headingOne" data-parent="#physicianResponsesAccordion">
+      <div class="card-body">
+        <div id="chart_type_user_physician" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
+              <% @tags.each do |tag| %>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="user_physician_chart_type" value="<%=tag%>_chart"> <%=tag%>
+                </label>    
+              <% end %>
+  </div>
+
+<div class="card mr-1" style="width:82%;height:500px">
+
+  <div class="card-header bg-transparent">
+    <div class="row align-items-center">
+      <div class="col">
+        <h6 class="text-black text-uppercase ls-1 mb-1">Overview</h6>
+        <h5 class="h3 text-black mb-0">Lifestyle data and trends</h5>
+      </div>
+      <div class="col">
+
+        <ul  class="nav nav-pills justify-content-end">
+          <li class="nav-item mr-2 mr-md-0" value="daily" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+          
+           <div id="daily_weekly_actions" class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                  <input type="radio" name="daily_weekly_option" value="daily" checked> Daily
+                </label>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="daily_weekly_option" value="weekly" > Weekly
+                </label>
+            </div>
+           
+          </li>
+          <li class="nav-item"  data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+    
+  <div class="card-body">
+  
+    <!-- Chart -->
+    <div class="chart">
+        
+      <div id="user_physician_charts">
+             <%= form_with url: pages_user_responses_path, local: true, method: :post do  %>
+                <input type="hidden" name="refresh" value="hard_refresh">
+                <%# <input type="hidden" name="data_for_user" value=<%= session[:oktastate]['uid'] %> 
+                 <button  class="btn btn-primary" type="submit">Refresh</button>
+              <% end %> 
+      <% 
+      @current_phy_resp =  user_responses_physician.filter {|rec| rec[0][4] == phy}
+    #   puts @current_phy_resp
+        #   @tags = @current_phy_resp.uniq {|rec| rec[0][0]}.collect{|rec| rec[0][0]}
+        %>
+        <% @tags.each do |tag|%>
+          <div id="<%=tag%>_chart_physician_daily" class="chart hidden">
+           <%
+             
+             @tag_responses=  @current_phy_resp.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1]}
+              numeric_responses = []
+              avg_numeric_responses=[]
+              @numeric_responses_data = []
+              show_numeric_chart = false
+              show_image_chart = false
+
+          
+                 @data = []
+                 @tag_responses.each do |k,v|
+
+                  numeric_responses = v.filter {|r| r[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
+                  image_responses = v.filter {|r| r[0][3] == "image"}.group_by {|rec| rec[0][1]}
+                  avg_numeric_responses = numeric_responses.map {|k,v|  [k, v.sum {|r| r[1] * r[0][2].to_i}/v.sum{ |r| r[1]}] }
+                  if !avg_numeric_responses.empty?
+                      avg_numeric_responses.each do |k,v|
+                        @numeric_responses_data.push(
+                          [k,v] 
+                        )
+                       end
+                    show_numeric_chart = true
+                  elsif !image_responses.empty?
+                    show_image_chart = true 
+                  else
+                      v.each do |key,val|
+                        @data.push({
+                          name: key[2], data: [ [k,val] ]
+                        })
+                      end
+                  end
+                 end
+           %> 
+            
+               <% if show_numeric_chart == true %> 
+                <%# <% puts @numeric_responses_data %>
+                <%# <% puts @data %> 
+
+                <%= line_chart  @numeric_responses_data,points:false, title: tag, round: 2, loading: "Loading...",
+                    xtitle: "", ytitle: ""
+                  %>
+                <% elsif show_image_chart == true%>
+           
+                   <%= react_component("ImageVisualization", {user_id: session[:oktastate]['uid'], image_urls: image_urls_physician, tag: tag, auth: session[:oktastate]['credentials']['token']}) %> 
+              <% else %> 
+                <%# <% puts @data %>  
+                  <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
+                <%end%>  
+          </div>
+
+           <div id="<%=tag%>_chart_physician_weekly" class="chart hidden">
+           <%
+              @tag_responses=  @current_phy_resp.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
+              @data = []
+                 @tag_responses.each do |k,v|
+                      v.each do |key,val|
+                        @data.push({
+                          name: key[2], data: [ [k,val] ]
+                        })
+                        
+                      end
+                 end
+           %> 
+           <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
+          </div>
+        <%end%>
+
+      </div> 
+      <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
+    </div>
+        
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+ </div>
+
+
+
+
+
+<% end %>
+
+<script>
+
+function revealChartTypePhysician(event) {
+    var chart_type = $(event.target).val(); 
+    var chart = $('input[name="daily_weekly_option"]:checked').val();
+    $('#user_physician_charts .chart').hide(); 
+    $('#' + chart_type +"_physician_"+chart).show();  
+}
+$(function() {
+    $('#chart_type_user_physician input').click(revealChartTypePhysician);
+});
+
+// to reveal daily or weekly chart
+function revealChartPhysician(event) {
+    var chart = $(event.target).val(); 
+    var chart_type = $('input[name="user_physician_chart_type"]:checked').val();
+    $('#user_physician_charts .chart').hide(); 
+    $('#' + chart_type +"_physician_"+chart).show();  
+}
+$(function() {
+    $('#daily_weekly_actions input').click(revealChartPhysician);
+});
+</script>
