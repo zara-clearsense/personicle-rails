@@ -8,8 +8,6 @@ class NotificationController < ApplicationController
     end
 
     def mark_notification_as_read
-        logger.info "hello"
-       logger.info request.body.string
        @notification_read = Notification.find_by(id: params[:notif_id]).mark_as_read!
        render json: {success: true}
     end

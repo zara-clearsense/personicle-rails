@@ -180,11 +180,9 @@ function removeNotification(notif_id){
     url : `/pages/notifications/mark_notification_as_read?notif_id=${notif_id}`,
     dataType: "JSON",
     method: "POST",
-    // data: notif_id,
-    success: function(data){
-      get_notif()
+    success: get_notif()
     //  $("[data-behavior='unread-count']").html(total_notif - 1);
-    }
+    
   })
 }
 
