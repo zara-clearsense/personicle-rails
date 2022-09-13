@@ -3,7 +3,17 @@ class DashboardController < ApplicationController
   require 'ostruct'
   require 'date'
   before_action :require_user, :session_active?
+  before_action :set_locale
 
+  protected def set_locale
+    I18n.locale = params[:locale] || # 1: use request parameter, if available
+      session[:locale] ||            # 2: use the value saved in iurrent session
+      I18n.default_locale            # last: fallback to default locale
+  end
+
+  protected def save_locale
+    session[:locale] = I18n.locale
+  end
 
   def index
     puts params
@@ -74,6 +84,43 @@ class DashboardController < ApplicationController
       # puts @daily_weight
     end
 
+    if Rails.env.production?
+      
+
+      Geocoder.search("70.31.77.253")
+      results = Geocoder.search("70.31.77.253")
+      results.first.coordinates# => [30.267153, -97.7430608]results.first.country# => "United States"
+
+      @latitude = request.location.latitude
+      @longitude = request.location.longitude
+
+      data={
+            "individual_id": session[:oktastate]["uid"],
+            "streamName": "com.personicle.individual.datastreams.location",
+            "source": "PERSONICLE_WEB_APP",
+            "dataPoints":[{
+              "timestamp": Time.now.getutc,
+              "value": [{"latitude": @latitude, "longitude": @longitude}]
+            }]
+        }
+
+        puts data.to_json
+        res = RestClient::Request.execute(:url => "https://api.personicle.org/data/write/datastream/upload", :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
+      
+      @ip_address = request.location
+      @country = request.location.country_code
+      @city = request.location.city
+     
+      puts results.first.coordinates
+      puts results.first.country
+
+      
+      puts "session"
+      puts session[:oktastate]["uid"]
+      puts Time.now.getutc
+      
+    end
+
     # puts @response
   end
 
@@ -89,6 +136,10 @@ class DashboardController < ApplicationController
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
       redirect_to pages_dashboard_path, refresh:"hard_refresh"
     end
+  end
+
+  def geocode
+    
   end
 
 end
