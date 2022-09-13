@@ -85,8 +85,8 @@ class DashboardController < ApplicationController
     end
 
     if Rails.env.production?
-      results = Geocoder.search("test-ip")
-      results.first.coordinates
+      # results = Geocoder.search("test-ip")
+      # puts results.first.coordinates
 
       @latitude = request.location.latitude
       @longitude = request.location.longitude
