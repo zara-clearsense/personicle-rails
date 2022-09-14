@@ -85,13 +85,16 @@ class DashboardController < ApplicationController
     end
 
     if Rails.env.production?
-      results = Geocoder.search(request.remote_ip)
+      ip = "#{request.ip}"
+      results = Geocoder.search(ip)
       # puts results.first.coordinates
-
+      puts ip
       # @latitude = request.safe_location.latitude
       # @longitude = request.safe_location.longitude
       @latitude =  results.first.coordinates[0]
       @longitude =  results.first.coordinates[1]
+      puts @latitude
+      puts @longitude
 
       data={
             "individual_id": session[:oktastate]["uid"],
