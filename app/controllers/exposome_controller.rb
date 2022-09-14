@@ -28,7 +28,7 @@ class ExposomeController < ApplicationController
         "com.personicle.individual.datastreams.exposome.humidity",
         "com.personicle.individual.datastreams.exposome.uvi"
     ]
-
+    end
     def get_exposome_data
         required = [ :exposomeType]
         @exposome_streams = [
@@ -60,7 +60,7 @@ class ExposomeController < ApplicationController
         et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
 
         exposome_type = params[:exposomeType]
-        puts exposome_type
+        # puts exposome_type
 
         # For each call of this API, need to store this data in hash variable / hash object
         # @exposome_streams_hash = {}
