@@ -85,11 +85,13 @@ class DashboardController < ApplicationController
     end
 
     if Rails.env.production?
-      # results = Geocoder.search("test-ip")
+      results = Geocoder.search(request.remote_ip)
       # puts results.first.coordinates
 
-      @latitude = request.location.latitude
-      @longitude = request.location.longitude
+      # @latitude = request.safe_location.latitude
+      # @longitude = request.safe_location.longitude
+      @latitude =  results.first.coordinates[0]
+      @longitude =  results.first.coordinates[1]
 
       data={
             "individual_id": session[:oktastate]["uid"],
@@ -101,7 +103,7 @@ class DashboardController < ApplicationController
             }]
         }
 
-        puts data.to_json
+        # puts data.to_json
         res = RestClient::Request.execute(:url => "https://api.personicle.org/data/write/datastream/upload", :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
            
     end
