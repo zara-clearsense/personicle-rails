@@ -83,3 +83,5 @@ group :production do
 end
 
 gem "noticed", "~> 1.5"
+
+gem "sidekiq-scheduler", "~> 4.0"

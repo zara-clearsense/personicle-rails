@@ -126,6 +126,8 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.10.0)
+    et-orbi (1.2.7)
+      tzinfo
     execjs (2.8.1)
     faraday (2.3.0)
       faraday-net_http (~> 2.0)
@@ -139,6 +141,9 @@ GEM
       thor (>= 0.14.0, < 2)
     font-awesome-rails (4.7.0.8)
       railties (>= 3.2, < 8.0)
+    fugit (1.5.3)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
     groupdate (6.1.0)
@@ -230,6 +235,7 @@ GEM
     public_suffix (4.0.7)
     puma (4.3.12)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.3.1)
     rack-proxy (0.7.2)
@@ -277,6 +283,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
+    redis (4.7.1)
     regexp_parser (2.5.0)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -289,6 +296,8 @@ GEM
     rexml (3.2.5)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+    rufus-scheduler (3.8.2)
+      fugit (~> 1.1, >= 1.1.6)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -305,6 +314,15 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
+    sidekiq (6.5.4)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.5.0)
+    sidekiq-scheduler (4.0.2)
+      redis (>= 4.2.0)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 4)
+      tilt (>= 1.4.0)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -395,6 +413,7 @@ DEPENDENCIES
   rest-client
   sass-rails (>= 6)
   selenium-webdriver
+  sidekiq-scheduler (~> 4.0)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3 (~> 1.4)
