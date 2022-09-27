@@ -1,5 +1,7 @@
 class UserQuestionsController < ApplicationController
-    before_action :require_user, :session_active?, :get_user_notifications
+    before_action :require_user, only: [:index]
+    before_action :session_active?, only: [:index]
+    before_action :get_user_notifications, only: [:index]
     def index
         @questions = {}
         @user = User.find_by(user_id: session[:oktastate]['uid'])
@@ -10,8 +12,28 @@ class UserQuestionsController < ApplicationController
             @questions[[phy.id,phy.name]] = @physician_questions if !@physician_questions.empty?
              
         end
+        puts @questions
+        logger.info @questions
     end
 
+    def get_physicians_questions
+        begin
+            res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+            @user = User.find_by(user_id: res['user_id'])
+              return  render json: @user.to_json(
+                    only: [:name],
+                    :include => {:physician_users => {only: [:physician_user_id, :questions], :include => {:physician => {only: [:name] }}}
+                    }
+                )
+            
+        rescue => exception
+            if exception.response.code == 401
+              return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+            end
+        end
+       
+      
+    end
     # def client_image_validation(images)
     #     # puts "client image validatoin"
     #     # puts images

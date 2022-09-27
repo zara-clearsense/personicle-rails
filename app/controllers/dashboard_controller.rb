@@ -88,13 +88,13 @@ class DashboardController < ApplicationController
       ip = "#{request.ip}"
       results = Geocoder.search(ip)
       # puts results.first.coordinates
-      puts ip
+      # puts ip
       # @latitude = request.safe_location.latitude
       # @longitude = request.safe_location.longitude
       @latitude =  results.first.coordinates[0]
       @longitude =  results.first.coordinates[1]
-      puts @latitude
-      puts @longitude
+      # puts @latitude
+      # puts @longitude
 
       data={
             "individual_id": session[:oktastate]["uid"],
