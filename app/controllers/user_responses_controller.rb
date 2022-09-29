@@ -1,5 +1,5 @@
 class UserResponsesController < ApplicationController
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
     # format data for chart
     # args: user_repsonses, data_type (physician_questionnaire or user_questionnaire, physician_response: bool)
     def format_data_to_visualize(user_responses,data_type,physician_responses)
@@ -31,13 +31,14 @@ class UserResponsesController < ApplicationController
                         image_keys = val['response'].split(";")
                             image_keys.each do |key|
                                 begin
-                                    
                                     res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                                     # puts key
                                     image_urls.push([k, val['timestamp'], res['image_url']])
                                 rescue => exception
                                     puts "deleted key " + key
-                                    next
+                                    if exception.response.code == 404
+                                        next
+                                    end
                                 end
                             
                         end
@@ -69,6 +70,8 @@ class UserResponsesController < ApplicationController
         if !user_physician_responses.empty?
             @user_responses_physician, @unique_tags_physician, @image_urls_physician  = format_data_to_visualize(user_physician_responses,"com.personicle.individual.datastreams.subjective.physician_questionnaire",true)
             @unique_physicians = @user_responses_physician.uniq {|rec| rec[0][4]}.collect{|rec| rec[0][4]}
+            puts "hello"
+            puts @unique_physicians
         end
        
     end #index end

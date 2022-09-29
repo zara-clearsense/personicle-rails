@@ -38,43 +38,48 @@ end
             <i class="ni ni-zoom-split-in"></i>
           </a>
         </li>
-        <!--<li class="nav-item dropdown">
+        <li class="nav-item dropdown" data-behavior="notifications">
           <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ni ni-bell-55"></i>
+            <i class="ni ni-bell-55"></i> <span style="color:red;" data-behavior="unread-count"></span>
           </a>
-          <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">-->
-            <!-- Dropdown header -->
-            <!--<div class="px-3 py-3">
-              <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">13</strong> notifications.</h6>
-            </div> -->
-            <!-- List group -->
-            <!--<div class="list-group list-group-flush">
-              <a href="#!" class="list-group-item list-group-item-action">
+          <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden" >
+             <%# Dropdown header  %>
+            <div class="px-3 py-3" data-behavior="notifications-count">
+              <%# <h6 class="text-sm text-muted m-0"> You have <%= pluralize( @notifications.length, 'notification' ) %>.
+
+              <%# <h6 class="text-sm text-muted m-0">You have <strong class="text-primary"><%= @notifications.length</strong>  %>
+            </div>
+             <%# List group  %>
+            <div class="list-group list-group-flush" data-behavior="notification-items">
+              <%# <a href="#!" class="list-group-item list-group-item-action"> %>
                 <div class="row align-items-center">
-                  <div class="col-auto"> -->
+                  <%# <div class="col-auto"> 
                     <!-- Avatar -->
-                      <%# <%= image_tag "theme/team-1.jpg", alt: "Image placeholder", class: "avatar rounded-circle" %> 
-                  <!--</div>
+                      <%= image_tag "theme/team-1.jpg", alt: "Image placeholder", class: "avatar rounded-circle" %> 
+                  <%# </div> %> 
                   <div class="col ml--2">
                     <div class="d-flex justify-content-between align-items-center">
-                      <div>
+                      <%# <div>
                         <h4 class="mb-0 text-sm"><%= session[:oktastate]["info"]["name"] %></h4>
-                      </div>
+                      <%# </div>
                       <div class="text-right text-muted">
                         <small>2 hrs ago</small>
-                      </div>
+                      </div> %> 
                     </div>
-                    <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
+                    <%# <%= render 'pages/dashboard/notification', notifications: @notifications %>  
+                    <%# <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p> %>
                   </div>
                 </div>
               </a>
-            </div> -->
+            </div> 
             <!-- View all -->
-            <!-- <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+            <%# <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a> %>
+
+            <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
           </div> 
-        </li> -->
-        <!--
-        <li class="nav-item dropdown">
+        </li> 
+        
+        <%# <li class="nav-item dropdown">
           <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="ni ni-ungroup"></i>
           </a>
@@ -118,8 +123,8 @@ end
               </a>
             </div>
           </div>
-        </li>
-      </ul> -->
+        </li> %>
+      </ul> 
       <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
         <li class="nav-item dropdown">
           <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -168,3 +173,70 @@ end
     </div>
   </div>
 </nav>
+<script>
+
+function removeNotification(notif_id){
+    $.ajax({
+    url : `/pages/notifications/mark_notification_as_read?notif_id=${notif_id}`,
+    dataType: "JSON",
+    method: "POST",
+    success: get_notif()
+    //  $("[data-behavior='unread-count']").html(total_notif - 1);
+  })
+}
+function handleSuccess(data){
+  
+  var s=[]
+  var notif_count = 0
+  var items = $.map(data, function(notification,i) {
+    var display_time_ago = ""
+    var current = new Date().getTime();
+    var created = new Date(notification.created_at).getTime();
+    var time_diff = current - created
+    var time_ago = Math.floor(time_diff / 1000 / 60 / 60);
+
+    if(time_ago < 1){
+      time_ago = Math.floor(time_diff / 1000 / 60 );
+      if (time_ago < 1){
+        time_ago = Math.floor(time_diff / 1000 );
+        display_time_ago = time_ago + " seconds ago"
+      } else {
+        if(time_ago == 1){
+           display_time_ago = time_ago + " min ago"
+        }else {
+           display_time_ago = time_ago + " mins ago"
+        }
+      }
+   
+    } else if (time_ago == 1){
+      display_time_ago = time_ago + " hr ago"
+    } else {
+      display_time_ago = time_ago + " hrs ago"
+    }
+    // console.log(`<a class='dropdown-item' href='${notification.url}'>${notification.insight_text}</a>`);
+    s.push(`<a class='dropdown-item' data-behavior='notpification-link' onclick='removeNotification(${notification.id});'value='${notification.id}' href='${notification.url}'>${notification.insight_text} <small class="text-muted">${display_time_ago}</small></a>
+      
+    `)
+  });
+  $("[data-behavior='unread-count']").html(s.length)
+  $("[data-behavior='notification-items']").html(s)
+  
+  $("[data-behavior='notifications-count']").html(`<h6 class='text-sm text-muted m-0'> You have <strong class="text-primary">${s.length}</strong> notifications.</h6>`)
+
+
+}
+function get_notif(){
+ $.ajax({
+    url : "/pages/notifications.json",
+    dataType: "JSON",
+    method: "GET",
+    success: function(data){
+      handleSuccess(data)
+    }
+  })
+}
+var notifications = $("[data-behavior='notifications']")
+if (notifications.length > 0){
+ get_notif()
+}
+</script>

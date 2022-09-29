@@ -54,6 +54,9 @@ Rails.application.routes.draw do
   get 'pages/user/responses', :to => 'user_responses#index'
   post 'pages/user/responses', :to => 'user_responses#index'
 
+  get 'pages/notifications', :to => 'notification#index'
+  post 'pages/notifications/mark_notification_as_read', :to => 'notification#mark_notification_as_read'
   get 'pages/dashboard', to: 'dashboard#geocode'
+  get 'physician/questions', :to=> 'user_questions#get_physicians_questions'
 end
 

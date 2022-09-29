@@ -7,6 +7,7 @@
 }
 
 </style>
+<% if !unique_physicians.nil?%>
 <% unique_physicians.each do |phy| %>
  <% @tags = user_responses_physician.filter {|rec| rec[0][4] == phy}.uniq {|rec| rec[0][0]}.collect {|rec| rec[0][0]} %>
 <% phy_name = Physician.find_by(user_id: phy).name %>
@@ -158,10 +159,8 @@
  </div>
 
 
-
-
-
 <% end %>
+<% end %> 
 
 <script>
 
