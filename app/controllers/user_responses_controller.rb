@@ -9,7 +9,7 @@ class UserResponsesController < ApplicationController
                     responses = rec['value']
                     phy = physician_responses ? rec['source'].split(":")[1]  : ""
                     responses.each do |resp|
-                        timestamped_responses.push({'timestamp'=> current_timestamp, 'physician' => phy, 'question_id'=> resp['question-id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
+                        timestamped_responses.push({'timestamp'=> current_timestamp, 'physician' => phy, 'question_id'=> resp['question_id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
                     end
             end
 

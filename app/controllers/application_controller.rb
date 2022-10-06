@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
         end
         image_keys = image_keys.join(";")
         image_response_packet.append({
-            "question-id": tag,
+            "question_id": tag,
             "value": image_keys,
             "response_type": "image"
         })
@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
     survey.each do |survey_resp|
         if !survey_resp[:value].empty?
             survey_response_packet.append({
-                "question-id": survey_resp[:'question-id'],
+                "question_id": survey_resp[:'question-id'],
                 "value": survey_resp[:value],
                 "response_type": "survey"
             })
@@ -175,7 +175,7 @@ class ApplicationController < ActionController::Base
     numeric.each do |numeric_resp|
         if !numeric_resp[:value].empty?
             numeric_response_packet.append({
-                "question-id": numeric_resp[:'question-id'],
+                "question_id": numeric_resp[:'question-id'],
                 "value": numeric_resp[:value].to_s,
                 "response_type": "numeric"
             })
@@ -185,7 +185,7 @@ class ApplicationController < ActionController::Base
     string.each do |string_resp|
         if !string_resp[:value].empty?
             string_response_packet.append({
-                "question-id": string_resp[:'question-id'],
+                "question_id": string_resp[:'question-id'],
                 "value": string_resp[:value].to_s,
                 "response_type": "string"
             })
