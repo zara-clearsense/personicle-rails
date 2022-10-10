@@ -80,6 +80,9 @@ GEM
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     bcrypt (3.1.18)
+    best_in_place (3.1.1)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     bindex (0.8.1)
     bootsnap (1.13.0)
       msgpack (~> 1.2)
@@ -352,6 +355,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-session_store
   ajax-datatables-rails
+  best_in_place
   bootsnap (>= 1.4.2)
   bootstrap-will_paginate (= 1.0.0)
   byebug

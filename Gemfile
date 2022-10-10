@@ -27,6 +27,7 @@ gem 'rails-i18n', '~> 6.0.0' # For 6.0.0 or higher # GEOCODER #I18n
 gem 'geoip'
 gem 'geocoder'
 
+
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets

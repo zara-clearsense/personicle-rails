@@ -129,7 +129,7 @@ class DashboardController < ApplicationController
     # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
     # params[:select-all] = select-all_value
     events = params[:selected_events]
-
+ 
     if !events.nil?
       events = events.join(";")
       url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
@@ -138,8 +138,29 @@ class DashboardController < ApplicationController
     end
   end
 
-  def geocode
+  def update_event
     
+  #   # url = "https://api.personicle.org/data/write/event/delete"?user_id=userid&event_id=some_event_id;another_event_id
+  #   # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
+  #   # params[:select-all] = select-all_value
+
+  # ## Get Updated Event
+  events = params[:selected_events]
+
+  #   ## Delete Original Event
+  #   delete_event
+
+  # ## Call API Endpoint to Add Events
+  #   if !events.nil?
+  #     events = events.join(";")
+  #     url = "https://api.personicle.org/data/write/events?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+  #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+  #     redirect_to pages_dashboard_path, refresh:"hard_refresh"
+  #   end
+  
+  puts "Params"
+  puts params
+  redirect_to pages_dashboard_path, refresh:"hard_refresh"
   end
 
 end

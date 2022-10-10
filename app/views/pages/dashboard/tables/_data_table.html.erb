@@ -1,11 +1,10 @@
 <%# CSS and JavaScript for Pagination %>
  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>  
-
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
 <%#  %>
 <%# Data Table - User Events %>
-  <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %> 
+  <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %>
   <div class="card">
   <div class="card-header border-0">
     <div class="row align-items-center">
@@ -13,7 +12,8 @@
         <h3 class="mb-0">User Events</h3>
       </div>
       <div class="col text-right">
-        <button type="submit" class="btn btn-sm btn-primary">Delete Selected</button>
+        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/dashboard/update-event' name="update_event" onclick="sendJSON()">Update Selected</button>
+        <button type="submit" class="btn btn-sm btn-primary" name="delete_event">Delete Selected </button>
       </div>
     </div>
   </div>
@@ -41,35 +41,36 @@
             <%# <% puts record['parameters'].to_json %>  
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
-            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" />
+            <input type="checkbox" id="row-check-<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" />
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
           </td>
           <td id="second">
-            <%=record['start_time']%>
+            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%d %H:%M')%>" onchange="dateChangeHandle(this)">
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <span class="mr-2"><%=user_data_table[0]['end_time']%></span>
+              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%d %H:%M')%>" onchange="dateChangeHandle(this)">
             </div>
           </td>
-          <td scope="row" class="context-menu" data-container-id="context-menu-items">
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="source-<%=record['unique_event_id']%>" name="source">
           <%=record['source']%>
           </td>
-          <td scope="row" class="context-menu" data-container-id="context-menu-items">
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="event-name-<%=record['unique_event_id']%>" name="event_name">
           <%=record['event_name']%>
           </td>
-          <td scope="row">
-            <a tabindex="0" role="button"  data-toggle="popover" data-animation="true" data-trigger="hover click" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName if !record['parameters'].source_device.nil? %> Version: <%=record['parameters'].source_device.version if !record['parameters'].source_device.nil? %>  Details URL: <%=record['parameters'].source_device.detailsUrl if !record['parameters'].source_device.nil?%>  ">See Details</a>
+          <td scope="row" id="parameters-<%=record['unique_event_id']%>" name="parameters">
+            <input id="hidden-parameters-<%=record['unique_event_id']%>" type="hidden" value="<%=record['parameters'].to_json%>" name="parameters"/>
+            <a tabindex="0" role="button" data-toggle="popover" data-animation="true" data-trigger="hover click" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName if !record['parameters'].source_device.nil? %> Version: <%=record['parameters'].source_device.version if !record['parameters'].source_device.nil? %>  Details URL: <%=record['parameters'].source_device.detailsUrl if !record['parameters'].source_device.nil?%>  ">See Details</a>
           </td>
         </tr>
-        <% end %> 
       <% end %>
       </tbody>
       
     </table>
-    <%# <%= form.submit "Search" %> 
+    <%# <%= form.submit "Search" %>
+    <% end %>
 <% end %>
   </div>
 </div>
@@ -95,27 +96,21 @@ $("#delete-button").on("click", function(e) {
   $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
 });
 
-// Prevent Page Refresh When Click Element Parameters In Table
-// $( "a" ).click(function( event ) {
-//   event.preventDefault();
-//   $( "<div>" )
-//     .append( "default " + event.type + " prevented" )
-//     .appendTo( "#log" );
-// });
 
 // Handle Select
-// function handleSelect(source) {
-//   console.log($(source).attr('id'))
-//   if(document.getElementById($(source).attr('id')).checked) {
-//       console.log("Adding event id" + $(source).attr('id'))
-//       eventIDs.push($(source).attr('id').replace("row-check-",""))
-//    } else {
-//       console.log("Removing event id" + $(source).attr('id'))
-//       eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
-// ;});
-//    }
+function handleSelect(source) {
+  console.log($(source).attr('id'))
 
-// }
+  if(document.getElementById($(source).attr('id')).checked) {
+      console.log("Adding event id" + $(source).attr('id'))
+      eventIDs.push($(source).attr('id').replace("row-check-",""))
+      event.push($(source).attr('id'))
+   } else {
+      console.log("Removing event id" + $(source).attr('id'))
+      eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
+;});
+   }
+}
 
 // Pop-Up Box for Parameters
 $(document).ready(function(){
@@ -129,5 +124,199 @@ $('.popover-dismiss').popover({
 $(document).ready( function () {
     $('#delete-table').DataTable();
 } );
+
+// Update Row
+$("#update-button").on("click", function(e) {
+  $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
+});
+
+
+// Call a function to capture initial value of date picker
+//     $("#selectdaterange").click(function() {
+//         var startDate = document.getElementById("selectdaterange").value;
+//         alert("Start Date :" + startDate);
+//     });
+
+// // Call a function when values of the date picker changes
+// $(".date").on("change", function changeSession() {
+//     var endDate = $(this).val();
+//     alert("End Date :" + endDate);
+// }); 
+
+function dateChangeHandle(obj) {
+  console.log(obj.id);
+  alert(obj.id);
+  console.log("row-check-"+obj.id.replace("startdate-",""))
+ 
+  
+  if (obj.id.startsWith("start")) {
+      let checkbox = document.getElementById("row-check-"+obj.id.replace("startdate-",""));
+      checkbox.checked = true;
+
+      let startDate = document.getElementById("startdate-"+obj.id.replace("startdate-",""));
+      console.log(startDate);
+      console.log(startDate.value);
+
+      let source = document.getElementById("source-"+obj.id.replace("startdate-",""));
+      console.log(source.textContent);
+
+      let eventname = document.getElementById("event-name-"+obj.id.replace("startdate-",""));
+      console.log(eventname.textContent);
+
+      let parameters = document.getElementById("parameters-"+obj.id.replace("startdate-",""));
+      var JSONString = JSON.parse(parameters);
+      console.log(JSONString.textContent);
+}
+  else {
+      let checkbox = document.getElementById("row-check-"+obj.id.replace("end-date-",""));
+      checkbox.checked = true;
+
+      let endDate = document.getElementById("end-date-"+obj.id.replace("end-date-",""));
+      console.log(endDate);
+      console.log(endDate.value);
+
+      let source = document.getElementById("source-"+obj.id.replace("end-date-",""));
+      console.log(source.textContent);
+
+      let eventname = document.getElementById("event-name-"+obj.id.replace("end-date-",""));
+      console.log(eventname.textContent);
+
+      let parameters = document.getElementById("parameters-"+obj.id.replace("end-date-",""));
+      var JSONString = JSON.parse(parameters);
+      console.log(JSONString.textContent);
+
+  }
+
+  // let duration = endDate - startDate;
+  // console.log(duration);
+
+//   // Put Events Data in JSON Format
+// get parameters string and then extract information from that
+// if unselect row manually, remove the event from jsonObj as well - event will not be updated in backend
+// 1) use jsonObj as a global variable to keep track of events selected, use function defined as onChange event handler associated with checkboxes
+// - updated everytime select or unselect a row. Update jsonObj global variable. 
+// Define onChange handler and associate that with the row. 
+// 2) how to access name = selected_events[] array in JS. Keeps track of all the rows that have been selected. 
+
+// Data must be passed from browser to the rails application. Access selected_events[] in browser. 
+
+// How to pass JS object to rails API?
+}
+
+// function CheckSelected(selected) {
+//   const selected = document.getElementsByName("selected_events[]");
+//   for (let i = 0; i < selected.length; i++) {
+//     if (selected[i].type == "checkbox") {
+//       selected[i].checked = true;
+//     }
+//   }
+// }
+
+function sendJSON(){
+
+      var grid = document.getElementById("delete-table");
+    
+    // Reference the CheckBoxes in Table.
+      var checkBoxes = grid.getElementsByTagName("INPUT");
+      var message = "Event_ID          StartTime       EndTime      Source          EventName            ListOfParameters\n";
+
+      // let jsonObj = [];
+    // Loop through the CheckBoxes.
+    let jsonObj = [];
+      for (var i = 0; i < checkBoxes.length; i++) {
+          if (checkBoxes[i].checked) {
+              console.log("checkBoxes: " + checkBoxes[i].id);
+              var row = checkBoxes[i].parentNode.parentNode;
+                message += row.cells[1].innerHTML;
+                message += "   " + document.getElementById("startdate-"+checkBoxes[i].id.replace("row-check-","")).value;
+                message += "   " + document.getElementById("end-date-"+checkBoxes[i].id.replace("row-check-","")).value;
+                message += "   " + row.cells[4].innerHTML;
+                message += "   " + row.cells[5].innerHTML;
+                message += "   " + document.getElementById("hidden-parameters-"+checkBoxes[i].id.replace("row-check-","")).value;
+                message += "\n";
+
+          // Converting JSON data to string
+            jsonObj.push(JSON.stringify({  
+                      "start_time": document.getElementById("startdate-"+checkBoxes[i].id.replace("row-check-","")).value,
+                      "end_time": document.getElementById("end-date-"+checkBoxes[i].id.replace("row-check-","")).value,
+                      "event_name": row.cells[5].innerHTML,
+                      "source": row.cells[4].innerHTML,
+                      "parameters": document.getElementById("hidden-parameters-"+checkBoxes[i].id.replace("row-check-","")).value }) 
+              ); 
+            }
+          }
+
+          alert(message);
+          alert(jsonObj);
+              
+            // Creating a XHR object
+            let xhr = new XMLHttpRequest();
+            let url = 'https://app.personicle.org/pages/dashboard/update-event';
+       
+            // open a connection
+            xhr.open("POST", url, true);
+ 
+            // Set the request header i.e. which type of content you are sending
+            xhr.setRequestHeader("Content-Type", "application/json");
+ 
+            // Create a state change callback
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+ 
+                    // Print received data from server
+                    result.innerHTML = this.responseText;
+ 
+                }
+            };
+ 
+        
+ 
+            // Sending data with the request
+            xhr.send({"new_events": jsonObj});
+        }
+
+// function GetSelected() {
+//         //Reference the Table.
+//         var grid = document.getElementById("delete-table");
+    
+//       //Reference the CheckBoxes in Table.
+//         var checkBoxes = grid.getElementsByTagName("INPUT");
+//         var message = "Event_ID          StartTime       EndTime      Source          EventName            ListOfParameters\n";
+
+//         let jsonObj = [];
+
+//       //Loop through the CheckBoxes.
+//         for (var i = 0; i < checkBoxes.length; i++) {
+//             if (checkBoxes[i].checked) {
+
+//                 console.log("checkBoxes: " + checkBoxes[i].id);
+//                 var row = checkBoxes[i].parentNode.parentNode;
+//                 // message += row.cells[1].innerHTML;
+//                 // message += "   " + document.getElementById("startdate-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                 // message += "   " + document.getElementById("end-date-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                 // message += "   " + row.cells[4].innerHTML;
+//                 // message += "   " + row.cells[5].innerHTML;
+//                 // message += "   " + document.getElementById("hidden-parameters-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                 // message += "\n";
+
+//                 jsonObj.push(
+//                     {
+//                       "start_time": document.getElementById("startdate-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                       "end_time": document.getElementById("end-date-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                       "event_name": row.cells[5].innerHTML;
+//                       "source": row.cells[4].innerHTML;
+//                       "parameters": document.getElementById("hidden-parameters-"+checkBoxes[i].id.replace("row-check-","")).value;
+//                     })
+//             }
+//         }
+ 
+//         //Display selected Row data in Alert Box.
+//         alert(message);
+//         alert(jsonObj);
+
+  
+
+        
+// }  
 
 </script>
