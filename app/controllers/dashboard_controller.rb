@@ -139,13 +139,18 @@ class DashboardController < ApplicationController
   end
 
   def update_event
-    
+  # Inside update make 2 API calls
+  # 1. Delete event api
+  # 2. Add events api
+
   #   # url = "https://api.personicle.org/data/write/event/delete"?user_id=userid&event_id=some_event_id;another_event_id
   #   # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
   #   # params[:select-all] = select-all_value
 
   # ## Get Updated Event
-  events = params[:selected_events]
+  delete_eventIds = params[:selected_events]
+
+  updated_events = params[:updated_events]
 
   #   ## Delete Original Event
   #   delete_event
@@ -153,7 +158,7 @@ class DashboardController < ApplicationController
   # ## Call API Endpoint to Add Events
   #   if !events.nil?
   #     events = events.join(";")
-  #     url = "https://api.personicle.org/data/write/events?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+  #     url = "https://api.personicle.org/data/write/events"
   #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
   #     redirect_to pages_dashboard_path, refresh:"hard_refresh"
   #   end
