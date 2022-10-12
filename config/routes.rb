@@ -58,5 +58,9 @@ Rails.application.routes.draw do
   post 'pages/notifications/mark_notification_as_read', :to => 'notification#mark_notification_as_read'
   get 'pages/dashboard', to: 'dashboard#geocode'
   get 'physician/questions', :to=> 'user_questions#get_physicians_questions'
+  get 'api/physicians', :to=> 'physicians_api#get_users_physicians'
+  get 'api/physician/:id', :to=> 'physicians_api#get_physician'
+
+
 end
 
