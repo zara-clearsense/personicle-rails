@@ -132,7 +132,7 @@ class DashboardController < ApplicationController
  
     if !events.nil?
       events = events.join(";")
-      url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+      url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
       redirect_to pages_dashboard_path, refresh:"hard_refresh"
     end
@@ -140,17 +140,28 @@ class DashboardController < ApplicationController
 
   def update_event
   # Inside update make 2 API calls
-  # 1. Delete event api
+ 
+ 
+     # 1. Delete event api
+     events = params[:selected_events]
+ 
+     if !events.nil?
+       events = events.join(";")
+       url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+      #  redirect_to pages_dashboard_path, refresh:"hard_refresh"
+     end
+
   # 2. Add events api
+  # delete_eventIds = JSON.parse(params[:selected_events])
+  # puts delete_eventIds
 
-  #   # url = "https://api.personicle.org/data/write/event/delete"?user_id=userid&event_id=some_event_id;another_event_id
-  #   # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
-  #   # params[:select-all] = select-all_value
-
-  # ## Get Updated Event
-  delete_eventIds = params[:selected_events]
-
-  updated_events = params[:updated_events]
+  updated_events = JSON.parse(params[:updated_events])
+  puts updated_events.class
+  # puts updated_events
+  # puts JSON.parse(params[:updated_events].class)
+  
+  res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => updated_events.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
 
   #   ## Delete Original Event
   #   delete_event
@@ -159,7 +170,7 @@ class DashboardController < ApplicationController
   #   if !events.nil?
   #     events = events.join(";")
   #     url = "https://api.personicle.org/data/write/events"
-  #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+  #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :post,:verify_ssl => false ),object_class: OpenStruct)
   #     redirect_to pages_dashboard_path, refresh:"hard_refresh"
   #   end
   

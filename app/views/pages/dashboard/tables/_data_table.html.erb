@@ -49,11 +49,11 @@
             <%=record['unique_event_id']%>
           </td>
           <td id="second">
-            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%d %H:%M')%>" onchange="dateChangeHandle(this)">
+            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%d %H:%M')%>" onchange="dateChangeHandle(this)">
+              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
             </div>
           </td>
           <td scope="row" class="context-menu" data-container-id="context-menu-items" id="source-<%=record['unique_event_id']%>" name="source">
