@@ -6,6 +6,7 @@
 <%# Data Table - User Events %>
   <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %>
   <input type="hidden" id="updated_events" name="updated_events" value="[]"/>
+  <input type="hidden" id="selected_events" name="selected_events" value="[]">
   <div class="card">
   <div class="card-header border-0">
     <div class="row align-items-center">
@@ -13,7 +14,7 @@
         <h3 class="mb-0">User Events</h3>
       </div>
       <div class="col text-right">
-        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/dashboard/update-event' name="update_event" onclick="sendJSON()">Update Selected</button>
+        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/dashboard/update-event' name="update_event" onclick="checkCheckboxes()">Update Selected</button>
         <button type="submit" class="btn btn-sm btn-primary" name="delete_event">Delete Selected </button>
       </div>
     </div>
@@ -43,7 +44,7 @@
             <%# <% puts record['parameters'].to_json %>  
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
-            <input type="checkbox" id="row-check-<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" onchange="sendJSON()"/>
+            <input type="checkbox" id="row-check-<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected[]" value="select-all" onchange="checkCheckboxes(this)"/>
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
@@ -136,56 +137,110 @@ $("#update-button").on("click", function(e) {
 function dateChangeHandle(obj) {
   
   console.log(obj.id + " changed")
+  var checkbox;
   if (obj.id.startsWith("start")) {
-      let checkbox = document.getElementById("row-check-"+obj.id.replace("startdate-",""));
+      checkbox = document.getElementById("row-check-"+obj.id.replace("startdate-",""));
       checkbox.checked = true;
+      // let unique_event_id = obj.id.replace("startdate-","");
   }
   else {
-      let checkbox = document.getElementById("row-check-"+obj.id.replace("end-date-",""));
+      checkbox = document.getElementById("row-check-"+obj.id.replace("end-date-",""));
       checkbox.checked = true;
+      // let unique_event_id = obj.id.replace("end-date","");
   }
-  sendJSON();
+  checkCheckboxes(checkbox);
 }
 
-//   // Put Events Data in JSON Format
-// get parameters string and then extract information from that
-// if unselect row manually, remove the event from jsonObj as well - event will not be updated in backend
-// 1) use jsonObj as a global variable to keep track of events selected, use function defined as onChange event handler associated with checkboxes
-// - updated everytime select or unselect a row. Update jsonObj global variable. 
-// Define onChange handler and associate that with the row. 
-// 2) how to access name = selected_events[] array in JS. Keeps track of all the rows that have been selected. 
+function addEvent(event) {
 
-// Data must be passed from browser to the rails application. Access selected_events[] in browser. 
-
-// How to pass JS object to rails API?
-
-function sendJSON(){
-
-      var grid = document.getElementById("delete-table");
+  // Reference the CheckBoxes in Table.
+  var grid = document.getElementById("delete-table");
     
-    // Reference the CheckBoxes in Table.
-      var checkBoxes = grid.getElementsByTagName("INPUT");
+  // Reference the CheckBoxes in Table.
+  var checkBoxes = grid.getElementsByTagName("INPUT");
 
-      // let jsonObj = [];
-    // Loop through the CheckBoxes.
-    let jsonObj = [];
-    for (var i = 0; i < checkBoxes.length; i++) {
-        if (checkBoxes[i].checked) {
-            // console.log("checkBoxes: " + checkBoxes[i].id);
+  // alert(document.getElementById(event.id.replace("row-check-","")));
+  let unique_event_id = event.id;
+  // console.log(unique_event_id);
+  let hidden_field = document.getElementById("updated_events");
+  // console.log(hidden_field);
+  let selected_events = document.getElementById("selected_events");
+  // console.log(selected_events);
+  var jsonObj = JSON.parse(hidden_field.value);
+  var selected_event_ids= JSON.parse(selected_events.value);
 
-        // Converting JSON data to string
-            jsonObj.push({  
-                      "start_time": document.getElementById("startdate-"+checkBoxes[i].id.replace("row-check-","")).value,
-                      "end_time": document.getElementById("end-date-"+checkBoxes[i].id.replace("row-check-","")).value,
-                      "event_name": document.getElementById("event-name-"+checkBoxes[i].id.replace("row-check-","")).innerHTML,
-                      "source": document.getElementById("source-"+checkBoxes[i].id.replace("row-check-","")).innerHTML,
-                      "parameters": document.getElementById("hidden-parameters-"+checkBoxes[i].id.replace("row-check-","")).value 
-                      }) 
+        if (event.checked) {
+          addedEvent = {  
+                      "start_time": document.getElementById("startdate-"+unique_event_id.replace("row-check-","")).value,
+                      "end_time": document.getElementById("end-date-"+unique_event_id.replace("row-check-","")).value,
+                      "event_name": document.getElementById("event-name-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "source": document.getElementById("source-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "parameters": document.getElementById("hidden-parameters-"+unique_event_id.replace("row-check-","")).value 
+                      }
+          jsonObj.push(addedEvent);
+
+          selected_event_ids.push(unique_event_id.replace("row-check-",""));
+          
+          }
+  console.log(jsonObj);
+  hidden_field.value = JSON.stringify(jsonObj);
+  console.log(hidden_field.value);
+  selected_events.value = JSON.stringify(selected_event_ids);
+  console.log(selected_events.value);
+}
+
+function deleteEvent(event) {
+ // Reference the CheckBoxes in Table.
+  var grid = document.getElementById("delete-table");
+    
+  // Reference the CheckBoxes in Table.
+  var checkBoxes = grid.getElementsByTagName("INPUT");
+
+  // alert(document.getElementById(event.id.replace("row-check-","")));
+  let unique_event_id = event.id;
+  // console.log(unique_event_id);
+  let hidden_field = document.getElementById("updated_events");
+  // console.log(hidden_field);
+  let selected_events = document.getElementById("selected_events");
+  // console.log(selected_events);
+  var jsonObj = JSON.parse(hidden_field.value);
+  var selected_event_ids= JSON.parse(selected_events.value);
+
+      if (!event.checked) {
+          deletedEvent = {  
+                      "start_time": document.getElementById("startdate-"+unique_event_id.replace("row-check-","")).value,
+                      "end_time": document.getElementById("end-date-"+unique_event_id.replace("row-check-","")).value,
+                      "event_name": document.getElementById("event-name-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "source": document.getElementById("source-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "parameters": document.getElementById("hidden-parameters-"+unique_event_id.replace("row-check-","")).value 
+                      }
+
+        for (i=0; i<jsonObj.length; i++) {
+          if (deletedEvent["start_time"] == jsonObj[i]["start_time"] && deletedEvent["end_time"] == jsonObj[i]["end_time"] && deletedEvent["event_name"] == jsonObj[i]["event_name"] && deletedEvent["source"] == jsonObj[i]["source"]) {
+            jsonObj.splice(i, 1); 
+            }
+          if (selected_event_ids[i] == unique_event_id.replace("row-check-","")) {
+            selected_event_ids.splice(i, 1);
+          }
         }
     }
-    console.log(jsonObj);
-    let hidden_field = document.getElementById("updated_events");
-    hidden_field.value = JSON.stringify(jsonObj);
+  console.log(jsonObj);
+  hidden_field.value = JSON.stringify(jsonObj);
+  console.log(hidden_field.value);
+  selected_events.value = JSON.stringify(selected_event_ids);
+  console.log(selected_events.value);
 }
+
+
+    function checkCheckboxes(checkbox) {
+        console.log(checkbox);
+          if (checkbox.checked) {
+            // alert("Check box is Checked");
+            addEvent(checkbox);
+          } else {
+            // alert("Check box is Unchecked");
+            deleteEvent(checkbox);
+          }
+    }
 
 </script>
