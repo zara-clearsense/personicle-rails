@@ -134,6 +134,7 @@ $("#update-button").on("click", function(e) {
   $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
 });
 
+// Upon changing date change handle, get row id 
 function dateChangeHandle(obj) {
   
   console.log(obj.id + " changed")
