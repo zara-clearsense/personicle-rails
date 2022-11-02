@@ -122,7 +122,7 @@ class DashboardController < ApplicationController
 
     if !events.nil?
       events = events.join(";")
-      url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+      url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
       redirect_to pages_dashboard_path, refresh:"hard_refresh"
     end
