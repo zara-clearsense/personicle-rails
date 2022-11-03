@@ -2,6 +2,7 @@ class PhysiciansApiController < ApplicationController
     def get_physician
         begin
            res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+  
            @user = User.find_by(user_id: res['user_id'])
            phy_id = params[:id]
            @phy = @user.physicians.filter {|phy| phy.user_id == phy_id}

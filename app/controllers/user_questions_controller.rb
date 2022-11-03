@@ -117,16 +117,16 @@ class UserQuestionsController < ApplicationController
             if v.blank?
                 next
             end
-            logger.info v
+            # logger.info v
             payload = {"response": v , "tag": k.split(" ")[1] , "response_type": k.split(" ")[2] }
             if physicians_questions_responses.empty?
                 physicians_questions_responses[k.split(" ")[0]] = [ payload ]
             else
-                logger.info "here"
-                logger.info physicians_questions_responses
-                logger.info k 
-                logger.info v.blank?
-                logger.info physicians_questions_responses[k.split(" ")[0]]
+                # logger.info "here"
+                # logger.info physicians_questions_responses
+                # logger.info k 
+                # logger.info v.blank?
+                # logger.info physicians_questions_responses[k.split(" ")[0]]
                 # if physicians_questions_responses[k.split(" ")[0]].empty?
                 #     physicians_questions_responses[k.split(" ")[0]] = [ payload ]
                 # else 
@@ -137,8 +137,7 @@ class UserQuestionsController < ApplicationController
         end
         
         physicians_questions_responses.each do |key,value|
-            logger.debug("dfef")
-            puts "hello"
+            
            responses, filtered_image_responses, filtered_survey_responses, filtered_string_responses, filtered_numeric_responses =  get_filtered_responses(value)
 
             code, image_validation_response = client_image_validation(filtered_image_responses) if !filtered_image_responses.empty? # client validation for quicker responses
@@ -160,12 +159,9 @@ class UserQuestionsController < ApplicationController
                 data = {"streamName": "com.personicle.individual.datastreams.subjective.physician_questionnaire", "individual_id": "#{session[:oktastate]["uid"]}",
                         "source": "Personicle:#{key}", "unit": "", "confidence": 100, "dataPoints":[{ "timestamp": Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N"), "value": final_data_packet }]
                         }
-                 puts "hola"
-                 logger.info "hola"
-                 logger.info data
+                 
                 res = RestClient::Request.execute(:url => ENV['DATASTREAM_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
-                logger.info "hello"
-                puts "hello"
+                
                 if res.code == 200
                     flash[:success] = "Your responses are recorded"
                     return redirect_to pages_dashboard_physician_questions_path(responses_send: true)

@@ -1,5 +1,9 @@
 class ProfileController < ApplicationController
-  before_action :require_user, :session_active?, :get_user_notifications
+  before_action :require_user, only: [:remove_physician, :add_physician,:update_user_info ,:index]
+  before_action :session_active?, only: [:remove_physician, :add_physician,:update_user_info ,:index]
+  before_action :get_user_notifications, only: [:remove_physician, :add_physician,:update_user_info ,:index]
+  protect_from_forgery with: :null_session
+  # before_action :require_user, :session_active?, :get_user_notifications
     def remove_physician
       if not params[:remove_physicians].blank? and !session[:oktastate]["physician"]
         @user = User.find_by(user_id: session[:oktastate]["uid"])
@@ -43,6 +47,42 @@ class ProfileController < ApplicationController
       end
       @user.save
       return redirect_to pages_profile_path
+    end
+
+   # api endpoint  to update user info 
+    def update_user
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        payload = {}
+        params.each do |k,v|
+          if !v.blank?
+            payload[k] =  v
+          end
+        end
+  
+        payload.each do |k,v|
+          @user.info[k] = v
+        end
+        @user.save
+        render json: {}, status: 200
+      rescue => exception
+        if exception.response.code == 401
+            return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+
+    def get_user
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        return  render json: @user.to_json(), status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
     end
 
     def index
