@@ -61,6 +61,8 @@ Rails.application.routes.draw do
   get 'api/physicians', :to=> 'physicians_api#get_users_physicians'
   get 'api/physician/:id', :to=> 'physicians_api#get_physician'
   post 'api/update/user', :to=> 'profile#update_user'
+  get 'api/user', :to=> 'profile#get_user'
+
 
 end
 

@@ -53,7 +53,6 @@ class ProfileController < ApplicationController
     def update_user
       begin
         res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
-        puts res
         @user = User.find_by(user_id: res['user_id'])
         payload = {}
         params.each do |k,v|
@@ -70,6 +69,18 @@ class ProfileController < ApplicationController
       rescue => exception
         if exception.response.code == 401
             return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+
+    def get_user
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        return  render json: @user.to_json(), status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
         end
       end
     end
