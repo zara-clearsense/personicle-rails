@@ -1,53 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import useGoogleCharts from './useGoogleCharts'
+import useGoogleCharts from "./useGoogleCharts";
 
-function AnalysisChart({userSummary}) {
-    // console.log(userSummary)
-    const google = useGoogleCharts()
-    const [chart, setChart] = useState(null);
-    const [dimensions, setDimensions] = useState({ 
-      height: 0,
-      width: 0
-    })
-    useEffect(() => {
-        if (google && !chart) {
+function AnalysisChart({ userSummary }) {
+  // console.log(userSummary)
+  const google = useGoogleCharts();
+  const [chart, setChart] = useState(null);
+  const [dimensions, setDimensions] = useState({
+    height: 0,
+    width: 0,
+  });
+  useEffect(() => {
+    if (google) {
+      console.log("We are using JavaScript");
 
+      var data = google.visualization.arrayToDataTable([
+        ["Age", "Weight"],
+        [8, 12],
+        [4, 5.5],
+        [11, 14],
+        [4, 5],
+        [3, 3.5],
+        [6.5, 7],
+      ]);
+      var options = {
+        title: "Age vs. Weight comparison",
+        hAxis: { title: "Age", minValue: 0, maxValue: 15 },
+        vAxis: { title: "Weight", minValue: 0, maxValue: 15 },
+        legend: "none",
+      };
 
-        console.log("We are using JavaScript");
-
-     
-            var data = google.visualization.arrayToDataTable([
-              ['Age', 'Weight'],
-              [ 8,      12],
-              [ 4,      5.5],
-              [ 11,     14],
-              [ 4,      5],
-              [ 3,      3.5],
-              [ 6.5,    7]
-            ]);
-    
-            var options = {
-              title: 'Age vs. Weight comparison',
-              hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-              vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
-              legend: 'none'
-            };
-    
-            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-    
-            chart.draw(data, options);
-        
+      var scatterPlot = new google.visualization.ScatterChart(
+        document.getElementById("chart_div")
+      );
+      scatterPlot.draw(data, options);
     }
-<body>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
-</body>
+  }, [google]);
+  return (
+    <>
+      {!google && <Spinner />}
+      <div id="analysis_chart_dashboard">
+        <div id="chart_div"></div>
+      </div>
+    </>
+  );
 }
 
-
- 
-
-
-)}
-
-export default AnalysisChart
+export default AnalysisChart;
