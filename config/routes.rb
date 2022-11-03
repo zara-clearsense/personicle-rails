@@ -56,5 +56,8 @@ Rails.application.routes.draw do
   post 'pages/user/responses', :to => 'user_responses#index'
 
   get 'pages/dashboard', to: 'dashboard#geocode'
+
+  get 'pages/analysis', :to => 'analysis#index'
+  post 'pages/analysis', :to => 'analysis#index'
 end
 

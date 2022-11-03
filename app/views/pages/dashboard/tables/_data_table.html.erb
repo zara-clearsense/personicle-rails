@@ -50,11 +50,11 @@
             <%=record['unique_event_id']%>
           </td>
           <td id="second">
-            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
+            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" max="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
+              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" min="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
             </div>
           </td>
           <td scope="row" class="context-menu" data-container-id="context-menu-items" id="source-<%=record['unique_event_id']%>" name="source">
@@ -142,11 +142,15 @@ function dateChangeHandle(obj) {
   if (obj.id.startsWith("start")) {
       checkbox = document.getElementById("row-check-"+obj.id.replace("startdate-",""));
       checkbox.checked = true;
+      var endDateChange = document.getElementById("end-date-"+obj.id.replace("startdate-",""))
+      endDateChange.min = obj.value;
       // let unique_event_id = obj.id.replace("startdate-","");
   }
   else {
       checkbox = document.getElementById("row-check-"+obj.id.replace("end-date-",""));
       checkbox.checked = true;
+      var startDateChange = document.getElementById("startdate-"+obj.id.replace("end-date-",""))
+      startDateChange.max = obj.value;
       // let unique_event_id = obj.id.replace("end-date","");
   }
   checkCheckboxes(checkbox);
