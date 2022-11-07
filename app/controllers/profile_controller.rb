@@ -49,6 +49,42 @@ class ProfileController < ApplicationController
       return redirect_to pages_profile_path
     end
 
+
+    # api endpoint to remove physicians from user
+    def remove_physicinas_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        params[:physicians].each do |phy|
+          @phy = Physician.find_by(user_id: phy)
+          @user.physicians.destroy(@phy)
+        end
+        render json: {message: 'Successfully removed physicians'}, status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+
+
+    # api endpoint to add physicians for a user
+    def add_physicians_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        params[:physicians].each do |phy|
+          @phy = Physician.find_by(user_id: phy)
+          @user.physicians << @phy
+        end
+        render json: {message: 'Successfully added physicians'}, status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+
    # api endpoint  to update user info 
     def update_user
       begin
