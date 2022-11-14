@@ -13,29 +13,65 @@ function AnalysisChart({ userSummary }) {
   useEffect(() => {
     if (google) {
       console.log("We are using JavaScript");
-
-      var data = google.visualization.arrayToDataTable([
-        ["Age", "Weight"],
-        [8, 12],
-        [4, 5.5],
-        [11, 14],
-        [4, 5],
-        [3, 3.5],
-        [6.5, 7],
-      ]);
+      
+      console.log(userSummary['correlation_result']);
+      var data = new google.visualization.DataTable();        
+      data.addColumn({ type: 'number', id: userSummary['correlation_result'][0]['XAxis']['Measure'] });
+      data.addColumn({ type: 'number', id: userSummary['correlation_result'][0]['YAxis']['Measure'] });
+      data.addColumn({ type: 'string', role: 'tooltip'});
+      
+    console.log(Object.keys(userSummary['correlation_result']).length);
+    
+   
+    for (var i=0; i < Object.keys(userSummary['correlation_result']).length; i++) {
+        console.log(userSummary['correlation_result'][i]['data']);
+        for (var j=0; j < userSummary['correlation_result'][i]['data'].length; j++) {
+        // data.addRow(userSummary['correlation_result'][i]['data']);
+        console.log(userSummary['correlation_result'][i]['data'][j]);
+        console.log(typeof userSummary['correlation_result'][i]['data'][j][0]);
+        console.log(typeof userSummary['correlation_result'][i]['data'][j][1]);
+        var datapoint = [...userSummary['correlation_result'][2]['data'][j],`${userSummary['correlation_result'][2]['data'][j][0]} ${userSummary['correlation_result'][0]['XAxis']['Measure']}, ${userSummary['correlation_result'][2]['data'][j][1]} ${userSummary['correlation_result'][0]['YAxis']['unit']}`];
+        data.addRow(datapoint);
+        }
+        
+    }
+      
+    
       var options = {
-        title: "Age vs. Weight comparison",
-        hAxis: { title: "Age", minValue: 0, maxValue: 15 },
-        vAxis: { title: "Weight", minValue: 0, maxValue: 15 },
+        title: "Total Calories vs. Sleep Duration",
+        hAxis: { title: userSummary['correlation_result'][0]['XAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['XAxis']['unit'] + ")"}, units: userSummary['correlation_result'][0]['XAxis']['unit'], minValue: 0, maxValue: 15 ,
+        vAxis: { title: userSummary['correlation_result'][0]['YAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['YAxis']['unit'] + ")" }, units: userSummary['correlation_result'][0]['YAxis']['unit'], minValue: 0, maxValue: 15 ,
         legend: "none",
+        trendlines: { 0: {} }    // Draw a trendline for data series 0.
       };
 
+      // Create a Scatterplot, passing some options
+      var scatterPlotOptions = {
+        width: '100%',
+        height: '40%',
+        legend: 'none'
+    };
+
       var scatterPlot = new google.visualization.ScatterChart(
-        document.getElementById("chart_div")
-      );
+          document.getElementById("chart_div")
+  );
+
+      // Instantiate and draw our dashboard and chart, passing in some options.
+      var dashboard = new google.visualization.Dashboard(document.getElementById('chart_div'));
       scatterPlot.draw(data, options);
+
+      function resize () {
+        const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        scatterPlotOptions.width = 1.0 * window.innerWidth;
+        //barChartOptions.height = .4 * window.innerHeight;
+        scatterPlot.draw(data, options);
+      }
+  
+      window.onload = resize;
+      window.onresize = resize;
     }
-  }, [google]);
+
+  }, [google, chart]);
   return (
     <>
       {!google && <Spinner />}
