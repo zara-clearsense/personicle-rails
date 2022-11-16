@@ -65,8 +65,9 @@ Rails.application.routes.draw do
   post 'api/update/user', :to=> 'profile#update_user'   # update user profile
   get 'api/user', :to=> 'profile#get_user'    # get specific user
   post 'api/user/physicians', :to=> 'profile#add_physicians_api' #  add physicians to user
+  # get 'api/user/physicians', :to=> 'profile#get_users_physicians_api' #  get users physicians
   post 'api/user/physicians/remove', :to=> 'profile#remove_physicinas_api' #  remove user physicians
-
+  
 
 end
 

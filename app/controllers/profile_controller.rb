@@ -66,7 +66,16 @@ class ProfileController < ApplicationController
         end
       end
     end
-
+    
+    def get_users_physicians_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        @phys = @user.physicians
+      rescue => exception
+        
+      end
+    end
 
     # api endpoint to add physicians for a user
     def add_physicians_api
@@ -130,7 +139,7 @@ class ProfileController < ApplicationController
 
       if not params[:delete_account].blank? and params[:delete_account] == "delete"
         url = ENV['ACCOUNT_DELETE']
-        res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false )
+       
         print(res.code)
         print(res)
         if res.code == 200
@@ -142,6 +151,11 @@ class ProfileController < ApplicationController
 
       if !session[:oktastate]["physician"]
         @user = User.find_by(user_id: session[:oktastate]["uid"])
+        # get user profile image 
+        image_key = @user.info['image_key']
+        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        # puts res['image_url']
+        @profile_image_url = res['image_url']
       else
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
       end
