@@ -8,10 +8,7 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
            <%= image_tag  profile_image_url, class: 'rounded-circle' %>
         </button>
-         <div class="spinner-border text-primary" 
-            id="spinner-profile-image-upload" role="status" style="margin:0 auto;display:none;">
-            <span class="sr-only">Loading...</span>
-         </div>
+        
         <%# </a> %>
       </div>
     </div>
@@ -100,6 +97,10 @@
       </div>
       <form  id="upload-profile-image">
       <div class="modal-body">
+          <div class="spinner-border text-primary" 
+            id="spinner-profile-image-upload" role="status" style="margin:0 auto;display:none;">
+            <span class="sr-only">Loading...</span>
+          </div>
           <fieldset class="my-2">
             <input
               type="file"
