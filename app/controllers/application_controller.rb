@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
     resource.env['omniauth.origin'] || root_path
   end
 
-
+  
 
   def handle_image_response(image_resp)
     # puts "inside handle_image_response"

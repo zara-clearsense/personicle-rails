@@ -6,7 +6,11 @@
       <div class="card-profile-image">
         <%# <a href="#"> %>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        <% if !profile_image_url.nil?%>
            <%= image_tag  profile_image_url, class: 'rounded-circle' %>
+        <% else %>
+          <%= image_tag  'theme/sketch.jpg', class: 'rounded-circle' %>
+        <% end %>
         </button>
         
         <%# </a> %>
@@ -15,8 +19,8 @@
   </div>
   <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
     <div class="d-flex justify-content-between">
-      <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
-      <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+      <%# <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
+      <a href="#" class="btn btn-sm btn-default float-right">Message</a> %>
     </div>
   </div>
   <div class="card-body pt-0">
@@ -67,7 +71,7 @@
    
       </h5>
       <div class="h5 font-weight-300">
-           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">
+           <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAccountModal">
                Delete Account
            </button>
 

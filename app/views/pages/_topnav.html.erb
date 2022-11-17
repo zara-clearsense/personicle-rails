@@ -129,9 +129,9 @@ end
         <li class="nav-item dropdown">
           <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
-              <span class="avatar avatar-sm rounded-circle">
-                <%# <%= image_tag "theme/team-4.jpg", class: "navbar-brand-img", alt: "..." %> 
-              </span>
+              <%# <span class="avatar avatar-sm rounded-circle">
+                <%= image_tag $profile_image_url, class: "navbar-brand-img", alt: "..."  %>
+              <%# </span> %>
               <div class="media-body  ml-2  d-none d-lg-block">
                 <span class="mb-0 text-sm  font-weight-bold"><%= session[:oktastate]["info"]["name"] %></span>
               </div>

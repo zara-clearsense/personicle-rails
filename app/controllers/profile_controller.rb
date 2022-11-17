@@ -153,9 +153,14 @@ class ProfileController < ApplicationController
         @user = User.find_by(user_id: session[:oktastate]["uid"])
         # get user profile image 
         image_key = @user.info['image_key']
-        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-        # puts res['image_url']
-        @profile_image_url = res['image_url']
+        puts 
+        if !image_key.nil?
+          res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+          # puts res['image_url']
+          @profile_image_url = res['image_url']
+        else
+          @profile_image_url = nil
+        end
       else
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
       end

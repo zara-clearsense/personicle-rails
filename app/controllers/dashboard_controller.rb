@@ -23,7 +23,7 @@ class DashboardController < ApplicationController
     # end
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-
+   
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
