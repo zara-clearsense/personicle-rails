@@ -118,6 +118,22 @@ class ProfileController < ApplicationController
       end
     end
 
+
+
+    def get_user_profile_image
+      @user = User.find_by(user_id: session[:oktastate]["uid"])
+      # get user profile image 
+      image_key = @user.info['image_key']
+      if !image_key.nil?
+        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        # puts res['image_url']
+      
+        return res['image_url']
+      else
+        return  nil
+      end
+    end
+    
     def get_user
       begin
         res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
@@ -150,19 +166,11 @@ class ProfileController < ApplicationController
       end
 
       if !session[:oktastate]["physician"]
-        @user = User.find_by(user_id: session[:oktastate]["uid"])
-        # get user profile image 
-        image_key = @user.info['image_key']
-        puts 
-        if !image_key.nil?
-          res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-          # puts res['image_url']
-          @profile_image_url = res['image_url']
-        else
-          @profile_image_url = nil
-        end
+        
+        @profile_image_url = get_user_profile_image()
       else
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
+        @profile_image_url = get_user_profile_image()
       end
 
     end
