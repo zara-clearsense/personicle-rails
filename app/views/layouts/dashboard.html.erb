@@ -19,7 +19,7 @@
   <body>
     <%= render 'pages/sidenav' %>
     <div class="main-content" id="panel">
-      <%= render partial: 'pages/topnav', locals: { bg_color_class: yield(:topnav_bg) } %>
+      <%= render partial: 'pages/topnav', locals: { bg_color_class: yield(:topnav_bg), profile_image_url: @profile_image_url} %>
       <%= yield %>
     </div>
   </body>

@@ -58,11 +58,16 @@ Rails.application.routes.draw do
   post 'pages/notifications/mark_notification_as_read', :to => 'notification#mark_notification_as_read'
   get 'pages/dashboard', to: 'dashboard#geocode'
   get 'physician/questions', :to=> 'user_questions#get_physicians_questions'
-  get 'api/physicians', :to=> 'physicians_api#get_users_physicians'
-  get 'api/physician/:id', :to=> 'physicians_api#get_physician'
-  post 'api/update/user', :to=> 'profile#update_user'
-  get 'api/user', :to=> 'profile#get_user'
-
+  get 'api/physicians', :to=> 'physicians_api#get_users_physicians' #  get physicians for a user
+  get 'api/physicians/all', :to=> 'physicians_api#get_all_physicians' #  get  all physicians
+  
+  get 'api/physician/:id', :to=> 'physicians_api#get_physician' # get specific physician
+  post 'api/update/user', :to=> 'profile#update_user'   # update user profile
+  get 'api/user', :to=> 'profile#get_user'    # get specific user
+  post 'api/user/physicians', :to=> 'profile#add_physicians_api' #  add physicians to user
+  # get 'api/user/physicians', :to=> 'profile#get_users_physicians_api' #  get users physicians
+  post 'api/user/physicians/remove', :to=> 'profile#remove_physicinas_api' #  remove user physicians
+  
 
 end
 

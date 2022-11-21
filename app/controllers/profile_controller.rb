@@ -49,6 +49,51 @@ class ProfileController < ApplicationController
       return redirect_to pages_profile_path
     end
 
+
+    # api endpoint to remove physicians from user
+    def remove_physicinas_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        params[:physicians].each do |phy|
+          @phy = Physician.find_by(user_id: phy)
+          @user.physicians.destroy(@phy)
+        end
+        render json: {message: 'Successfully removed physicians'}, status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+    
+    def get_users_physicians_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        @phys = @user.physicians
+      rescue => exception
+        
+      end
+    end
+
+    # api endpoint to add physicians for a user
+    def add_physicians_api
+      begin
+        res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+        @user = User.find_by(user_id: res['user_id'])
+        params[:physicians].each do |phy|
+          @phy = Physician.find_by(user_id: phy)
+          @user.physicians << @phy
+        end
+        render json: {message: 'Successfully added physicians'}, status: 200
+      rescue => exception
+        if exception.response.code == 401
+          return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+        end
+      end
+    end
+
    # api endpoint  to update user info 
     def update_user
       begin
@@ -73,6 +118,22 @@ class ProfileController < ApplicationController
       end
     end
 
+
+
+    def get_user_profile_image
+      @user = User.find_by(user_id: session[:oktastate]["uid"])
+      # get user profile image 
+      image_key = @user.info['image_key']
+      if !image_key.nil?
+        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        # puts res['image_url']
+      
+        return res['image_url']
+      else
+        return  nil
+      end
+    end
+    
     def get_user
       begin
         res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
@@ -94,7 +155,7 @@ class ProfileController < ApplicationController
 
       if not params[:delete_account].blank? and params[:delete_account] == "delete"
         url = ENV['ACCOUNT_DELETE']
-        res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false )
+       
         print(res.code)
         print(res)
         if res.code == 200
@@ -105,9 +166,11 @@ class ProfileController < ApplicationController
       end
 
       if !session[:oktastate]["physician"]
-        @user = User.find_by(user_id: session[:oktastate]["uid"])
+        
+        @profile_image_url = get_user_profile_image()
       else
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
+        @profile_image_url = get_user_profile_image()
       end
 
     end

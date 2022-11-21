@@ -17,6 +17,19 @@ class PhysiciansApiController < ApplicationController
               end
         end
     end
+
+    def get_all_physicians
+        begin
+            res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+            @physicians =  User.all.select { |u| u.is_physician == true }
+            return  render json: @physicians
+        rescue => exception
+            if exception.response.code == 401
+                return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+            end
+        end
+    end
+
     def get_users_physicians
         begin
             res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)

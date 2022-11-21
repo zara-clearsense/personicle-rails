@@ -12,8 +12,8 @@ class UserQuestionsController < ApplicationController
             @questions[[phy.id,phy.name]] = @physician_questions if !@physician_questions.empty?
              
         end
-        puts @questions
-        logger.info @questions
+        # puts @questions
+        # logger.info @questions
     end
 
     def get_physicians_questions
