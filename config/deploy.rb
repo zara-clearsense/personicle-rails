@@ -26,9 +26,6 @@ set :branch, "main"
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "vendor/bundle", ".bundle" ,"public/system", "vendor", "storage", "public/uploads"
 
-after "bundle:install" do
-    run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:precompile"
-end
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
