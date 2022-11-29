@@ -45,9 +45,9 @@ end
           <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden" >
              <%# Dropdown header  %>
             <div class="px-3 py-3" data-behavior="notifications-count">
-              <%# <h6 class="text-sm text-muted m-0"> You have <%= pluralize( @notifications.length, 'notification' ) %>.
+              <%# <h6 class="text-sm text-muted m-0"> You have <%= pluralize( @notifications.length, 'notification' ) %>
 
-              <%# <h6 class="text-sm text-muted m-0">You have <strong class="text-primary"><%= @notifications.length</strong>  %>
+               <%# <h6 class="text-sm text-muted m-0">You have <strong class="text-primary"><%= @notifications.length %>
             </div>
              <%# List group  %>
             <div class="list-group list-group-flush" data-behavior="notification-items">
@@ -211,7 +211,13 @@ function handleSuccess(data){
     } else if (time_ago == 1){
       display_time_ago = time_ago + " hr ago"
     } else {
-      display_time_ago = time_ago + " hrs ago"
+        if(time_ago >= 24 && time_ago <= 168){
+          display_time_ago = Math.floor(time_ago/24) + " days ago"
+        } else if (time_ago > 168) {
+           display_time_ago = Math.floor(time_ago/730) + " month ago"
+        }else {
+          display_time_ago = time_ago + " hrs ago"
+        }
     }
     // console.log(`<a class='dropdown-item' href='${notification.url}'>${notification.insight_text}</a>`);
     s.push(`<a class='dropdown-item' data-behavior='notpification-link' onclick='removeNotification(${notification.id});'value='${notification.id}' href='${notification.url}'>${notification.insight_text} <small class="text-muted">${display_time_ago}</small></a>

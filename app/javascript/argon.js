@@ -24,7 +24,7 @@
 
 
 $( document ).on('turbolinks:load', function() {
-  console.log("hola")
+
   var Layout = (function() {
       
       function pinSidenav() {
@@ -43,13 +43,13 @@ $( document ).on('turbolinks:load', function() {
 
       function initSideNav() {
         if($(window).width() >= 1200) {
-          console.log("pin sidenav")
+        
 
             pinSidenav();
         }
 
         if($(window).width() < 1200){
-          console.log("unpin")
+         
           unpinSidenav();
         }
       }
@@ -562,7 +562,7 @@ $( document ).on('turbolinks:load', function() {
 
     $( ".sidenav-toggler" ).click(function() {
       if(navbar_menu_visible == 1){
-        console.log("toggler")
+      
         $('body').removeClass('nav-open');
         navbar_menu_visible = 0;
         $('.bodyClick').remove();
@@ -571,7 +571,7 @@ $( document ).on('turbolinks:load', function() {
 
       var div = '<div class="bodyClick"></div>';
       $(div).appendTo('body').click(function() {
-        console.log("toggler else")
+     
           $('body').removeClass('nav-open');
             navbar_menu_visible = 0;
             $('.bodyClick').remove();
@@ -1058,4 +1058,3 @@ $( document ).on('turbolinks:load', function() {
   //   modal.find('.my-div').val(recipient)
   // })
 })
-
