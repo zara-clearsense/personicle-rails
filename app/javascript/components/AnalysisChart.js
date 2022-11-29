@@ -23,18 +23,18 @@ function AnalysisChart({ userSummary }) {
     console.log(Object.keys(userSummary['correlation_result']).length);
     
    
-    for (var i=0; i < Object.keys(userSummary['correlation_result']).length; i++) {
-        console.log(userSummary['correlation_result'][i]['data']);
-        for (var j=0; j < userSummary['correlation_result'][i]['data'].length; j++) {
+    // for (var i=0; i < Object.keys(userSummary['correlation_result']).length; i++) {
+        console.log(userSummary['correlation_result'][2]['data']);
+        for (var j=0; j < userSummary['correlation_result'][2]['data'].length; j++) {
         // data.addRow(userSummary['correlation_result'][i]['data']);
-        console.log(userSummary['correlation_result'][i]['data'][j]);
-        console.log(typeof userSummary['correlation_result'][i]['data'][j][0]);
-        console.log(typeof userSummary['correlation_result'][i]['data'][j][1]);
+        console.log(userSummary['correlation_result'][2]['data'][j]);
+        console.log(typeof userSummary['correlation_result'][2]['data'][j][0]);
+        console.log(typeof userSummary['correlation_result'][2]['data'][j][1]);
         var datapoint = [...userSummary['correlation_result'][2]['data'][j],`${userSummary['correlation_result'][2]['data'][j][0]} ${userSummary['correlation_result'][0]['XAxis']['Measure']}, ${userSummary['correlation_result'][2]['data'][j][1]} ${userSummary['correlation_result'][0]['YAxis']['unit']}`];
         data.addRow(datapoint);
         }
         
-    }
+    // }
       
     
       var options = {
@@ -42,7 +42,10 @@ function AnalysisChart({ userSummary }) {
         hAxis: { title: userSummary['correlation_result'][0]['XAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['XAxis']['unit'] + ")"}, units: userSummary['correlation_result'][0]['XAxis']['unit'], minValue: 0, maxValue: 15 ,
         vAxis: { title: userSummary['correlation_result'][0]['YAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['YAxis']['unit'] + ")" }, units: userSummary['correlation_result'][0]['YAxis']['unit'], minValue: 0, maxValue: 15 ,
         legend: "none",
-        trendlines: { 0: {} }    // Draw a trendline for data series 0.
+        trendlines: { 0: {} },    // Draw a trendline for data series 0.
+        width: '100%',
+        height: '150%'
+
       };
 
       // Create a Scatterplot, passing some options
