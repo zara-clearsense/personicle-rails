@@ -1,11 +1,12 @@
 <%# CSS and JavaScript for Pagination %>
  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>  
-
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
 <%#  %>
 <%# Data Table - User Events %>
-  <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %> 
+  <%= form_with url: delete_user_events_path, local: true, method: :post do |form| %>
+  <input type="hidden" id="updated_events" name="updated_events" value="[]"/>
+  <input type="hidden" id="selected_events" name="selected_events" value="[]">
   <div class="card">
   <div class="card-header border-0">
     <div class="row align-items-center">
@@ -13,7 +14,8 @@
         <h3 class="mb-0">User Events</h3>
       </div>
       <div class="col text-right">
-        <button type="submit" class="btn btn-sm btn-primary">Delete Selected</button>
+        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/dashboard/update-event' name="update_event" onclick="checkCheckboxes()">Update Selected</button>
+        <button type="submit" class="btn btn-sm btn-primary" name="delete_event">Delete Selected </button>
       </div>
     </div>
   </div>
@@ -32,6 +34,7 @@
           <th scope="col">List of Parameters</th>
         </tr>
       </thead>
+
       <tbody>
     
     
@@ -40,35 +43,37 @@
             <% @response.each do |record|%>
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
-            <input type="checkbox" id="<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected_events[]" value="select-all" />
+            <input type="checkbox" id="row-check-<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected[]" value="select-all" onchange="checkCheckboxes(this)"/>
           </th>
           <td scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_event_id']%>
           </td>
           <td id="second">
-            <%=record['start_time']%>
+            <input type="datetime-local" id="startdate-<%=record['unique_event_id']%>" class="date" name="start_date" value="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" max="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <span class="mr-2"><%=record['end_time']%></span>
+              <input type="datetime-local" id="end-date-<%=record['unique_event_id']%>" class="date" name="end_date" value="<%=record['end_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" min="<%=record['start_time'].to_datetime.strftime('%Y-%m-%dT%H:%M')%>" onchange="dateChangeHandle(this)">
             </div>
           </td>
-          <td scope="row" class="context-menu" data-container-id="context-menu-items">
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="source-<%=record['unique_event_id']%>" name="source">
           <%=record['source']%>
           </td>
-          <td scope="row" class="context-menu" data-container-id="context-menu-items">
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="event-name-<%=record['unique_event_id']%>" name="event_name">
           <%=record['event_name']%>
           </td>
-          <td scope="row">
-            <a tabindex="0" role="button"  data-toggle="popover" data-animation="true" data-trigger="hover click" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName if !record['parameters'].source_device.nil? %> Version: <%=record['parameters'].source_device.version if !record['parameters'].source_device.nil? %>  Details URL: <%=record['parameters'].source_device.detailsUrl if !record['parameters'].source_device.nil?%>  ">See Details</a>
+          <td scope="row" id="parameters-<%=record['unique_event_id']%>" name="parameters">
+            <input id="hidden-parameters-<%=record['unique_event_id']%>" type="hidden" value="<%=record['parameters'].to_json%>" name="parameters"/>
+            <a tabindex="0" role="button" data-toggle="popover" data-animation="true" data-trigger="hover click" title="Parameters" data-content="Duration: <%=record['parameters'].duration%> Source Device: <%=record['parameters'].source_device.packageName if !record['parameters'].source_device.nil? %> Version: <%=record['parameters'].source_device.version if !record['parameters'].source_device.nil? %>  Details URL: <%=record['parameters'].source_device.detailsUrl if !record['parameters'].source_device.nil?%>  ">See Details</a>
           </td>
         </tr>
-        <% end %> 
       <% end %>
+      
       </tbody>
       
     </table>
-    <%# <%= form.submit "Search" %> 
+    <%# <%= form.submit "Search" %>
+    <% end %>
 <% end %>
   </div>
 </div>
@@ -94,27 +99,21 @@ $("#delete-button").on("click", function(e) {
   $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
 });
 
-// Prevent Page Refresh When Click Element Parameters In Table
-// $( "a" ).click(function( event ) {
-//   event.preventDefault();
-//   $( "<div>" )
-//     .append( "default " + event.type + " prevented" )
-//     .appendTo( "#log" );
-// });
 
 // Handle Select
-// function handleSelect(source) {
-//   console.log($(source).attr('id'))
-//   if(document.getElementById($(source).attr('id')).checked) {
-//       console.log("Adding event id" + $(source).attr('id'))
-//       eventIDs.push($(source).attr('id').replace("row-check-",""))
-//    } else {
-//       console.log("Removing event id" + $(source).attr('id'))
-//       eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
-// ;});
-//    }
+function handleSelect(source) {
+  console.log($(source).attr('id'))
 
-// }
+  if(document.getElementById($(source).attr('id')).checked) {
+      console.log("Adding event id" + $(source).attr('id'))
+      eventIDs.push($(source).attr('id').replace("row-check-",""))
+      event.push($(source).attr('id'))
+   } else {
+      console.log("Removing event id" + $(source).attr('id'))
+      eventIDs = eventIDs.filter(function(value, index, arr){return value != $(source).attr('id').replace("row-check-","")
+;});
+   }
+}
 
 // Pop-Up Box for Parameters
 $(document).ready(function(){
@@ -128,5 +127,124 @@ $('.popover-dismiss').popover({
 $(document).ready( function () {
     $('#delete-table').DataTable();
 } );
+
+// Update Row
+$("#update-button").on("click", function(e) {
+  $("#delete-table tr:has(td > input[type=checkbox]:checked)").remove();
+});
+
+// Upon changing date change handle, get row id 
+function dateChangeHandle(obj) {
+  
+  console.log(obj.id + " changed")
+  var checkbox;
+  if (obj.id.startsWith("start")) {
+      checkbox = document.getElementById("row-check-"+obj.id.replace("startdate-",""));
+      checkbox.checked = true;
+      var endDateChange = document.getElementById("end-date-"+obj.id.replace("startdate-",""))
+      endDateChange.min = obj.value;
+      // let unique_event_id = obj.id.replace("startdate-","");
+  }
+  else {
+      checkbox = document.getElementById("row-check-"+obj.id.replace("end-date-",""));
+      checkbox.checked = true;
+      var startDateChange = document.getElementById("startdate-"+obj.id.replace("end-date-",""))
+      startDateChange.max = obj.value;
+      // let unique_event_id = obj.id.replace("end-date","");
+  }
+  checkCheckboxes(checkbox);
+}
+
+function addEvent(event) {
+
+  // Reference the CheckBoxes in Table.
+  var grid = document.getElementById("delete-table");
+    
+  // Reference the CheckBoxes in Table.
+  var checkBoxes = grid.getElementsByTagName("INPUT");
+
+  // alert(document.getElementById(event.id.replace("row-check-","")));
+  let unique_event_id = event.id;
+  // console.log(unique_event_id);
+  let hidden_field = document.getElementById("updated_events");
+  // console.log(hidden_field);
+  let selected_events = document.getElementById("selected_events");
+  // console.log(selected_events);
+  var jsonObj = JSON.parse(hidden_field.value);
+  var selected_event_ids= JSON.parse(selected_events.value);
+
+        if (event.checked) {
+          addedEvent = {  
+                      "start_time": document.getElementById("startdate-"+unique_event_id.replace("row-check-","")).value,
+                      "end_time": document.getElementById("end-date-"+unique_event_id.replace("row-check-","")).value,
+                      "event_name": document.getElementById("event-name-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "source": document.getElementById("source-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "parameters": document.getElementById("hidden-parameters-"+unique_event_id.replace("row-check-","")).value 
+                      }
+          jsonObj.push(addedEvent);
+
+          selected_event_ids.push(unique_event_id.replace("row-check-",""));
+          
+          }
+  console.log(jsonObj);
+  hidden_field.value = JSON.stringify(jsonObj);
+  console.log(hidden_field.value);
+  selected_events.value = JSON.stringify(selected_event_ids);
+  console.log(selected_events.value);
+}
+
+function deleteEvent(event) {
+ // Reference the CheckBoxes in Table.
+  var grid = document.getElementById("delete-table");
+    
+  // Reference the CheckBoxes in Table.
+  var checkBoxes = grid.getElementsByTagName("INPUT");
+
+  // alert(document.getElementById(event.id.replace("row-check-","")));
+  let unique_event_id = event.id;
+  // console.log(unique_event_id);
+  let hidden_field = document.getElementById("updated_events");
+  // console.log(hidden_field);
+  let selected_events = document.getElementById("selected_events");
+  // console.log(selected_events);
+  var jsonObj = JSON.parse(hidden_field.value);
+  var selected_event_ids= JSON.parse(selected_events.value);
+
+      if (!event.checked) {
+          deletedEvent = {  
+                      "start_time": document.getElementById("startdate-"+unique_event_id.replace("row-check-","")).value,
+                      "end_time": document.getElementById("end-date-"+unique_event_id.replace("row-check-","")).value,
+                      "event_name": document.getElementById("event-name-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "source": document.getElementById("source-"+unique_event_id.replace("row-check-","")).innerHTML,
+                      "parameters": document.getElementById("hidden-parameters-"+unique_event_id.replace("row-check-","")).value 
+                      }
+
+        for (i=0; i<jsonObj.length; i++) {
+          if (deletedEvent["start_time"] == jsonObj[i]["start_time"] && deletedEvent["end_time"] == jsonObj[i]["end_time"] && deletedEvent["event_name"] == jsonObj[i]["event_name"] && deletedEvent["source"] == jsonObj[i]["source"]) {
+            jsonObj.splice(i, 1); 
+            }
+          if (selected_event_ids[i] == unique_event_id.replace("row-check-","")) {
+            selected_event_ids.splice(i, 1);
+          }
+        }
+    }
+  console.log(jsonObj);
+  hidden_field.value = JSON.stringify(jsonObj);
+  console.log(hidden_field.value);
+  selected_events.value = JSON.stringify(selected_event_ids);
+  console.log(selected_events.value);
+}
+
+
+    function checkCheckboxes(checkbox) {
+        console.log(checkbox);
+          if (checkbox.checked) {
+            // alert("Check box is Checked");
+            addEvent(checkbox);
+          } else {
+            // alert("Check box is Unchecked");
+            deleteEvent(checkbox);
+          }
+    }
 
 </script>
