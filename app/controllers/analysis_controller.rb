@@ -13,11 +13,11 @@ class AnalysisController < ApplicationController
         @xarray = []
         @yarray = []
         @response['correlation_result']["2"]['data'].each {|x|
-            puts "x values" 
-            puts x[0]
+            # puts "x values" 
+            # puts x[0]
 
-            puts "y values"
-            puts x[1]
+            # puts "y values"
+            # puts x[1]
 
             # Push x and y values into seperate xarray and yarray
             @xarray.push(x[0])
@@ -25,9 +25,9 @@ class AnalysisController < ApplicationController
            
         }
         puts "xarray"
-        puts @xarray
+        # puts @xarray
         puts "yarray"
-        puts @yarray
+        # puts @yarray
 
         # Calculate mean for x and y arrays
         puts "Mean X"
@@ -99,17 +99,32 @@ class AnalysisController < ApplicationController
             puts "X-Filtered"
             # puts @xarray.select! {|x| x > range_upper_x || x < range_lower_x } # Values removed from X
 
+            save_index_x = []
+            save_index_y = []
+            combined_index = []
             puts "Find x and index"
             @xarray.each_with_index do | x, index |
-                if @xarray.select! {|x| x > range_upper_x || x < range_lower_x } # XArray containing only values in range
+                if (x > range_upper_x || x < range_lower_x)
                     puts "#{x} is number #{index} in the array"
                     puts "Index: #{index} and Value #{@xarray[index]} Rejected"
+                else
+                    # Store list of indices we want to select
+                    save_index_x.push(index)
                 end
+            end
                 
-             end
-
-            # puts "Y-Filtered"
-            # puts @yarray.reject {|y| y > range_upper_y || y < range_lower_y }
+            @yarray.each_with_index do | y, index |
+                if (@yarray[index] > range_upper_y || @yarray[index] < range_lower_y)
+                    puts "#{y} is number #{index} in the array"
+                # Use index to access corresponding y value in array
+                    puts "#{@yarray[index]} is number #{index} in the array"
+                    puts "Index: #{index} and Value #{@yarray[index]} Rejected"
+                else
+                    save_index_y.push(index)
+                end
+                # @xarray.reject {|x| x > range_upper_x || x < range_lower_x }
+                    # if @xarray.select! {|x| x > range_upper_x || x < range_lower_x } # XArray containing only values in range        
+            end 
 
             # Length of X Array
             puts "Length of X Array - After Filtering"
@@ -119,7 +134,36 @@ class AnalysisController < ApplicationController
             puts "Length of Y Array = After Filtering"
             puts @yarray.length
 
-        end   
+            puts "Saved Indexes with Filtered Values Removed"
+            puts save_index_x
+
+            puts "Saved Y Indexes with Filtered Values Removed"
+            puts save_index_y
+
+            puts "Combined Indices"
+            combined_index = save_index_x.intersection(save_index_y)
+            puts combined_index
+
+        end
+
+        # Populate filtered values with array of (x,y) values
+        filtered_values = []
+        for i in combined_index
+            # puts "combined"
+            # puts i
+            filtered_values.push([@xarray[i],@yarray[i]])
+        end
+
+        puts "Filtered Values"
+        puts filtered_values
+          
+        # Push filtered_values into @response which will be fed to the view
+        @response['correlation_result']["2"]["data"].replace(filtered_values)
+        puts "Response After Anomaly Removal - Replacing Data with Filtered Values in Position 2"
+        puts @response
+
+        # Make view expect only data from one user
+        @send =  @response['correlation_result']["2"]
 
     end
 

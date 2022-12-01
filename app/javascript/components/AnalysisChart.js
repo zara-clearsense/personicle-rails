@@ -14,38 +14,34 @@ function AnalysisChart({ userSummary }) {
     if (google) {
       console.log("We are using JavaScript");
       
-      console.log(userSummary['correlation_result']);
+      // console.log(userSummary['correlation_result']);
       var data = new google.visualization.DataTable();        
-      data.addColumn({ type: 'number', id: userSummary['correlation_result'][0]['XAxis']['Measure'] });
-      data.addColumn({ type: 'number', id: userSummary['correlation_result'][0]['YAxis']['Measure'] });
+      data.addColumn({ type: 'number', id: userSummary['XAxis']['Measure'] });
+      data.addColumn({ type: 'number', id: userSummary['YAxis']['Measure'] });
       data.addColumn({ type: 'string', role: 'tooltip'});
       
-    console.log(Object.keys(userSummary['correlation_result']).length);
+    // console.log(Object.keys(userSummary['correlation_result']).length);
     
    
     // for (var i=0; i < Object.keys(userSummary['correlation_result']).length; i++) {
-        console.log(userSummary['correlation_result'][2]['data']);
-        for (var j=0; j < userSummary['correlation_result'][2]['data'].length; j++) {
+        console.log(userSummary['data']);
+        for (var j=0; j < userSummary['data'].length; j++) {
         // data.addRow(userSummary['correlation_result'][i]['data']);
-        console.log(userSummary['correlation_result'][2]['data'][j]);
-        console.log(typeof userSummary['correlation_result'][2]['data'][j][0]);
-        console.log(typeof userSummary['correlation_result'][2]['data'][j][1]);
-        var datapoint = [...userSummary['correlation_result'][2]['data'][j],`${userSummary['correlation_result'][2]['data'][j][0]} ${userSummary['correlation_result'][0]['XAxis']['Measure']}, ${userSummary['correlation_result'][2]['data'][j][1]} ${userSummary['correlation_result'][0]['YAxis']['unit']}`];
+        console.log(userSummary['data'][j]);
+        console.log(typeof userSummary['data'][j][0]);
+        console.log(typeof userSummary['data'][j][1]);
+        var datapoint = [...userSummary['data'][j],`${userSummary['data'][j][0]} ${userSummary['XAxis']['Measure']}, ${userSummary['data'][j][1]} ${userSummary['YAxis']['unit']}`];
         data.addRow(datapoint);
         }
         
-    // }
-      
-    
       var options = {
         title: "Total Calories vs. Sleep Duration",
-        hAxis: { title: userSummary['correlation_result'][0]['XAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['XAxis']['unit'] + ")"}, units: userSummary['correlation_result'][0]['XAxis']['unit'], minValue: 0, maxValue: 15 ,
-        vAxis: { title: userSummary['correlation_result'][0]['YAxis']['Measure'] + " (" + userSummary['correlation_result'][0]['YAxis']['unit'] + ")" }, units: userSummary['correlation_result'][0]['YAxis']['unit'], minValue: 0, maxValue: 15 ,
+        hAxis: { title: userSummary['XAxis']['Measure'] + " (" + userSummary['XAxis']['unit'] + ")"}, units: userSummary['XAxis']['unit'], minValue: 0, maxValue: 15 ,
+        vAxis: { title: userSummary['YAxis']['Measure'] + " (" + userSummary['YAxis']['unit'] + ")" }, units: userSummary['YAxis']['unit'], minValue: 0, maxValue: 15 ,
         legend: "none",
         trendlines: { 0: {} },    // Draw a trendline for data series 0.
-        width: '100%',
-        height: '150%'
-
+        height: '100%',
+        width: '100%'
       };
 
       // Create a Scatterplot, passing some options
@@ -54,6 +50,11 @@ function AnalysisChart({ userSummary }) {
         height: '40%',
         legend: 'none'
     };
+
+    // Drag and Select to Zoom Functionality - Right Click to Return to Original Chart
+    options.explorer = {
+      actions: ['dragToZoom', 'rightClickToReset']
+    }
 
       var scatterPlot = new google.visualization.ScatterChart(
           document.getElementById("chart_div")
@@ -69,7 +70,7 @@ function AnalysisChart({ userSummary }) {
         //barChartOptions.height = .4 * window.innerHeight;
         scatterPlot.draw(data, options);
       }
-  
+
       window.onload = resize;
       window.onresize = resize;
     }
