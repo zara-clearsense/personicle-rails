@@ -1,0 +1,116 @@
+ <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+ <%= form_with url: select_user_events_path, local: true, method: :post do |form| %>
+  <input type="hidden" id="selected_event" name="selected_event" value="[]"/>
+  <div class="card">
+  <div class="card-header border-0">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="mb-0">User Events</h3>
+      </div>
+      <div class="col text-right">
+        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/analysis/select-event' name="select_event">Update with Selected Chart</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <!-- Data Table -->
+    <table id="analysis-table" class="table align-items-center table-flush">
+      <thead class="thead-light">
+        <tr>
+          <th class="form-check-input"></th>
+          <th style="display:none" scope="col">Unique Analysis ID</th>
+          <th scope="col">Antecedent Name</th>
+          <th scope="col">Antecedent Parameter / Antecedent Duration</th>
+          <th scope="col">Query Interval</th>
+          <th scope="col">Consequent Name</th>
+          <th scope="col">Consequent Parameter</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+   <% if !@table.empty? %>
+        <div class="accordion mt-2" id="accordionExample">
+            <% @table.each do |record|%>
+            <%# <% puts record['parameters'].to_json %>  
+        <tr id="<%=record['unique_analysis_id']%>" class="tableRow">
+          <th scope="row">
+            <input type="radio" id="row-check-<%=record['unique_analysis_id']%>" value="<%=record['unique_analysis_id']%>" class="form-check-input" name="selected[]" onchange="printStatement(this)"/>
+          </th>
+          <td style="display:none" scope="row" class="context-menu" data-container-id="context-menu-items">
+            <%=record['unique_analysis_id']%>
+          </td>
+           <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_name-<%=record['unique_analysis_id']%>" name="antecedent_name">
+            <%=record['antecedent_name']%>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_parameter-<%=record['unique_analysis_id']%>" name="antecedent_parameter">
+          <%=record['antecedent_parameter']%>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="query_interval-<%=record['unique_analysis_id']%>" name="query_interval">
+          <%=record['query_interval']%>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_name-<%=record['unique_analysis_id']%>" name="consequent_name">
+          <%=record['consequent_name']%>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_parameter-<%=record['unique_analysis_id']%>" name="consequent_parameter">
+          <%=record['consequent_parameter']%>
+          </td>
+        </tr>
+      <% end %>
+      
+      </tbody>
+      
+    </table>
+    <%# <%= form.submit "Search" %>
+    <% end %>
+  <% end %>
+  </div>
+</div>
+
+<script language="JavaScript">
+// If table row selected, send row data to analysis controller
+function printStatement(event) {
+console.log(document.getElementById(event.id));
+}
+// function addEvent(event) {
+
+//   // Reference the CheckBoxes in Table.
+//   var grid = document.getElementById("analysis-table");
+    
+//   // Reference the CheckBoxes in Table.
+//   var checkBoxes = grid.getElementsByTagName("INPUT");
+
+//   // alert(document.getElementById(event.id.replace("row-check-","")));
+//   let unique_analysis_id = event.id; // 1. CHANGE TO UNIQUE ANALYSIS ID
+//   console.log(unique_analysis_id);
+//   let hidden_field = document.getElementById("selected_event");
+//   console.log(hidden_field);
+//   let selected_event = document.getElementById("selected_event");
+//   console.log(selected_event);
+//   var jsonObj = JSON.parse(hidden_field.value);
+//   var selected_event_id= JSON.parse(selected_event.value);
+
+//         if (event.checked) {
+//           addedEvent = {  
+//                       "antecedent_name": document.getElementById("antecedent_name-"+unique_analysis_id.replace("row-check-","")).textContent.trim(),
+//                       "antecedent_parameter": document.getElementById("antecedent_parameter-"+unique_analysis_id.replace("row-check-","")).textContent.trim(),
+//                       "query_interval": document.getElementById("query_interval-"+unique_analysis_id.replace("row-check-","")).textContent.trim(),
+//                       "consequent_name": document.getElementById("consequent_name-"+unique_analysis_id.replace("row-check-","")).textContent.trim(),
+//                       "consequent_parameter": document.getElementById("consequent_parameter-"+unique_analysis_id.replace("row-check-","")).textContent.trim() 
+//                       }
+//           jsonObj.push(addedEvent);
+
+//           selected_event_id.push(unique_analysis_id.replace("row-check-",""));
+          
+//           }
+//   console.log(jsonObj);
+//   hidden_field.value = JSON.stringify(jsonObj);
+//   console.log(hidden_field.value);
+//   selected_event.value = JSON.stringify(selected_event_id);
+//   console.log(selected_event.value);
+// }
+
+
+</script>
