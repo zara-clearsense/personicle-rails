@@ -85,8 +85,6 @@ class DashboardController < ApplicationController
     end
 
     if Rails.env.production?
-      
-
       Geocoder.search("70.31.77.253")
       results = Geocoder.search("70.31.77.253")
       results.first.coordinates# => [30.267153, -97.7430608]results.first.country# => "United States"
@@ -132,7 +130,7 @@ class DashboardController < ApplicationController
  
     if !events.nil?
       events = events.join(";")
-      url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+      url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
       redirect_to pages_dashboard_path, refresh:"hard_refresh"
     end
@@ -147,10 +145,10 @@ class DashboardController < ApplicationController
   
     if !events.nil?
       events = events.join(";")
-      url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+      url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
     end
-
+    
     # ## Get Updated Event
     updated_events = JSON.parse(params[:updated_events])
     puts updated_events.class

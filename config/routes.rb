@@ -59,5 +59,7 @@ Rails.application.routes.draw do
 
   get 'pages/analysis', :to => 'analysis#index'
   post 'pages/analysis', :to => 'analysis#index'
+
+  post 'pages/analysis/select-event', :to => 'analysis#select_event', :as => 'select_user_events'
 end
 

@@ -2,14 +2,22 @@ class AnalysisController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
+    require 'csv'
     before_action :require_user, :session_active?
 
     def index
+        puts params
+        if(params.has_key?(:selected_analysis_id))
+            puts "Selected Analysis ID found in Parameters"
+            puts params[:selected_analysis_id]
+        else
+            puts "Not found"
+        end
         @response = JSON.parse(File.read('db/scatterplot_e2d.json'))
-        puts @response
+        # puts @response
         # puts @response['correlation_result']["0"]
         # puts @response['correlation_result']["0"]['data']
-
+        
         @xarray = []
         @yarray = []
         @response['correlation_result']["2"]['data'].each {|x|
@@ -105,8 +113,8 @@ class AnalysisController < ApplicationController
             puts "Find x and index"
             @xarray.each_with_index do | x, index |
                 if (x > range_upper_x || x < range_lower_x)
-                    puts "#{x} is number #{index} in the array"
-                    puts "Index: #{index} and Value #{@xarray[index]} Rejected"
+                    # puts "#{x} is number #{index} in the array"
+                    # puts "Index: #{index} and Value #{@xarray[index]} Rejected"
                 else
                     # Store list of indices we want to select
                     save_index_x.push(index)
@@ -115,10 +123,10 @@ class AnalysisController < ApplicationController
                 
             @yarray.each_with_index do | y, index |
                 if (@yarray[index] > range_upper_y || @yarray[index] < range_lower_y)
-                    puts "#{y} is number #{index} in the array"
+                    # puts "#{y} is number #{index} in the array"
                 # Use index to access corresponding y value in array
-                    puts "#{@yarray[index]} is number #{index} in the array"
-                    puts "Index: #{index} and Value #{@yarray[index]} Rejected"
+                    # puts "#{@yarray[index]} is number #{index} in the array"
+                    # puts "Index: #{index} and Value #{@yarray[index]} Rejected"
                 else
                     save_index_y.push(index)
                 end
@@ -128,21 +136,21 @@ class AnalysisController < ApplicationController
 
             # Length of X Array
             puts "Length of X Array - After Filtering"
-            puts @xarray.length
+            # puts @xarray.length
 
             # Length of Y Array
             puts "Length of Y Array = After Filtering"
-            puts @yarray.length
+            # puts @yarray.length
 
             puts "Saved Indexes with Filtered Values Removed"
-            puts save_index_x
+            # puts save_index_x
 
             puts "Saved Y Indexes with Filtered Values Removed"
-            puts save_index_y
+            # puts save_index_y
 
             puts "Combined Indices"
             combined_index = save_index_x.intersection(save_index_y)
-            puts combined_index
+            # puts combined_index
 
         end
 
@@ -155,7 +163,7 @@ class AnalysisController < ApplicationController
         end
 
         puts "Filtered Values"
-        puts filtered_values
+        # puts filtered_values
           
         # Push filtered_values into @response which will be fed to the view
         @response['correlation_result']["2"]["data"].replace(filtered_values)
@@ -164,6 +172,11 @@ class AnalysisController < ApplicationController
 
         # Make view expect only data from one user
         @send =  @response['correlation_result']["2"]
+
+        # Parse CSV file
+        puts "Parsed CSV File"
+        @table = CSV.parse(File.read("/root/frontend-rubyonrails/personicle-rails/db/sample-analysis.csv"), headers: true)
+        puts @table
 
     end
 
@@ -178,7 +191,18 @@ class AnalysisController < ApplicationController
     def analysis
         @response = JSON.parse(File.read('db/scatterplot_e2d.json'))
         puts @response
-
-
     end
+
+    def select_event  
+        # Get Updated Event
+        puts "Print selected event"
+        selected = params[:selected]
+        puts params[:selected].class
+        puts selected
+
+        # Pass selected analysis ID and make a call to main analysis page and pass as parameter
+        redirect_to pages_analysis_path(refresh:"hard_refresh", selected_analysis_id: selected)
+    end
+
+    
 end

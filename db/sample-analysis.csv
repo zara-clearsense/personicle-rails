@@ -1,0 +1,3 @@
+"unique_analysis_id","user_id","anchor","antecedent_name","antecedent_table","antecedent_parameter","consequent_name","consequent_table","consequent_parameter","aggregate_function","antecedent_type","consequent_type","consequent_interval","antecedent_interval","query_interval"
+"cae1ec8f-e648-4993-ad80-f63f813a0ddc","test_user","CONSEQUENT","RUNNING","personal_events","duration","SLEEP","personal_events","duration","SUM","EVENT","EVENT",NULL,NULL,"(0,24,H)"
+"4ac788f5-e547-429f-9173-5e907ac7b726","test_user","CONSEQUENT","STEPS","interval_step_count",NULL,"SLEEP","personal_events","duration","SUM","DATASTREAM","EVENT",NULL,"DAILY","(0,24,H)"

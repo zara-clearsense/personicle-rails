@@ -24,12 +24,12 @@ function AnalysisChart({ userSummary }) {
     
    
     // for (var i=0; i < Object.keys(userSummary['correlation_result']).length; i++) {
-        console.log(userSummary['data']);
+        // console.log(userSummary['data']);
         for (var j=0; j < userSummary['data'].length; j++) {
         // data.addRow(userSummary['correlation_result'][i]['data']);
-        console.log(userSummary['data'][j]);
-        console.log(typeof userSummary['data'][j][0]);
-        console.log(typeof userSummary['data'][j][1]);
+        // console.log(userSummary['data'][j]);
+        // console.log(typeof userSummary['data'][j][0]);
+        // console.log(typeof userSummary['data'][j][1]);
         var datapoint = [...userSummary['data'][j],`${userSummary['data'][j][0]} ${userSummary['XAxis']['Measure']}, ${userSummary['data'][j][1]} ${userSummary['YAxis']['unit']}`];
         data.addRow(datapoint);
         }
