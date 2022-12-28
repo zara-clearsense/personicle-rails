@@ -125,7 +125,7 @@ class ProfileController < ApplicationController
       # get user profile image 
       image_key = @user.info['image_key']
       if !image_key.nil?
-        res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+        res = JSON.parse(RestClient::Request.execute(:url => "http://personicle-file-upload.herokuapp.com/user_images/#{image_key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
         # puts res['image_url']
       
         return res['image_url']
