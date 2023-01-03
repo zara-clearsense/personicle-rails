@@ -26,6 +26,6 @@
     <div class="col" background-color="white">
      <% @data_table = !@table.nil? ? @table: []
       %>
-        <%= render 'pages/analysis/tables/analysis_data_table', user_data_table:@table %>
+        <%= render 'pages/analysis/tables/analysis_data_table', user_data_table:@user_created_analyses %>
     </div>
   </div> 

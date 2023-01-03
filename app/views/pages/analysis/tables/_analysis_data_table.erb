@@ -21,19 +21,25 @@
         <tr>
           <th class="form-check-input"></th>
           <th style="display:none" scope="col">Unique Analysis ID</th>
+          <th scope="col">Anchor</th>
           <th scope="col">Antecedent Name</th>
-          <th scope="col">Antecedent Parameter / Antecedent Duration</th>
-          <th scope="col">Query Interval</th>
+          <th scope="col">Antecedent Table</th>
+          <th scope="col">Antecedent Parameter / Antecedent Interval</th>
           <th scope="col">Consequent Name</th>
-          <th scope="col">Consequent Parameter</th>
+          <th scope="col">Consequent Table</th>
+          <th scope="col">Consequent Parameter / Consequent Interval</th>
+          <th scope="col">Aggregate Function</th>
+          <th scope="col">Antecedent Type</th>
+          <th scope="col">Consequent Type</th>
+          <th scope="col">Query Interval</th>
         </tr>
       </thead>
 
       <tbody>
 
-   <% if !@table.empty? %>
+   <% if !@user_created_analyses.empty? %>
         <div class="accordion mt-2" id="accordionExample">
-            <% @table.each do |record|%>
+            <% @user_created_analyses.each do |record|%>
             <%# <% puts record['parameters'].to_json %>  
         <tr id="<%=record['unique_analysis_id']%>" class="tableRow">
           <th scope="row">
@@ -42,21 +48,39 @@
           <td style="display:none" scope="row" class="context-menu" data-container-id="context-menu-items">
             <%=record['unique_analysis_id']%>
           </td>
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="anchor-<%=record['unique_analysis_id']%>" name="anchor">
+            <%=record['anchor']%>
+          </td>
            <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_name-<%=record['unique_analysis_id']%>" name="antecedent_name">
             <%=record['antecedent_name']%>
           </td>
-        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_parameter-<%=record['unique_analysis_id']%>" name="antecedent_parameter">
-          <%=record['antecedent_parameter']%>
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_table-<%=record['unique_analysis_id']%>" name="antecedent_table">
+            <%=record['antecedent_table']%>
           </td>
-        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="query_interval-<%=record['unique_analysis_id']%>" name="query_interval">
-          <%=record['query_interval']%>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_parameter-<%=record['unique_analysis_id']%>" name="antecedent_parameter">
+          <%=record['antecedent_parameter'].blank? ? record['antecedent_interval'] : record['antecedent_parameter'] %>
           </td>
         <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_name-<%=record['unique_analysis_id']%>" name="consequent_name">
           <%=record['consequent_name']%>
+        </td>
+          <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_table-<%=record['unique_analysis_id']%>" name="consequent_table">
+          <%=record['consequent_table']%>
           </td>
-        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_parameter-<%=record['unique_analysis_id']%>" name="consequent_parameter">
-          <%=record['consequent_parameter']%>
+                 <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_parameter-<%=record['unique_analysis_id']%>" name="consequent_parameter">
+          <%=record['consequent_parameter'].blank? ? record['consequent_interval'] : record['consequent_parameter'] %>
           </td>
+                 <td scope="row" class="context-menu" data-container-id="context-menu-items" id="aggregate_function-<%=record['unique_analysis_id']%>" name="aggregate_function">
+          <%=record['aggregate_function'] %>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="antecedent_type-<%=record['unique_analysis_id']%>" name="antecedent_type">
+          <%=record['antecedent_type'] %>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="consequent_type-<%=record['unique_analysis_id']%>" name="consequent_type">
+          <%=record['consequent_type'] %>
+          </td>
+        <td scope="row" class="context-menu" data-container-id="context-menu-items" id="query_interval-<%=record['unique_analysis_id']%>" name="query_interval">
+          <%=record['query_interval']%>
+          </td> 
         </tr>
       <% end %>
       

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_12_172205) do
+ActiveRecord::Schema.define(version: 2022_12_16_215922) do
 
   create_table "insights", force: :cascade do |t|
     t.string "user_id", null: false
@@ -48,6 +48,26 @@ ActiveRecord::Schema.define(version: 2022_08_12_172205) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "user_created_analyses", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "unique_analysis_id"
+    t.string "anchor", null: false
+    t.string "antecedent_name", null: false
+    t.string "antecedent_table", null: false
+    t.string "antecedent_parameter"
+    t.string "consequent_name", null: false
+    t.string "consequent_table", null: false
+    t.string "consequent_parameter"
+    t.string "aggregate_function", null: false
+    t.string "antecedent_type", null: false
+    t.string "consequent_type", null: false
+    t.string "consequent_interval"
+    t.string "antecedent_interval"
+    t.string "query_interval"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -178,6 +178,66 @@ class AnalysisController < ApplicationController
         @table = CSV.parse(File.read("/root/frontend-rubyonrails/personicle-rails/db/sample-analysis.csv"), headers: true)
         puts @table
 
+            # Query Unique Analysis ID by Specified Unique Analysis ID
+    # puts "User Created Analysis"
+    # # user_id = UserCreatedAnalysis.find_by(user_id: "test_user")
+    # unique_analysis_id = UserCreatedAnalysis.find_by(unique_analysis_id: "cae1ec8f-e648-4993-ad80-f63f813a0ddc")
+    # # puts user_id
+    # puts unique_analysis_id
+
+    # Query User Created Analysis for Test User
+    @user_created_analyses = UserCreatedAnalysis.where("user_id = 'test_user'")
+    puts @user_created_analyses
+    @user_created_analyses.each do |analysis|
+        puts "User ID Loop"
+        puts analysis.user_id
+
+        puts "Unique Analysis ID"
+        puts analysis.unique_analysis_id
+
+        puts "Anchor"
+        puts analysis.anchor
+
+        puts "Antecedent Name Loop"
+        puts analysis.antecedent_name
+
+        puts "Antedent Table"
+        puts analysis.antecedent_table
+
+        puts "Antecedent Parameter"
+        puts analysis.antecedent_parameter
+
+        puts "Consequent Name"
+        puts analysis.consequent_name
+
+        puts "Consequent Table"
+        puts analysis.consequent_table
+
+        puts "Consequent Parameter"
+        puts analysis.consequent_parameter
+
+        puts "Aggregate Function"
+        puts analysis.aggregate_function
+
+        puts "Antecedent Type"
+        puts analysis.antecedent_type
+
+        puts "Consequent Type"
+        puts analysis.consequent_type
+
+        puts "Consequent Interval"
+        puts analysis.consequent_interval
+
+        puts "Antecendent Interval"
+        puts analysis.antecedent_interval
+
+        puts "Query Interval"
+        puts analysis.query_interval
+        puts "--------------"
+    end
+            # puts "Antecedent Name"
+            # puts unique_analysis_id.antecedent_name   
+
     end
 
     def percentile(values, percentile)
@@ -204,5 +264,6 @@ class AnalysisController < ApplicationController
         redirect_to pages_analysis_path(refresh:"hard_refresh", selected_analysis_id: selected)
     end
 
-    
+   
+
 end
