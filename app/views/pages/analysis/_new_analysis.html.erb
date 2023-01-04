@@ -1,0 +1,140 @@
+<h1>Create new queries</h1>
+
+<%= form_with url: add_analysis_path, local: true, method: :post do |form| %>
+    <div class="card">
+    <div id="user-metadata" hidden><%=user_metadata.to_json%></div>
+        <div class="card-header border-0">
+            <div class="row align-items-center">
+                <div class="col antecedent" >
+                    <div class="row">
+                        <input type="radio" name="anchor-select" value="antecedent" required/>
+                        <h3 class="mb-0">Antecedent Events</h3>
+                    </div>
+                    <div class="row data-entity-div" id="antecedent-selections">
+                        <div class="data-entity-selection">
+                        <%= select_tag "antecedentName",options_for_select(user_metadata.keys), prompt: 'Choose one...',:required => true %>
+                        </div>
+                        <div id="antecedent-parameters"></div>
+                    </div>
+                    <h4 id="antecedent-message" style="color:red"></h4>
+                </div>
+                <div class="col query-interval">
+                    <h3>Time interval</h3>
+                    <h4>Null values refer to concurrent matching</h4>
+
+                    <div class="row">
+                        <input class="time-interval" type="number" name="interval-start" min="0" id="interval-start"/>
+                        <input class="time-interval" type="number" name="interval-end" min="0" id="interval-end"/>
+                        <select id="time-interval-unit" name="time-interval-unit">
+                            <option value="minutes">Minutes</option>
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col consequent" >
+                    <div class="row">
+                        <input type="radio" name="anchor-select" value="consequent"/>
+                        <h3 class="mb-0">Consequent Events</h3>
+                    </div>
+                    <div class="row data-entity-div" id="consequent-selection">
+                        <div class="data-entity-selection">
+                            <%= select_tag "consequentName",options_for_select(user_metadata.keys), prompt: 'Choose one...',:required => true %>
+                        </div>
+                        <div id="consequent-parameters"></div>
+                    </div>
+                    <h4 id="consequent-message" style="color:red"></h4>
+                </div>
+                
+            </div>
+            </div>
+            <div class="row align-items-center" width="100%">
+                <div class="col" align="center">
+                    <button type="submit" class="btn btn-sm btn-primary" name="add_analysis">Add analysis </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<%end%>
+
+<script language="JavaScript">
+
+$('.data-entity-selection').on("change", function (event){
+    var target_id = event.target.id;
+    // console.log(target_id)
+    if (target_id.startsWith("antecedent")){
+        var entity = "antecedent";
+        var messageField = "antecedent-message";
+        var parameterField = "antecedent-parameters";
+    }
+    else{
+        var entity = "consequent";
+        var messageField = "consequent-message";
+        var parameterField = "consequent-parameters";
+    }
+    var entityName = document.getElementById(`${entity}Name`).value;
+    var userMetadata = JSON.parse(document.getElementById("user-metadata").innerHTML);
+    // document.getElementById('test-selection').innerHTML = antecedentName;
+    // console.log(Object.keys(userMetadata));
+    if(!(entityName in userMetadata)){
+        var selectionMessage = document.getElementById(messageField);
+        selectionMessage.innerHTML = "";
+        if(entityName)
+            alert(`${entityName} not found in user metadata!`);
+        var parentElement = document.getElementById(parameterField);
+        parentElement.innerHTML = '';
+        return;
+    }
+    if(userMetadata[entityName]["type"] === "event"){
+        setEvent(entity);
+    }
+    else{
+        setDataStream(entity);
+    }
+});
+
+function setEvent(target){
+    // create the front end elements for an event input as antecedent or consequent
+    var userMetadata = JSON.parse(document.getElementById("user-metadata").innerHTML);
+    // console.log(userMetadata);
+    if(target === "antecedent"){
+        var selectedEvent = document.getElementById("antecedentName").value;
+        var parentElement = document.getElementById("antecedent-parameters");
+        var selectionMessage = document.getElementById("antecedent-message");
+    }
+    else{
+        var selectedEvent = document.getElementById("consequentName").value;
+        var parentElement = document.getElementById("consequent-parameters");
+        var selectionMessage = document.getElementById("consequent-message");
+    }
+    // console.log(userMetadata[selectedEvent]["parameters"]);
+    var parameterOptions = userMetadata[selectedEvent]["parameters"].map((param) => {return `<option>${param}</option>`});
+    // console.log(parameterOptions);
+    var parameterDropdown = `<select id="${target}-parameter" name="${target}-parameter">${parameterOptions}</select>`;
+    parentElement.innerHTML = parameterDropdown;
+
+    selectionMessage.innerHTML = `${selectedEvent} is an event. Please select one of the parameters for analysis.`
+}
+
+function setDataStream(target){
+    var userMetadata = JSON.parse(document.getElementById("user-metadata").innerHTML);
+    if(target === "antecedent"){
+        var selectedData = document.getElementById("antecedentName").value;
+        var parentElement = document.getElementById("antecedent-parameters");
+        var selectionMessage = document.getElementById("antecedent-message");
+    }
+    else{
+        var selectedData = document.getElementById("consequentName").value;
+        var parentElement = document.getElementById("consequent-parameters");
+        var selectionMessage = document.getElementById("consequent-message");
+    }
+
+    var parameterOptions = ["Hourly", "Daily", "Weekly"].map((param) => {return `<option>${param}</option>`});
+    // console.log(parameterOptions);
+    var parameterDropdown = `<select id="${target}-window" name="${target}-window">${parameterOptions}</select>`;
+    parentElement.innerHTML = parameterDropdown;
+
+    selectionMessage.innerHTML = `${selectedData} is a data stream. Please select an aggregation window for analysing the data stream.`;
+}
+</script>
