@@ -12,6 +12,27 @@
 
 ActiveRecord::Schema.define(version: 2022_12_16_215922) do
 
+  create_table "event_analyses", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "unique_analysis_id"
+    t.string "anchor", null: false
+    t.string "antecedent_name", null: false
+    t.string "antecedent_table", null: false
+    t.string "antecedent_parameter"
+    t.string "consequent_name", null: false
+    t.string "consequent_table", null: false
+    t.string "consequent_parameter"
+    t.string "aggregate_function", null: false
+    t.string "antecedent_type", null: false
+    t.string "consequent_type", null: false
+    t.string "consequent_interval"
+    t.string "antecedent_interval"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "query_intervalTIME_INTERVAL"
+    t.string "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000000125391090>"
+  end
+
   create_table "insights", force: :cascade do |t|
     t.string "user_id", null: false
     t.string "life_aspect", default: "", null: false

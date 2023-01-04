@@ -174,9 +174,9 @@ class AnalysisController < ApplicationController
         @send =  @response['correlation_result']["2"]
 
         # Parse CSV file
-        puts "Parsed CSV File"
-        @table = CSV.parse(File.read("/root/frontend-rubyonrails/personicle-rails/db/sample-analysis.csv"), headers: true)
-        puts @table
+        # puts "Parsed CSV File"
+        # @table = CSV.parse(File.read("/root/frontend-rubyonrails/personicle-rails/db/sample-analysis.csv"), headers: true)
+        # puts @table
 
             # Query Unique Analysis ID by Specified Unique Analysis ID
     # puts "User Created Analysis"
