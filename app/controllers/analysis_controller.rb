@@ -39,57 +39,11 @@ class AnalysisController < ApplicationController
         @xarray = []
         @yarray = []
         @response['correlation_result']["2"]['data'].each {|x|
-            # puts "x values" 
-            # puts x[0]
-
-            # puts "y values"
-            # puts x[1]
-
             # Push x and y values into seperate xarray and yarray
             @xarray.push(x[0])
             @yarray.push(x[1])
            
         }
-        puts "xarray"
-        # puts @xarray
-        puts "yarray"
-        # puts @yarray
-
-        # Calculate mean for x and y arrays
-        puts "Mean X"
-        mean_x = @xarray.sum(0.0) / @xarray.size
-        puts mean_x
-
-        puts "Mean Y"
-        mean_y = @yarray.sum(0.0) / @yarray.size
-        puts mean_y
-    
-        # Calculate sum for x and y arrays
-        puts "Sum X"
-        sum_x = @xarray.sum { |element| (element - mean_x) ** 2 }
-        puts sum_x
-
-        puts "Sum Y"
-        sum_y = @yarray.sum { |element| (element - mean_y) ** 2 }
-        puts sum_y
-     
-        # Calculate variance for x and y arrays
-        puts "Variance X"
-        variance_x = sum_x / (@xarray.size - 1)
-        puts variance_x
-
-        puts "Variance Y"
-        variance_y = sum_y / (@yarray.size - 1)
-        puts variance_y
-
-        # Calculate standard deviation for x and y arrays
-        puts "Standard Deviation X"
-        standard_deviation_x = Math.sqrt(variance_x)
-        puts standard_deviation_x
-
-        puts "Standard Deviation Y"
-        standard_deviation_y = Math.sqrt(variance_y)
-        puts standard_deviation_y
 
         # If xarray or yarray is empty, no data to plot
         # Calculate upper and lower ranges
@@ -110,20 +64,6 @@ class AnalysisController < ApplicationController
             puts "Upper Range Y"
             range_upper_y = percentile(@yarray, 0.975)
             puts range_upper_y
-
-            # puts "95th Percentile"
-            # puts "Upper Range X"
-            # range_upper_x = percentile(@xarray, 0.95)
-            # puts range_upper_x
-
-            # puts "50th Percentile"
-            # puts "Upper Range X"
-            # range_upper_x = percentile(@xarray, 0.50)
-            # puts range_upper_x
-
-            # Filter
-            puts "X-Filtered"
-            # puts @xarray.select! {|x| x > range_upper_x || x < range_lower_x } # Values removed from X
 
             save_index_x = []
             save_index_y = []
@@ -152,19 +92,6 @@ class AnalysisController < ApplicationController
                     # if @xarray.select! {|x| x > range_upper_x || x < range_lower_x } # XArray containing only values in range        
             end 
 
-            # Length of X Array
-            puts "Length of X Array - After Filtering"
-            # puts @xarray.length
-
-            # Length of Y Array
-            puts "Length of Y Array = After Filtering"
-            # puts @yarray.length
-
-            puts "Saved Indexes with Filtered Values Removed"
-            # puts save_index_x
-
-            puts "Saved Y Indexes with Filtered Values Removed"
-            # puts save_index_y
 
             puts "Combined Indices"
             combined_index = save_index_x.intersection(save_index_y)
@@ -191,70 +118,55 @@ class AnalysisController < ApplicationController
         # Make view expect only data from one user
         @send =  @response['correlation_result']["2"]
 
-        # Parse CSV file
-        # puts "Parsed CSV File"
-        # @table = CSV.parse(File.read("/root/frontend-rubyonrails/personicle-rails/db/sample-analysis.csv"), headers: true)
-        # puts @table
+        # Query User Created Analysis for Test User
+        @user_created_analyses = UserCreatedAnalysis.where("user_id = '#{session[:oktastate]["uid"]}'")
+        @user_created_analyses.each do |analysis|
+            puts "User ID Loop"
+            puts analysis.user_id
 
-            # Query Unique Analysis ID by Specified Unique Analysis ID
-    # puts "User Created Analysis"
-    # # user_id = UserCreatedAnalysis.find_by(user_id: "test_user")
-    # unique_analysis_id = UserCreatedAnalysis.find_by(unique_analysis_id: "cae1ec8f-e648-4993-ad80-f63f813a0ddc")
-    # # puts user_id
-    # puts unique_analysis_id
+            puts "Unique Analysis ID"
+            puts analysis.unique_analysis_id
 
-    # Query User Created Analysis for Test User
-    @user_created_analyses = UserCreatedAnalysis.where("user_id = 'test_user'")
-    puts @user_created_analyses
-    @user_created_analyses.each do |analysis|
-        puts "User ID Loop"
-        puts analysis.user_id
+            puts "Anchor"
+            puts analysis.anchor
 
-        puts "Unique Analysis ID"
-        puts analysis.unique_analysis_id
+            puts "Antecedent Name Loop"
+            puts analysis.antecedent_name
 
-        puts "Anchor"
-        puts analysis.anchor
+            puts "Antedent Table"
+            puts analysis.antecedent_table
 
-        puts "Antecedent Name Loop"
-        puts analysis.antecedent_name
+            puts "Antecedent Parameter"
+            puts analysis.antecedent_parameter
 
-        puts "Antedent Table"
-        puts analysis.antecedent_table
+            puts "Consequent Name"
+            puts analysis.consequent_name
 
-        puts "Antecedent Parameter"
-        puts analysis.antecedent_parameter
+            puts "Consequent Table"
+            puts analysis.consequent_table
 
-        puts "Consequent Name"
-        puts analysis.consequent_name
+            puts "Consequent Parameter"
+            puts analysis.consequent_parameter
 
-        puts "Consequent Table"
-        puts analysis.consequent_table
+            puts "Aggregate Function"
+            puts analysis.aggregate_function
 
-        puts "Consequent Parameter"
-        puts analysis.consequent_parameter
+            puts "Antecedent Type"
+            puts analysis.antecedent_type
 
-        puts "Aggregate Function"
-        puts analysis.aggregate_function
+            puts "Consequent Type"
+            puts analysis.consequent_type
 
-        puts "Antecedent Type"
-        puts analysis.antecedent_type
+            puts "Consequent Interval"
+            puts analysis.consequent_interval
 
-        puts "Consequent Type"
-        puts analysis.consequent_type
+            puts "Antecendent Interval"
+            puts analysis.antecedent_interval
 
-        puts "Consequent Interval"
-        puts analysis.consequent_interval
-
-        puts "Antecendent Interval"
-        puts analysis.antecedent_interval
-
-        puts "Query Interval"
-        puts analysis.query_interval
-        puts "--------------"
-    end
-            # puts "Antecedent Name"
-            # puts unique_analysis_id.antecedent_name   
+            puts "Query Interval"
+            puts analysis.query_interval
+            puts "--------------"
+        end
 
     end
 
@@ -282,6 +194,29 @@ class AnalysisController < ApplicationController
         redirect_to pages_analysis_path(refresh:"hard_refresh", selected_analysis_id: selected)
     end
 
-   
+    def add_analysis
+        # add the passed analysis to user_created)_analysis model
+        puts params
+        puts session
+        puts @user_metadata
+        analysis = UserCreatedAnalysis.new do |u|
+            u.user_id = "#{session[:oktastate]["uid"]}"
+            u.anchor = params["anchor-select"]
+            u.antecedent_name = params["antecedentName"]
+            u.antecedent_table = "test"
+            u.antecedent_parameter = (params.key?("antecedent-parameter"))?params["antecedent-parameter"]:nil
+            u.consequent_name = params["consequentName"]
+            u.consequent_table = "test"
+            u.consequent_parameter = (params.key?("consequent-parameter"))?params["consequent-parameter"]:nil
+            u.aggregate_function = "SUM"
+            u.antecedent_type = (params.key?("antecedent-parameter"))? "EVENT" : "DATASTREAM"#@user_metadata[params["antecedentName"]]
+            u.consequent_type = (params.key?("consequent-parameter"))? "EVENT" : "DATASTREAM" #@user_metadata[params["consequentName"]]
+            u.consequent_interval = (params.key?("consequent-window"))?params["consequent-window"]:nil
+            u.antecedent_interval = (params.key?("antecedent-window"))?params["antecedent-window"]:nil
+            u.query_interval = "(#{params["interval-start"]},#{params["interval-end"]},#{params["time-interval-unit"]})"
+        end
+        analysis.save
+        redirect_to analysis_page_path
+    end
 
 end

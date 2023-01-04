@@ -57,8 +57,11 @@ Rails.application.routes.draw do
 
   get 'pages/dashboard', to: 'dashboard#geocode'
 
-  get 'pages/analysis', :to => 'analysis#index', :as => 'add_analysis'
+  get 'pages/analysis', :to => 'analysis#index', :as => 'analysis_page'
   post 'pages/analysis', :to => 'analysis#index'
+
+  get 'pages/analysis/new_analysis', :to => 'analysis#add_analysis'
+  post 'pages/analysis/new_analysis', :to => 'analysis#add_analysis', :as => 'add_analysis'
 
   post 'pages/analysis/select-event', :to => 'analysis#select_event', :as => 'select_user_events'
 end

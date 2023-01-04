@@ -7,7 +7,7 @@
             <div class="row align-items-center">
                 <div class="col antecedent" >
                     <div class="row">
-                        <input type="radio" name="anchor-select" value="antecedent" required/>
+                        <input type="radio" name="anchor-select" value="ANTECEDENT" required/>
                         <h3 class="mb-0">Antecedent Events</h3>
                     </div>
                     <div class="row data-entity-div" id="antecedent-selections">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col consequent" >
                     <div class="row">
-                        <input type="radio" name="anchor-select" value="consequent"/>
+                        <input type="radio" name="anchor-select" value="CONSEQUENT"/>
                         <h3 class="mb-0">Consequent Events</h3>
                     </div>
                     <div class="row data-entity-div" id="consequent-selection">
@@ -130,7 +130,7 @@ function setDataStream(target){
         var selectionMessage = document.getElementById("consequent-message");
     }
 
-    var parameterOptions = ["Hourly", "Daily", "Weekly"].map((param) => {return `<option>${param}</option>`});
+    var parameterOptions = ["HOURLY", "DAILY", "WEEKLY"].map((param) => {return `<option>${param}</option>`});
     // console.log(parameterOptions);
     var parameterDropdown = `<select id="${target}-window" name="${target}-window">${parameterOptions}</select>`;
     parentElement.innerHTML = parameterDropdown;

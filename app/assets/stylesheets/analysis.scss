@@ -1,3 +1,62 @@
 // Place all the styles related to the sleep controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.align-items-center {
+    flex: 1;
+    align-items: stretch;
+}
+
+.antecedent {
+    background-color: #ffd6bb;
+    min-height: 100px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 2px;
+    border-radius: 3px;
+    flex:1;
+}
+
+
+.consequent {
+    background-color: #2774c7;
+    min-height: 100px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 2px;
+    border-radius: 3px;
+    flex:1;
+}
+
+.antecedent> h3 {
+    flex: 1;
+    text-align: center;
+}
+
+.consequent > h3 {
+    flex: 1;
+    text-align: center;
+}
+
+.data-entity-div {
+    justify-content: center;
+}
+
+.query-interval {
+    flex:1;
+    justify-content: center;
+    align-items: center;
+}
+
+.query-interval>.row {
+    flex:1;
+    justify-content: center;
+    align-items: center;
+}
+
+.time-interval {
+    width: 20%;
+    padding: 0;
+}
