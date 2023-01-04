@@ -13,6 +13,24 @@ class AnalysisController < ApplicationController
         else
             puts "Not found"
         end
+
+        @user_metadata = {
+            "Sleep" => {
+                "type" => "event",
+                "parameters" => ["duration", "sleep_quality"]
+                },
+            "Running" => {
+                "type" => "event",
+                "parameters" => ["duration", "calories"]
+            },
+            "Steps" => {
+                "type" => "datastream"
+            },
+            "Calories" => {
+                "type" => "datastream"
+            }
+        }
+
         @response = JSON.parse(File.read('db/scatterplot_e2d.json'))
         # puts @response
         # puts @response['correlation_result']["0"]
