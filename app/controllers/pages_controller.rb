@@ -14,7 +14,11 @@ class PagesController < ApplicationController
     # end
     case action_name
     when 'login', 'register'
+      if token_is_valid()
+        'dashboard'
+      else
       'authentication'
+      end
     else
       #  @profile_image = get_user_profile_image_url()
       # 'dashboard',  locals: { bg_color_class: @profile_image}
