@@ -1,15 +1,15 @@
 class PagesController < ApplicationController
-  before_action :require_user, except: [:login,:register, :is_user_loggedin, :create_physician_account]
+  before_action :require_user, except: [:login,:register, :create_physician_account]
   before_action :is_user_loggedin
   # layout :resolve_layout
 
-  def is_user_loggedin
-     if token_is_valid()
-      redirect_to pages_dashboard_path
-     else
-      'authentication'
-     end
-  end
+  # def is_user_loggedin
+  #    if token_is_valid()
+  #     redirect_to pages_dashboard_path
+  #    else
+  #     'authentication'
+  #    end
+  # end
   # private
   def resolve_layout
     # puts "hello"
@@ -22,11 +22,11 @@ class PagesController < ApplicationController
     # end
     case action_name
     when 'login', 'register'
-      if token_is_valid()
-        redirect_to 'https://app.personicle.org/pages/dashboard'
-      else 
+      # if token_is_valid()
+      #   redirect_to 'https://app.personicle.org/pages/dashboard'
+      # else 
       'authentication'
-      end
+      # end
     else
       #  @profile_image = get_user_profile_image_url()
       # 'dashboard',  locals: { bg_color_class: @profile_image}
