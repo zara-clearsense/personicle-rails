@@ -1,7 +1,15 @@
 class PagesController < ApplicationController
   before_action :require_user, except: [:login,:register, :create_physician_account]
-  layout :resolve_layout
+  before_action :is_user_loggedin
+  # layout :resolve_layout
 
+  def is_user_loggedin
+     if token_is_valid()
+      redirect_to pages_dashboard_path
+     else
+      'authentication'
+     end
+  end
   # private
   def resolve_layout
     # puts "hello"
