@@ -15,7 +15,7 @@ class PagesController < ApplicationController
     case action_name
     when 'login', 'register'
       if token_is_valid()
-        redirect_to pages_dashboard_path
+        redirect_to 'https://app.personicle.org/pages/dashboard'
       else 
       'authentication'
       end
