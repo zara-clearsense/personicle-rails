@@ -15,8 +15,8 @@ class PagesController < ApplicationController
     case action_name
     when 'login', 'register'
       if token_is_valid()
-        'dashboard'
-      else
+        redirect_to pages_dashboard_path
+      else 
       'authentication'
       end
     else
