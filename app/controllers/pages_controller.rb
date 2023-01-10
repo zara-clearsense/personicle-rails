@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   before_action :require_user, except: [:login,:register, :create_physician_account]
-  before_action :is_user_loggedin
+  # before_action :is_user_loggedin
   # layout :resolve_layout
 
   # def is_user_loggedin
