@@ -3,13 +3,17 @@ class PagesController < ApplicationController
   # before_action :is_user_loggedin
   layout :resolve_layout
 
-  # def is_user_loggedin
-  #    if token_is_valid()
-  #     redirect_to pages_dashboard_path
-  #    else
-  #     'authentication'
-  #    end
-  # end
+  def is_user_loggedin
+     if token_is_valid() && logged_in?
+      puts "herer"
+      redirect_to pages_dashboard_path
+     else
+      # redirect_to pages_login_path
+      # render :template 
+     render template: 'layouts/authentication.html.erb'
+     end
+  end
+
   # private
   def resolve_layout
     # puts "hello"
@@ -23,7 +27,7 @@ class PagesController < ApplicationController
     case action_name
     when 'login', 'register'
       # if token_is_valid()
-      #   redirect_to 'https://app.personicle.org/pages/dashboard'
+      #  return redirect_to pages_dashboard_path
       # else 
       'authentication'
       # end
