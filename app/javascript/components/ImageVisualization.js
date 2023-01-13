@@ -5,6 +5,8 @@ import SimpleImageSlider from "react-simple-image-slider";
 // import { KeyboardControlKey } from '@mui/icons-material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import Typography from '@mui/material/Typography';
 import Image from "material-ui-image";
 const style = {
@@ -74,6 +76,22 @@ const handleOpen = (idx) => {
   setOpen(true);
 
 }
+const deleteImage = (imageUrl) => {
+  console.log(imageUrl)
+  const url = new URL(imageUrl);
+  const key = url.pathname.split("/")[2]
+  $.ajax({
+    type: "POST",
+    url: "/image/delete",
+    data : {
+      "image_key": key,
+      "question_id": tag
+    },
+     complete: function () {
+      alert("Image is marked for deletion and will be deleted")
+    }
+  });
+}
 
 const ImageModal = () => {
   return modalData ? (
@@ -91,6 +109,12 @@ const ImageModal = () => {
            Patient description: 
           </Typography> */}
           <Image src={modalData.url} style={{ border: '3px solid #5e72e4'}}/>
+          <Button onClick={() => {
+            deleteImage(modalData.url);
+          }} 
+          >
+            Delete
+          </Button>
           {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}> */}
             {/* {modalData} */}
           {/* </Typography> */}
@@ -114,5 +138,6 @@ return (
   {/* <Chrono items={items} mode="HORIZONTAL"  onItemSelected={handleClick(items)}/> */}
   </div>
 );
+
 }
 export default ImageVisualization; 
