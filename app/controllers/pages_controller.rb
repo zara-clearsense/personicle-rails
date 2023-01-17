@@ -1,6 +1,18 @@
 class PagesController < ApplicationController
   before_action :require_user, except: [:login,:register, :create_physician_account]
+  # before_action :is_user_loggedin
   layout :resolve_layout
+
+  def is_user_loggedin
+     if token_is_valid() && logged_in?
+      puts "herer"
+      redirect_to pages_dashboard_path
+     else
+      # redirect_to pages_login_path
+      # render :template 
+     render template: 'layouts/authentication.html.erb'
+     end
+  end
 
   # private
   def resolve_layout
@@ -14,7 +26,11 @@ class PagesController < ApplicationController
     # end
     case action_name
     when 'login', 'register'
+      # if token_is_valid()
+      #  return redirect_to pages_dashboard_path
+      # else 
       'authentication'
+      # end
     else
       #  @profile_image = get_user_profile_image_url()
       # 'dashboard',  locals: { bg_color_class: @profile_image}

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :logged_in?, :require_user, :session_active?, :is_physician?, :get_user_notifications
+  helper_method :logged_in?, :require_user, :session_active?, :is_physician?, :get_user_notifications, :token_is_valid
   
 
   def get_user_notifications
@@ -74,6 +74,22 @@ class ApplicationController < ActionController::Base
     if !logged_in? 
         flash[:danger] = "You must be logged in to perform that action"
         redirect_to root_path
+    end
+  end
+
+  def token_is_valid
+    if session[:oktastate]
+      access_token = session[:oktastate]['credentials']['token']
+
+      url = ENV['TOKEN_INTROSPECTION']+"?token="+access_token
+      
+      res = RestClient::Request.execute(:url => url, headers: {Authorization: "Basic #{ENV['BASE_64_CLIENT']}", :content_type =>'application/x-www-form-urlencoded'}, :method => :post)
+      is_active =  JSON.parse(res)['active']
+      
+      if !is_active
+        return false
+      end
+      return true
     end
   end
 
