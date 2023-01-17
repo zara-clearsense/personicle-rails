@@ -79,18 +79,21 @@ const handleOpen = (idx) => {
 const deleteImage = (imageUrl) => {
   console.log(imageUrl)
   const url = new URL(imageUrl);
-  const key = url.pathname.split("/")[2]
-  $.ajax({
-    type: "POST",
-    url: "/image/delete",
-    data : {
-      "image_key": key,
-      "question_id": tag
-    },
-     complete: function () {
-      alert("Image is marked for deletion and will be deleted")
-    }
-  });
+  const key = url.pathname.split("/")[2];
+  var result = confirm("Are you sure you want to delete this image?");
+  if(result){
+    $.ajax({
+      type: "POST",
+      url: "/image/delete",
+      data : {
+        "image_key": key,
+        "question_id": tag
+      },
+      complete: function () {
+        alert("Image is marked for deletion and will be deleted")
+      }
+    });
+  }
 }
 
 const ImageModal = () => {

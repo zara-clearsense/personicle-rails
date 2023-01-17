@@ -55,6 +55,7 @@
     "popper.js": "^1.16.1",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
+    "react_ujs": "^2.6.1",
     "react-bootstrap": "^2.2.1",
     "react-chartjs-2": "^4.3.1",
     "react-chrono": "^1.18.0",
@@ -62,7 +63,6 @@
     "react-google-charts": "^4.0.0",
     "react-router-dom": "^6.3.0",
     "react-simple-image-slider": "^2.4.1",
-    "react_ujs": "^2.6.1",
     "turbolinks": "^5.2.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"

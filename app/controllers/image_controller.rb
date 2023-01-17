@@ -22,9 +22,6 @@ class ImageController < ApplicationController
        
         data_to_update = []
         JSON.parse(data[0][0]).each do |r|
-            puts r
-            puts r.class
-            puts r["value"]
             if r["value"] != image_key
                 data_to_update.push(r)
             end
@@ -43,13 +40,7 @@ class ImageController < ApplicationController
         res =  JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/delete", :payload => payload, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete ),object_class: OpenStruct)
         puts res
         Rails.cache.delete([:images,"com.personicle.individual.datastreams.subjective.physician_questionnaire",session[:oktastate]['uid']])
-        return redirect_to pages_user_responses_path, refresh:"hard_refresh"
-        # record.each do |k,v|
-        #     puts k
-        #     puts v
-        # end
-        
-        
+        return redirect_to pages_user_responses_path, refresh:"hard_refresh" 
     end
 
     def send_packet
