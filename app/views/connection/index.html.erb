@@ -1,3 +1,9 @@
+<div class="header-margin">
+<div class="header-info">
+  <h1>Connections</h1>
+  <p><b>Enables user to connect to different wearable devices such as FitBit, Google Fit, and Oura Ring. Includes information about the last data retrieval time (dd/mm/yy hh:mm) and allows user to retrieve latest data from each individual data stream. </b></p>
+</div>
+</div>
 
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
@@ -16,14 +22,15 @@
     <div class=" col ">
       <div class="card">
         <div class="card-header bg-transparent">
-          <h3 class="mb-0">Connections</h3>
+          <h3 class="mb-0">Wearable Devices</h3>
         </div>
         <div class="card-body">
           <div class="row icon-examples">
             <div class="col-lg-3 col-md-6">
             <a href="<%= ENV['FITBIT_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
-              <button type="button" class="btn-icon-clipboard" data-clipboard-text="active-40" title="Connect your Fitbit">
+              <span><button type="button" class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Fitbit with last date of data retrieval. User can retrieve most recent data by clicking the Fitbit button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
                 <div>
+                 
                   <span class="iconify" data-icon="vscode-icons:file-type-fitbit"></span>
                   <span class="btn-inner--text">Fitbit</span>
                 </div>

@@ -1,11 +1,14 @@
+ <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="row">
   <div class="col-xl-3 col-md-6">
     <div class="card card-stats">
       <!-- Card body -->
       <div class="card-body">
         <div class="row">
-          <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Average sleep</h5>
+          <div class="col">  
+            <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The average sleep of the user over the course of the month. Indicates increase or decrease in sleep as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Average sleep </h5>
             <%if avg_sleep_week == 0%>
             <%sleep_text = "No sleep events for past week"%>
             <%else%>
@@ -45,7 +48,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Activity</h5>
+            <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The net calories over the past month taking into account calories consumed and calories burned. Indicates increase or decrease in calories as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Calories </h5>
             <span class="h2 font-weight-bold mb-0">2,356</span>
           </div>
           <div class="col-auto">
@@ -67,7 +70,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Walking</h5>
+            <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The number of steps over the past month performing physical activity. Indicates increase or decrease in steps as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Walking </h5>
             <%if avg_steps_week == 0%>
             <%steps_text = "No steps data"%>
             <%else%>
@@ -106,7 +109,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+            <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The overall performance of the user (to be completed…). Indicates increase or decrease in performance as compared to previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Performance </h5>
             <span class="h2 font-weight-bold mb-0">2500</span>
           </div>
           <div class="col-auto">

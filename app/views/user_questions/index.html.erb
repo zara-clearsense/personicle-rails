@@ -1,9 +1,25 @@
 <% if !@questions.empty? %>
-<h1 class="ml-3 mb-3">
-    Questionnaire
-</h1>
-<style>
-</style>
+<div class="header-margin">
+<div class="header-info">
+  <h1>Physician Questions</h1>
+  <p><b>Populates questions asked by the physician to collect data about patient well-being and health status in between doctor’s visits.</b></p>
+</div>
+</div>
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+  <div class="col-lg-6 col-7">
+   
+  </div>
+  <div class="col-lg-6 col-5 text-right">
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
 
 <%= form_with url: pages_dashboard_physician_questions_path , id: "physician_response_form", multipart: true, method: :post do  %>
 
@@ -22,7 +38,7 @@
             <div class="card-header bg-white" id="headingOne">
                 <h2 class="mb-0">
                     <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#<%= id %>" aria-expanded="false" aria-controls="collapseOne">
-                    <%= key[1]%> Questions
+                    <span class="hovertext" data-hover="Click on a certain doctor’s name to see the specific questions they asked the patient. The user may answer these questions and see them reflected in the “Plot Data From Answers”."><i class="fa fa-info-circle" aria-hidden="true"></i> <%= key[1]%> Questions
                     </button>
                 </h2>
             </div>
