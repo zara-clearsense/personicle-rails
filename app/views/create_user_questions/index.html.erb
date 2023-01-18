@@ -1,3 +1,25 @@
+<div class="header-margin">
+<div class="header-info">
+  <h1>Create Your Own Questions</h1>
+  <p><b>Enables the user to create their own questions and answers to those questions which can then be populated on the “Plot Data from Answers” page. Answers can be in the form of surveys, numbers, written word, or images.</b></p>
+</div>
+</div>
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+  <div class="col-lg-6 col-7">
+   
+  </div>
+  <div class="col-lg-6 col-5 text-right">
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
 <% puts session[:oktastate]['uid']%>
 <button type="button" class="btn btn-primary mt-2 ml-2" data-toggle="modal" data-target="#create_user_question_modal">Create new question</button>
 <div class="overlay d-flex justify-content-center align-items-center  text-center">
@@ -61,7 +83,7 @@
     <div class="card-header" id="headingOne">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Your Questions
+          <span class="hovertext" data-hover="Click “Create new question”, then write your specific question. Add a tag to signify what the question is about. The question can be a survey in which case there will be multiple options you create for the survey, or you can create questions with word, number, or image responses."><i class="fa fa-info-circle" aria-hidden="true"></i> Your Questions</span>
         </button>
       </h2>
     </div>

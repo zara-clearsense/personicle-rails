@@ -56,6 +56,16 @@
               <span class="nav-link-text ml-1"> Exposome</span>
             </a>
           </li>
+<<<<<<< HEAD
+=======
+          <%# <li class="nav-item"> %>
+            <%# <a class="nav-link <%= action_name.eql?('tables') ? 'active': ''" href="<%= pages_analysis_path">  %>
+              <%# <% #<i class="ni ni-bullet-list-67 text-default"></i> %>
+              <%# <span class="iconify" data-icon="carbon:text-link-analysis" data-width="30" data-height="30"></span> %>
+              <%# <span class="nav-link-text ml-1">Analysis</span> %>
+            <%# </a> %>
+          <%# </li> %>
+>>>>>>> fbd1045... Information Data Hovers & Header Descriptions
           <% if !session[:oktastate]["physician"]%>
            <li class="nav-item">
             <a class="nav-link <%= action_name.eql?('tables') ? 'active': '' %>" href="<%= pages_dashboard_physician_questions_path %>">
@@ -80,26 +90,25 @@
             </a>
           </li>
           <% end %>
-         <li class="nav-item">
-            <a class="nav-link" href=<%= image_upload_path %> >
+         <%# <li class="nav-item">
+            <a class="nav-link" href=<%= image_upload_path %> 
               <%# <i class="fa-solid fa-user-doctor"></i> %>
-              <span class="iconify" data-icon="bi:file-earmark-image"></span>
-              <span class="nav-link-text ml-3">Upload image</span>
-            </a>
-          </li>
-
+              <%# <span class="iconify" data-icon="mdi:upload" data-width="24" data-height="24"></span> %>
+              <%# <span class="nav-link-text ml-3">Upload image</span> %>
+            <%# </a>
+          </li> %>
            <li class="nav-item">
             <a class="nav-link" href=<%= pages_user_create_question_path %> >
               <%# <i class="fa-solid fa-user-doctor"></i> %>
-              <%# <span class="iconify" data-icon="bi:file-earmark-image"></span> %>
-              <span class="nav-link-text ml-3">Create Questions</span>
+              <span class="iconify" data-icon="mdi:head-question" data-width="24" data-height="24"></span>
+              <span class="nav-link-text ml-3">Create Own Questions</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href=<%=  pages_user_responses_path %> >
               <%# <i class="fa-solid fa-user-doctor"></i> %>
-              <%# <span class="iconify" data-icon="bi:file-earmark-image"></span> %>
-              <span class="nav-link-text ml-3">View responses</span>
+              <span class="iconify" data-icon="mdi:graph-bar-stacked" data-width="24" data-height="24"></span>
+              <span class="nav-link-text ml-3">View Your Answers</span>
             </a>
           </li>
    

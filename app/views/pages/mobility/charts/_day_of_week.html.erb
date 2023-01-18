@@ -3,7 +3,7 @@
     <div class="row align-items-center">
       <div class="col">
         
-        <h5 class="h3 text-black mb-0">Mobility on different days of the week</h5>
+        <h5 class="h3 text-black mb-0"><span class="hovertext" data-hover="A line chart showing average steps over many days at various times of day (0-24 hrs)."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Mobility on different days of the week</h5>
         <%= form_with url: pages_mobility_path, local: true, method: :post do  %>
           <input type="hidden" name="refresh" value="hard_refresh">
           <button  class="btn btn-primary" style="float: right;" type="submit">Refresh</button>
