@@ -16,9 +16,14 @@
 <!DOCTYPE html>
 <html>
   <%= render 'shared/head' %>
+  <%= puts logged_in? %>
+  <%= if token_is_valid() && logged_in? 
+       return controller.redirect_to pages_dashboard_path
+      end
+  %>
   <body class="bg-default">
     <%= render 'pages/logged_out/topnav' %>
-   
+  
     <div class="main-content">
       <%= render partial: 'authentication/header', locals: { title: yield(:title), subtitle: yield(:subtitle) } %>
       <%= yield %>
