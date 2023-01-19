@@ -133,20 +133,19 @@ class PhysicianController < ApplicationController
             daily_sleep = @user_data.map {|event| {'date' => event['end_time'].to_datetime.to_date,'duration' => 24*(event['end_time'].to_datetime - event['start_time'].to_datetime).to_f}}
            
             tmp = daily_sleep.group_by {|rec| rec['date']}.to_h
-         
-            max_date = daily_sleep.max {|rec| rec['date']}['date']
-            min_date = daily_sleep.min {|rec| rec['date']}['date']
+            max_date = daily_sleep.map {|rec| rec['date']}.max
+            min_date = daily_sleep.map {|rec| rec['date']}.min
+
             @daily_sleep_summary = tmp.map {|k,v| [k , v.sum {|r| r['duration']}]}.to_h
             (min_date..max_date).each do |d|
                 if ! @daily_sleep_summary.key?(d)
                     @daily_sleep_summary[d]=0
-                end
+                end 
             end
             @daily_sleep_summary = @daily_sleep_summary.sort.to_h
             tmp2 = daily_sleep.group_by {|rec| rec['date'].strftime('%Y-%U')}.to_h
             @weekly_sleep_summary = tmp2.map {|k,v| [k , v.sum {|r| r['duration']}/ v.size]}.to_h
             # moving_average_sleep = @daily_sleep_summary.each_cons(7).map {|recs| [recs.max {|r| r[0]}[0], recs.sum {|r| r[1]}/recs.sum {|r| (r[1] > 0)?1:0 }]}.to_h
-                    
             (min_date..max_date).each do |d|
                 @daily_sleep_summary[d] = {'duration'=> @daily_sleep_summary[d], 'moving_average' => 0}
             end

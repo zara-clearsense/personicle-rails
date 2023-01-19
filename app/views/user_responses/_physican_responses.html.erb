@@ -90,6 +90,17 @@
 
           
                  @data = []
+                 @testData = [
+                   {"name"=>"angry", "data"=>[["Mon, 14 Nov 2022", 1]] },
+                   {"name" => "great", "data" => [["Mon, 14 Nov 2022", 16], ["Tue, 06 Dec 2022", 16]] }
+                   ]
+#                  {:name=>"great", :data=>[[Mon, 14 Nov 2022, 16]]}
+# {:name=>"angry", :data=>[[Mon, 14 Nov 2022, 1]]}
+# {:name=>"good", :data=>[[Mon, 14 Nov 2022, 2]]}
+# {:name=>"great", :data=>[[Tue, 06 Dec 2022, 16]]}
+                #  obj =  {"name" => "great", "data" => [["Mon, 14 Nov 2022", 16], ["Tue, 06 Dec 2022", 16]] }
+                 
+                #  @testData.push(obj)
                  @tag_responses.each do |k,v|
 
                   numeric_responses = v.filter {|r| r[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
@@ -106,9 +117,15 @@
                     show_image_chart = true 
                   else
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                            name: key[2], data: [ [k,val] ]
+                            })
+                        end
+                       
                       end
                   end
                  end
@@ -125,8 +142,8 @@
            
                    <%= react_component("ImageVisualization", {user_id: session[:oktastate]['uid'], image_urls: image_urls_physician, tag: tag, auth: session[:oktastate]['credentials']['token']}) %> 
               <% else %> 
-                <%# <% puts @data %>  
-                  <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
+                
+                  <%= column_chart  @data, title: tag, library: { isStacked: 'true' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
                 <%end%>  
           </div>
 
@@ -136,13 +153,19 @@
               @data = []
                  @tag_responses.each do |k,v|
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                              name: key[2], data: [ [k,val] ]
+                            })
+                        end
                         
                       end
                  end
            %> 
+           
            <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
           </div>
         <%end%>

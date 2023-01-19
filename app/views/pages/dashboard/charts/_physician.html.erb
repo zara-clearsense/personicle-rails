@@ -179,7 +179,7 @@
         </div>
 
         <div id="sleep_chart_daily" class="chart">
-
+          <%=puts daily_sleep_summary %>
             <%= column_chart [
                   {
                       name: "Daily Sleep", type: "column", data: daily_sleep_summary.map {|k,v| [k, v['duration']]} 
