@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   before_action :require_user, except: [:login,:register, :create_physician_account]
   layout :resolve_layout
-  
+
   # private
   def resolve_layout
     # puts "hello"
@@ -16,7 +16,10 @@ class PagesController < ApplicationController
     when 'login', 'register'
       'authentication'
     else
+      #  @profile_image = get_user_profile_image_url()
+      # 'dashboard',  locals: { bg_color_class: @profile_image}
       'dashboard'
+
     end
   end
 

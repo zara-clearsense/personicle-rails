@@ -12,6 +12,8 @@
 </div>
 <!-- Page content -->
 <div class="container-fluid mt--6">
+ <%= render 'layouts/insights' , notification_type: "sleep" %>
+
   <div class="row">
     <div class="col" background-color="white">
         <%=render 'pages/sleep/charts/daily_sleep', user_data: @daily_sleep_summary %>

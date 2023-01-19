@@ -1,7 +1,9 @@
 class PhysicianController < ApplicationController
     before_action :require_user, :session_active?, :is_user_physician?, except: [:create_account]
+    before_action :get_user_notifications
     
     def index
+        
         logger.info session[:oktastate]['credentials']['token']
         @physician = Physician.find_by(user_id: session[:oktastate]["uid"])
     end
@@ -58,9 +60,15 @@ class PhysicianController < ApplicationController
                 image_responses.each do |k,v|
                     v.each do |val|
                         image_keys = val['response'].split(";")
-                            image_keys.each do |key|
-                            res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
-                            @image_urls.push([k, val['timestamp'], res['image_url']])
+                            begin
+                                image_keys.each do |key|
+                                    res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{params['data_for_user']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+                                    @image_urls.push([k, val['timestamp'], res['image_url']])
+                            rescue => exception
+                                if exception.response.code == 404
+                                    next
+                                end
+                            end
                         end
                     end
                  end

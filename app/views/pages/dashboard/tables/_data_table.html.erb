@@ -41,7 +41,6 @@
      <% if !@response.empty? %>
         <div class="accordion mt-2" id="accordionExample">
             <% @response.each do |record|%>
-            <%# <% puts record['parameters'].to_json %>  
         <tr id="<%=record['unique_event_id']%>" class="tableRow">
           <th scope="row">
             <input type="checkbox" id="row-check-<%=record['unique_event_id']%>" value="<%=record['unique_event_id']%>" class="form-check-input" name="selected[]" value="select-all" onchange="checkCheckboxes(this)"/>

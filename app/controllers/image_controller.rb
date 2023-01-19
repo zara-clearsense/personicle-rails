@@ -1,12 +1,14 @@
 class ImageController < ApplicationController
     before_action :require_params, only: %i[ upload_image ]
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
  
     def upload
+      
 
     end
 
     def send_packet
+
         image_data = params[:image_ids]
         values = []
         image_data.each do |k,v|

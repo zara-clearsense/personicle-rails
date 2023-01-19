@@ -1,7 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :logged_in?, :require_user, :session_active?, :is_physician?
+  helper_method :logged_in?, :require_user, :session_active?, :is_physician?, :get_user_notifications
   
+
+  def get_user_notifications
+     @current_user = User.find_by(user_id: session[:oktastate]['uid'])
+     @notifications = @current_user.notifications.unread
+     return @notifications
+  end
+
   def user_is_logged_in?
     if !session[:oktastate]
       # redirect_to user_oktaoauth_omniauth_authorize_path
@@ -74,7 +81,7 @@ class ApplicationController < ActionController::Base
     resource.env['omniauth.origin'] || root_path
   end
 
-
+  
 
   def handle_image_response(image_resp)
     # puts "inside handle_image_response"
@@ -140,7 +147,7 @@ class ApplicationController < ActionController::Base
         end
         image_keys = image_keys.join(";")
         image_response_packet.append({
-            "question-id": tag,
+            "question_id": tag,
             "value": image_keys,
             "response_type": "image"
         })
@@ -158,7 +165,7 @@ class ApplicationController < ActionController::Base
     survey.each do |survey_resp|
         if !survey_resp[:value].empty?
             survey_response_packet.append({
-                "question-id": survey_resp[:'question-id'],
+                "question_id": survey_resp[:'question-id'],
                 "value": survey_resp[:value],
                 "response_type": "survey"
             })
@@ -168,7 +175,7 @@ class ApplicationController < ActionController::Base
     numeric.each do |numeric_resp|
         if !numeric_resp[:value].empty?
             numeric_response_packet.append({
-                "question-id": numeric_resp[:'question-id'],
+                "question_id": numeric_resp[:'question-id'],
                 "value": numeric_resp[:value].to_s,
                 "response_type": "numeric"
             })
@@ -178,7 +185,7 @@ class ApplicationController < ActionController::Base
     string.each do |string_resp|
         if !string_resp[:value].empty?
             string_response_packet.append({
-                "question-id": string_resp[:'question-id'],
+                "question_id": string_resp[:'question-id'],
                 "value": string_resp[:value].to_s,
                 "response_type": "string"
             })

@@ -1,0 +1,5 @@
+
+:schedule:
+  user_behavioral_insight:
+    cron: '0 * * * * *'   # Runs once per minute
+    class: UserBehavioralInsight

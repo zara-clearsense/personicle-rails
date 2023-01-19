@@ -1,5 +1,5 @@
 class UserResponsesController < ApplicationController
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
     # format data for chart
     # args: user_repsonses, data_type (physician_questionnaire or user_questionnaire, physician_response: bool)
     def format_data_to_visualize(user_responses,data_type,physician_responses)
@@ -9,7 +9,7 @@ class UserResponsesController < ApplicationController
                     responses = rec['value']
                     phy = physician_responses ? rec['source'].split(":")[1]  : ""
                     responses.each do |resp|
-                        timestamped_responses.push({'timestamp'=> current_timestamp, 'physician' => phy, 'question_id'=> resp['question-id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
+                        timestamped_responses.push({'timestamp'=> current_timestamp, 'physician' => phy, 'question_id'=> resp['question_id'], 'response' => resp['value'], 'response_type' => resp['response_type']})
                     end
             end
 
@@ -31,13 +31,14 @@ class UserResponsesController < ApplicationController
                         image_keys = val['response'].split(";")
                             image_keys.each do |key|
                                 begin
-                                    
                                     res = JSON.parse(RestClient::Request.execute(:url => "https://personicle-file-upload.herokuapp.com/user_images/#{key}?user_id=#{session[:oktastate]['uid']}", headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
                                     # puts key
                                     image_urls.push([k, val['timestamp'], res['image_url']])
                                 rescue => exception
                                     puts "deleted key " + key
-                                    next
+                                    if exception.response.code == 404
+                                        next
+                                    end
                                 end
                             
                         end
@@ -51,9 +52,9 @@ class UserResponsesController < ApplicationController
     end
 
     def index
-        st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
-        et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-     
+        st = 3.months.ago.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")
+        et = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")
+      
         if params[:refresh]=="hard_refresh"
            user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.user_questionnaire",st, et, hard_refresh=true,uid=session[:oktastate]['uid'])
            user_physician_responses = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=true,uid=session[:oktastate]['uid'])
@@ -62,13 +63,14 @@ class UserResponsesController < ApplicationController
            user_physician_responses = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=session[:oktastate]['uid'])
 
         end
-        # puts user_responses
+       
         if !user_responses.empty? 
          @user_responses, @unique_tags, @image_urls  = format_data_to_visualize(user_responses,"com.personicle.individual.datastreams.subjective.user_questionnaire",false)
         end
         if !user_physician_responses.empty?
             @user_responses_physician, @unique_tags_physician, @image_urls_physician  = format_data_to_visualize(user_physician_responses,"com.personicle.individual.datastreams.subjective.physician_questionnaire",true)
             @unique_physicians = @user_responses_physician.uniq {|rec| rec[0][4]}.collect{|rec| rec[0][4]}
+           
         end
        
     end #index end

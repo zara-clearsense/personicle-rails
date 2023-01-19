@@ -2,9 +2,12 @@ class SleepController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
 
     def index
+        # if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+        #     @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+        # end
         # url = ENV['EVENTS_ENDPOINT']+"?startTime="+start_time+"&endTime="+current_time+"&event_type=Sleep"
         # res = RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false )
         st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")

@@ -2,7 +2,7 @@ class DashboardController < ApplicationController
   require 'json'
   require 'ostruct'
   require 'date'
-  before_action :require_user, :session_active?
+  before_action :require_user, :session_active?, :get_user_notifications
   before_action :set_locale
 
   protected def set_locale
@@ -16,12 +16,14 @@ class DashboardController < ApplicationController
   end
 
   def index
-    puts params
+    # puts params
     puts session[:oktastate]['credentials']['token']
-    
+    # if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+    #   @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+    # end
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-
+   
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
@@ -33,9 +35,7 @@ class DashboardController < ApplicationController
       @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
       @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
     end 
-
-    # @is_physician = session["physician"] 
-    # puts @is_physician
+   
     if !@response.empty?
       # @response = JSON.parse(res,object_class: OpenStruct)
       # last_month_total_sleep, last_month_sleep_events
@@ -91,6 +91,16 @@ class DashboardController < ApplicationController
 
       @latitude = request.location.latitude
       @longitude = request.location.longitude
+      ip = "#{request.ip}"
+      results = Geocoder.search(ip)
+      # puts results.first.coordinates
+      # puts ip
+      # @latitude = request.safe_location.latitude
+      # @longitude = request.safe_location.longitude
+      @latitude =  results.first.coordinates[0]
+      @longitude =  results.first.coordinates[1]
+      # puts @latitude
+      # puts @longitude
 
       data={
             "individual_id": session[:oktastate]["uid"],
@@ -102,21 +112,9 @@ class DashboardController < ApplicationController
             }]
         }
 
-        puts data.to_json
+        # puts data.to_json
         res = RestClient::Request.execute(:url => "https://api.personicle.org/data/write/datastream/upload", :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
-      
-      @ip_address = request.location
-      @country = request.location.country_code
-      @city = request.location.city
-     
-      puts results.first.coordinates
-      puts results.first.country
-
-      
-      puts "session"
-      puts session[:oktastate]["uid"]
-      puts Time.now.getutc
-      
+           
     end
 
     # puts @response
@@ -127,9 +125,10 @@ class DashboardController < ApplicationController
     # RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete, ),object_class: OpenStruct)
     # params[:select-all] = select-all_value
     events = JSON.parse(params[:selected_events])
- 
+    puts events.class
+    
     if !events.nil?
-      events = events.join(";")
+      events = events.join(";") 
       url = "https://staging.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
       res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
       redirect_to pages_dashboard_path, refresh:"hard_refresh"
@@ -164,5 +163,37 @@ class DashboardController < ApplicationController
     # puts params
     redirect_to pages_dashboard_path, refresh:"hard_refresh"
   end
+  def update_event
+    # Inside update make 2 API calls
+    # 1. Delete event api
+    # 2. Add events api
+      events = JSON.parse(params[:selected_events])
+      puts events
+    
+      if !events.nil?
+        events = events.join(";")
+        url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{events}"
+        res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+      end
+  
+      # ## Get Updated Event
+      updated_events = JSON.parse(params[:updated_events])
+  
+      for index in 0 ... updated_events.size
+        # puts "array[#{index}] = #{array[index].inspect}"
+        updated_events[index][:individual_id] = session[:oktastate]['uid']
+      end
+      puts updated_events.to_json
+  
+      res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => updated_events.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})  
+      # puts "Params"
+      # puts params
+      redirect_to pages_dashboard_path, refresh:"hard_refresh"
+    end
 
+  def geocode
+    
+  end
+
+ 
 end

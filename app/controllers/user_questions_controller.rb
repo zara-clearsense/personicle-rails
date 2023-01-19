@@ -1,5 +1,7 @@
 class UserQuestionsController < ApplicationController
-    before_action :require_user, :session_active?
+    before_action :require_user, only: [:index, :send_responses]
+    before_action :session_active?, only: [:index, :send_responses]
+    before_action :get_user_notifications, only: [:index,:send_responses]
     def index
         @questions = {}
         @user = User.find_by(user_id: session[:oktastate]['uid'])
@@ -10,8 +12,28 @@ class UserQuestionsController < ApplicationController
             @questions[[phy.id,phy.name]] = @physician_questions if !@physician_questions.empty?
              
         end
+        # puts @questions
+        # logger.info @questions
     end
 
+    def get_physicians_questions
+        begin
+            res = JSON.parse(RestClient::Request.execute(:url => "https://api.personicle.org/auth/authenticate", headers: {Authorization: request.authorization}, :method => :get ),object_class: OpenStruct)
+            @user = User.find_by(user_id: res['user_id'])
+              return  render json: @user.to_json(
+                    only: [:name],
+                    :include => {:physician_users => {only: [:physician_user_id, :questions], :include => {:physician => {only: [:name] }}}
+                    }
+                )
+            
+        rescue => exception
+            if exception.response.code == 401
+              return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+            end
+        end
+       
+      
+    end
     # def client_image_validation(images)
     #     # puts "client image validatoin"
     #     # puts images
@@ -87,21 +109,35 @@ class UserQuestionsController < ApplicationController
    
   
     def send_responses   
-        # puts "hello"
+      
         # puts params
         question_reponses = params.except(:authenticity_token,:controller, :action)
         physicians_questions_responses = {}
         question_reponses.each do |k,v|
+            if v.blank?
+                next
+            end
+            # logger.info v
             payload = {"response": v , "tag": k.split(" ")[1] , "response_type": k.split(" ")[2] }
             if physicians_questions_responses.empty?
                 physicians_questions_responses[k.split(" ")[0]] = [ payload ]
             else
-                physicians_questions_responses[k.split(" ")[0]].push(payload) 
+                # logger.info "here"
+                # logger.info physicians_questions_responses
+                # logger.info k 
+                # logger.info v.blank?
+                # logger.info physicians_questions_responses[k.split(" ")[0]]
+                # if physicians_questions_responses[k.split(" ")[0]].empty?
+                #     physicians_questions_responses[k.split(" ")[0]] = [ payload ]
+                # else 
+                   physicians_questions_responses[k.split(" ")[0]].push(payload) 
+
+                # end
             end 
         end
         
         physicians_questions_responses.each do |key,value|
-
+            
            responses, filtered_image_responses, filtered_survey_responses, filtered_string_responses, filtered_numeric_responses =  get_filtered_responses(value)
 
             code, image_validation_response = client_image_validation(filtered_image_responses) if !filtered_image_responses.empty? # client validation for quicker responses
@@ -119,13 +155,13 @@ class UserQuestionsController < ApplicationController
 
             final_data_packet =  final_data_packet.flatten!
             
-            
             if !final_data_packet.nil?
                 data = {"streamName": "com.personicle.individual.datastreams.subjective.physician_questionnaire", "individual_id": "#{session[:oktastate]["uid"]}",
                         "source": "Personicle:#{key}", "unit": "", "confidence": 100, "dataPoints":[{ "timestamp": Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N"), "value": final_data_packet }]
                         }
-            
+                 
                 res = RestClient::Request.execute(:url => ENV['DATASTREAM_UPLOAD'], :payload => data.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})
+                
                 if res.code == 200
                     flash[:success] = "Your responses are recorded"
                     return redirect_to pages_dashboard_physician_questions_path(responses_send: true)

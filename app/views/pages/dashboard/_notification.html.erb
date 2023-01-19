@@ -1,0 +1,10 @@
+<div>
+   <% notifications.each do |notification|%>
+     <% if  !notification.params[:message].nil?%>
+        <% puts notification.params[:message]['insight_text'] %>
+        <%= link_to notification.params[:message]['insight_text'], notification.to_notification.url(notification.id,notification.params[:message]['life_aspect']  ) %> <br>
+     <% else %>
+        <%= link_to notification.to_notification.message, notification.params[:url]%> <br>
+      <% end %>
+   <% end %>
+</div>

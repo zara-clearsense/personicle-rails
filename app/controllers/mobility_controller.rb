@@ -2,9 +2,12 @@ class MobilityController < ApplicationController
     require 'json'
     require 'ostruct'
     require 'date'
-    before_action :require_user, :session_active?
+    before_action :require_user, :session_active?, :get_user_notifications
 
   def index
+    # if !params[:noti_id].nil? &&  !params[:noti_id].blank? 
+    #   @notification_read = Notification.find_by(id: params[:noti_id]).mark_as_read!
+    # end
     # add another request for specific data streams (step count)
     # use exercise for another chart
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")

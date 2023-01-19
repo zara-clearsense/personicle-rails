@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  notifications:
+    insight_notification:
+      message: "You have a new notification"

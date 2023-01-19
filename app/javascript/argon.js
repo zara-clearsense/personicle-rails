@@ -23,7 +23,8 @@
 'use strict';
 
 
-$( document ).on('ready page:load', function() {
+$( document ).on('turbolinks:load', function() {
+
   var Layout = (function() {
       
       function pinSidenav() {
@@ -42,10 +43,13 @@ $( document ).on('ready page:load', function() {
 
       function initSideNav() {
         if($(window).width() >= 1200) {
+        
+
             pinSidenav();
         }
 
         if($(window).width() < 1200){
+         
           unpinSidenav();
         }
       }
@@ -558,6 +562,7 @@ $( document ).on('ready page:load', function() {
 
     $( ".sidenav-toggler" ).click(function() {
       if(navbar_menu_visible == 1){
+      
         $('body').removeClass('nav-open');
         navbar_menu_visible = 0;
         $('.bodyClick').remove();
@@ -566,6 +571,7 @@ $( document ).on('ready page:load', function() {
 
       var div = '<div class="bodyClick"></div>';
       $(div).appendTo('body').click(function() {
+     
           $('body').removeClass('nav-open');
             navbar_menu_visible = 0;
             $('.bodyClick').remove();
@@ -1052,4 +1058,3 @@ $( document ).on('ready page:load', function() {
   //   modal.find('.my-div').val(recipient)
   // })
 })
-

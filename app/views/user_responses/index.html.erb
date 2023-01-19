@@ -7,7 +7,10 @@
 }
 
 </style>
-<% if !@user_responses.nil? || !@user_responses_physician.nil?%>
+<% if @user_responses.nil? && @user_responses_physician.nil? %>
+<p>No responses to visualize</p>
+<% end %>
+<% if !@user_responses.nil? %>
 <div class="accordion" id="userResponsesAccordion">
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -20,11 +23,14 @@
     <div id="collapseUserResponses" class="collapse" aria-labelledby="headingOne" data-parent="#userResponsesAccordion">
       <div class="card-body">
         <div id="chart_type_user" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
+        <% if !@user_responses.nil? %>
               <% @unique_tags.each do |tag| %>
                 <label class="btn btn-secondary">
                   <input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
                 </label>    
               <% end %>
+        <% end %>
+
   </div>
 
 <div class="card mr-1" style="width:82%;height:500px">
@@ -147,9 +153,9 @@
     </div>
   </div>
  </div>
+<% end %>
+<% if  !@user_responses_physician.nil? %>
   <%= render 'user_responses/physican_responses', image_urls_physician: @image_urls_physician, unique_physicians: @unique_physicians, user_responses_physician: @user_responses_physician%>
-<% else %>
-<p>No responses to visualize</p>
 <% end %>
 <script>
 

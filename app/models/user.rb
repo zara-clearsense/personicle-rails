@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates_uniqueness_of :user_id
   has_many :physician_users,foreign_key: 'user_user_id'
   has_many :physicians, :through => :physician_users, foreign_key: 'user_user_id'
-
+  has_many :notifications, as: :recipient
   devise :omniauthable, omniauth_providers: [:oktaoauth, :google_oauth2]
 
   def self.from_omniauth(auth)

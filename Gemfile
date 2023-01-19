@@ -85,3 +85,7 @@ gem 'font-awesome-rails'
 group :production do
   gem 'rails_12factor'
 end
+
+gem "noticed", "~> 1.5"
+
+gem "sidekiq-scheduler", "~> 4.0"
