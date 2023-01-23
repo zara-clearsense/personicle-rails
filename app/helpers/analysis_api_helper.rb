@@ -1,0 +1,2 @@
+module AnalysisApiHelper
+end
