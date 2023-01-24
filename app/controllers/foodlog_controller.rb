@@ -50,14 +50,15 @@ class FoodlogController < ApplicationController
         
         if  not params[:start_time].blank?
             start_time = params[:start_date]+" "+ params[:start_time] + ":00"
+
         else
-            start_time = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
+            start_time = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")
         end
         
         if  not params[:start_time].blank?
             end_time = params[:start_date]+" "+ params[:end_time] + ":00"
         else
-            default_end_time = Time.now + 15.minutes
+            default_end_time = Time.now.utc + 15.minutes
             end_time = default_end_time.strftime("%Y-%m-%d %H:%M:%S.%6N")
         end
        
@@ -65,10 +66,13 @@ class FoodlogController < ApplicationController
         end_time_millis = (Time.parse(end_time).to_f)*1000
         duration = end_time_millis - start_time_millis
         # puts params[:ingredients]
+        puts start_time.class
+        puts end_time.class
+        puts Time.find_zone("UTC").parse(end_time)
         data = [{
             "individual_id": "#{session[:oktastate]["uid"]}",
-            "start_time": "#{start_time}",
-            "end_time": "#{end_time}",
+            "start_time": "#{Time.find_zone("UTC").parse(start_time)}",
+            "end_time": "#{Time.find_zone("UTC").parse(end_time)}",
             "duration": "#{duration}",
             "event_name": "Food",
             "source": "personicle-foodlogger",

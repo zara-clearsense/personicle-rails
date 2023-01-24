@@ -103,9 +103,15 @@
                     show_image_chart = true 
                   else
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                            name: key[2], data: [ [k,val] ]
+                            })
+                        end
+                       
                       end
                   end
                  end
@@ -122,6 +128,28 @@
                   <%= react_component("ImageVisualization", {user_id: session[:oktastate]['uid'], image_urls: @image_urls, tag: tag, auth: session[:oktastate]['credentials']['token']}) %>
               <% else %> 
                 <%# <% puts @data %>  
+
+                <%
+                  dates = @data.map {|obj| obj[:data].map { |sub_array| sub_array.first }}.flatten
+                    min_date = dates.min
+                    max_date = dates.max
+                    missing_dates = []
+                    (min_date..max_date).step(1) do |date|
+                      unless dates.include?(date)
+                        tmp = [date, ""]
+                        missing_dates << tmp
+                      end
+                    end
+                  
+                    @data.each do |json_object|
+                      json_object.each do |key, value|
+                        if value.is_a?(Array)
+                          value.concat(missing_dates)
+                          json_object[key] = value
+                        end
+                      end
+                    end
+                %>
                   <%= column_chart  @data, title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Date", ytitle: "Total Responses", stacked: true %>  
                 <%end%>  
           </div>
@@ -132,12 +160,37 @@
               @data = []
                  @tag_responses.each do |k,v|
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
-                        
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                            name: key[2], data: [ [k,val] ]
+                            })
+                        end
+                       
                       end
                  end
+
+                 dates = @data.map {|obj| obj[:data].map { |sub_array| sub_array.first }}.flatten
+                  min_date = dates.min
+                  max_date = dates.max
+                  missing_dates = []
+                  (min_date..max_date).step(1) do |date|
+                    unless dates.include?(date)
+                      tmp = [date, ""]
+                      missing_dates << tmp
+                    end
+                  end
+                 
+                  @data.each do |json_object|
+                    json_object.each do |key, value|
+                      if value.is_a?(Array)
+                        value.concat(missing_dates)
+                        json_object[key] = value
+                      end
+                    end
+                  end
            %> 
            <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
           </div>
