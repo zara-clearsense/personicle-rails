@@ -103,9 +103,15 @@
                     show_image_chart = true 
                   else
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                            name: key[2], data: [ [k,val] ]
+                            })
+                        end
+                       
                       end
                   end
                  end
@@ -154,10 +160,15 @@
               @data = []
                  @tag_responses.each do |k,v|
                       v.each do |key,val|
-                        @data.push({
-                          name: key[2], data: [ [k,val] ]
-                        })
-                        
+                        obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
+                        if !obj_exists.nil?
+                          obj_exists[:data].push([k,val])
+                        else
+                            @data.push({
+                            name: key[2], data: [ [k,val] ]
+                            })
+                        end
+                       
                       end
                  end
 
