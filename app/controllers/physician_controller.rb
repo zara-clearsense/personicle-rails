@@ -31,7 +31,7 @@ class PhysicianController < ApplicationController
             @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
             
         end
-         
+        
          if !@user_responses.empty?
             # puts @user_responses/
             responses_for_current_physician = @user_responses.filter {|resp| resp['source'].split(':')[1] == session[:oktastate]['uid']} 
@@ -86,6 +86,7 @@ class PhysicianController < ApplicationController
             #      @image_urls.push(res['image_url'])
             #     end
             # end
+   
         end
 
          if !@user_hr.empty?
