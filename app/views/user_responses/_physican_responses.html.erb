@@ -146,7 +146,8 @@
                     json_object.each do |key, value|
                       if value.is_a?(Array)
                         value.concat(missing_dates)
-                        json_object[key] = value
+                        sorted_value = value.sort_by { |sub_arr| sub_arr[0] }
+                        json_object[key] = sorted_value
                       end
                     end
                   end
@@ -190,7 +191,8 @@
                     json_object.each do |key, value|
                       if value.is_a?(Array)
                         value.concat(missing_dates)
-                        json_object[key] = value
+                        sorted_value = value.sort_by { |sub_arr| sub_arr[0] }
+                        json_object[key] = sorted_value
                       end
                     end
                   end
