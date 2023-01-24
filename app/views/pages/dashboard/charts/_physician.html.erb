@@ -35,10 +35,13 @@
               <label class="btn btn-secondary">
                 <input type="radio" name="charttype" value="activity_chart" > Activity
               </label>
-              <% unique_question_tags.each do |tag| %>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="charttype" value="<%=tag%>_chart"> <%=tag%>
-                </label>
+              
+              <% if !unique_question_tags.nil? %>
+                <% unique_question_tags.each do |tag| %>
+                  <label class="btn btn-secondary">
+                    <input type="radio" name="charttype" value="<%=tag%>_chart"> <%=tag%>
+                  </label>
+                <% end %>
               <% end %>
   </div>
 
@@ -83,15 +86,15 @@
                 <input type="hidden" name="data_for_user" value=<%= patient_id %>>
                 <button  class="btn btn-primary" type="submit">Refresh</button>
               <% end %>
-   
+       
+        <% if !user_data.nil? %>
+          <% if user_data.length() != 0 or user_events.length()!=0 or !patient_responses.nil?  %>
+          <% 
+            @numeric_responses =  patient_responses.filter {|rec| rec[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
 
-        <% if user_data.length() != 0 or user_events.length()!=0 or patient_responses.length() !=0%>
-         <% 
-           @numeric_responses =  patient_responses.filter {|rec| rec[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
-
-          
-          # puts @numeric_responses
-         %>
+            
+            # puts @numeric_responses
+          %>
         <% unique_question_tags.each do |tag|%>
           <div id="<%=tag%>_chart_daily" class="chart hidden">
            <%
@@ -179,7 +182,7 @@
         </div>
 
         <div id="sleep_chart_daily" class="chart">
-          <%=puts daily_sleep_summary %>
+          
             <%= column_chart [
                   {
                       name: "Daily Sleep", type: "column", data: daily_sleep_summary.map {|k,v| [k, v['duration']]} 
@@ -200,6 +203,8 @@
       <%else%>
         <h3 style="color:black;">No activities for the past 3 months</h3>
       <%end%>
+      <%end%>
+
      
       <%# <canvas id="chart-sales-dark" class="chart-canvas"></canvas> %>
     </div>
