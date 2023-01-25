@@ -152,7 +152,8 @@ class DashboardController < ApplicationController
         # puts "array[#{index}] = #{array[index].inspect}"
         updated_events[index][:individual_id] = session[:oktastate]['uid']
       end
-     
+      puts updated_events.to_json
+  
       res = RestClient::Request.execute(:url => ENV['EVENT_UPLOAD'], :payload => updated_events.to_json, :method => :post, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']}", content_type: :json})  
       # puts "Params"
       # puts params
