@@ -1,3 +1,6 @@
+<% if @questions.empty? %>
+<p class="physician-questions-error-message">Physician has not yet posed question to the user.</p>
+<% end %>
 <% if !@questions.empty? %>
 <div class="header-margin">
 <div class="header-info">

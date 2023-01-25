@@ -54,6 +54,21 @@
 // body { 
 //     background-color: #5e72e4;
 // }
+
+.physician-questions-error-message, .user-physician-responses-error-message {
+  background-color: rgb(177, 20, 20);
+  border-radius: 25px;
+  width: 20rem;
+  text-align: center;
+  padding: 10px;
+  color: white;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  margin: 20px auto;
+
+   
+}
 .header-margin{
     background-color: #5e72e4;
     margin: 0px;

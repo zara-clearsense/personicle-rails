@@ -17,18 +17,28 @@
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapsePhysicianResponses<%=phy%>" aria-expanded="true" aria-controls="collapsePhysicianResponses<%=phy%>">
 
-         <%=phy_name%> responses
+         <span class="hovertext" data-hover="Enables the user to view the health metrics graphed from the answers they provided to the specified doctor’s questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> <%=phy_name%> responses
         </button>
       </h2>
     </div>
     <div id="collapsePhysicianResponses<%=phy%>" class="collapse" aria-labelledby="headingOne" data-parent="#physicianResponsesAccordion">
       <div class="card-body">
         <div id="chart_type_user_physician" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
+            <% if @physician_responses.nil? %>
               <% @tags.each do |tag| %>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="user_physician_chart_type" value="<%=tag%>_chart"> <%=tag%>
-                </label>    
+                  <% @questions[[phy,phy_name]]["questions"].each_with_index do |element, index| %>
+                  <%# <% puts "#{element["question"]}, #{index}"  %>
+                    <% if element["tag"] == tag %>
+                    <span class="hovertext" data-hover="<%=element["question"]%>"><i class="fa fa-info-circle" aria-hidden="true"></i></span><input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
+                    <%# <%break%> 
+                    <% end %> 
+                  <% end %>
+                </label>                
               <% end %>
+        <% end %>
+
+        
   </div>
 
 <div class="card mr-1" style="width:82%;height:500px">
@@ -46,10 +56,10 @@
           
            <div id="daily_weekly_actions" class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-secondary">
-                  <input type="radio" name="daily_weekly_option" value="daily" checked> Daily
+                  <input type="radio" name="daily_weekly_option" value="daily" checked><span class="hovertext" data-hover="A stacked bar graph showing the user’s daily question responses to the physician's questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Daily
                 </label>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="daily_weekly_option" value="weekly" > Weekly
+                  <input type="radio" name="daily_weekly_option" value="weekly" ><span class="hovertext" data-hover="A stacked bar graph showing the user’s weekly question responses to the physician's questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Weekly
                 </label>
             </div>
            

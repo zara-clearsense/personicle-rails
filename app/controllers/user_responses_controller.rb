@@ -2,6 +2,7 @@ class UserResponsesController < ApplicationController
     before_action :require_user, :session_active?, :get_user_notifications
     # format data for chart
     # args: user_repsonses, data_type (physician_questionnaire or user_questionnaire, physician_response: bool)
+
     def format_data_to_visualize(user_responses,data_type,physician_responses)
            timestamped_responses = []
             user_responses.each do |rec|
@@ -52,12 +53,32 @@ class UserResponsesController < ApplicationController
     end
 
     def index
+        @user_questions = User.find_by(user_id: session[:oktastate]['uid']).questions
+        puts "User Questions"
+        puts @user_questions
+        @user_questions["questions"].each {|element| puts element["question"]}
+
+        @questions = {}
+        @user = User.find_by(user_id: session[:oktastate]['uid'])
+
+        @user.physicians.each do |phy|
+            
+            @physician_questions = PhysicianUser.find_by(user_user_id: session[:oktastate]['uid'], physician_user_id: phy.user_id).questions
+            puts @physician_questions.to_yaml
+            if !@physician_questions.empty? 
+            @questions[[phy.id,phy.name]] = @physician_questions if !@physician_questions.empty?
+            puts @questions[[phy.id,phy.name]]
+            @physician_questions["questions"].each {|ques| puts ques["question"]}
+            end
+        end
+        
         st = 3.months.ago.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")
         et = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S.%6N")
       
         if params[:refresh]=="hard_refresh"
            user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.user_questionnaire",st, et, hard_refresh=true,uid=session[:oktastate]['uid'])
            user_physician_responses = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=true,uid=session[:oktastate]['uid'])
+ 
         else
            user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.user_questionnaire",st, et, hard_refresh=false,uid=session[:oktastate]['uid'])
            user_physician_responses = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=session[:oktastate]['uid'])
