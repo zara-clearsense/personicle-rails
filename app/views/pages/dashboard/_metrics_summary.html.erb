@@ -1,3 +1,7 @@
+    <script src="https://kit.fontawesome.com/16923e284e.js" crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+    
+
 <div class="row">
   <div class="col-xl-3 col-md-6">
     <div class="card card-stats">
@@ -32,35 +36,52 @@
         <%text_color = "text-success"%>
         <%end%>
         
-          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=percent_change%>%</span>
+          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=number_with_precision(percent_change, precision:2)%>%</span>
         
           <span class="text-nowrap">Since last month</span>
         </p>
       </div>
     </div>
   </div>
-  <div class="col-xl-3 col-md-6">
+    <div class="col-xl-3 col-md-6">
     <div class="card card-stats">
       <!-- Card body -->
       <div class="card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Activity</h5>
-            <span class="h2 font-weight-bold mb-0">2,356</span>
+            <h5 class="card-title text-uppercase text-muted mb-0">Calories Burned</h5>
+            <%if avg_calories_week == 0%>
+            <%calories_text = "No calories data"%>
+            <%else%>
+            <%calories_text = "#{number_with_delimiter(avg_calories_week, :delimiter => ',')} calories per day"%>
+            <%end%>
+            <span class="h2 font-weight-bold mb-0"><%=calories_text%></span>
           </div>
           <div class="col-auto">
-            <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-              <i class="ni ni-chart-pie-35"></i>
+            <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+            <i class="fa fa-fire" aria-hidden="true"></i>
             </div>
           </div>
         </div>
         <p class="mt-3 mb-0 text-sm">
-          <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+          <%if avg_calories_month > avg_calories_week%>
+          <%calories_percent_change = (avg_calories_month>0)? 100*(avg_calories_month - avg_calories_week)/avg_calories_month: 0%>
+          <%arrow_direction = "fa-arrow-down"%>
+          <%text_color = "text-warning"%>
+          <%else%>
+          <%calories_percent_change = (avg_calories_month>0)? 100*(avg_calories_week - avg_calories_month)/avg_calories_month: 0%>
+          <%arrow_direction = "fa-arrow-up"%>
+          <%text_color = "text-success"%>
+          <%end%>
+        
+          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=number_with_precision(calories_percent_change, precision:2)%>%</span>
+        
           <span class="text-nowrap">Since last month</span>
         </p>
       </div>
     </div>
   </div>
+
   <div class="col-xl-3 col-md-6">
     <div class="card card-stats">
       <!-- Card body -->
@@ -76,8 +97,8 @@
             <span class="h2 font-weight-bold mb-0"><%=steps_text%></span>
           </div>
           <div class="col-auto">
-            <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-              <i class="ni ni-money-coins"></i>
+            <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
+              <iconify-icon icon="mdi:footprints" width="30px" height="30px"></iconify-icon>
             </div>
           </div>
         </div>
@@ -92,7 +113,7 @@
           <%text_color = "text-success"%>
           <%end%>
         
-          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=steps_percent_change%>%</span>
+          <span class="<%=text_color%> mr-2"><i class="<%="fa #{arrow_direction}"%>"></i> <%=number_with_precision(steps_percent_change, precision:2)%>%</span>
         
           <span class="text-nowrap">Since last month</span>
         </p>

@@ -23,17 +23,28 @@ class DashboardController < ApplicationController
     # end
     st = 3.months.ago.strftime("%Y-%m-%d %H:%M:%S.%6N")
     et = Time.now.strftime("%Y-%m-%d %H:%M:%S.%6N")
-   
+    puts st
+    puts et
+    puts 3.months.ago.strftime("2022-12-03 04:02:20.220132")
+    puts Time.now.strftime("2022-12-09 04:59:16.546184")
     if params[:refresh]=="hard_refresh"
       puts "hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=true,uid=session[:oktastate]['uid'])
-      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.interval.step.count",start_date=st, end_date=et, is_hard_refresh=true,uid=session[:oktastate]['uid'])
       @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response_calories = FetchData.get_datastreams(session,data_source="google-fit",datatype="com.personicle.individual.datastreams.interval.total_calories",start_date=st, end_date=et, is_hard_refresh=true,user_id=session[:oktastate]['uid'])
+      puts "Calories data"
+      puts @response_calories
     else
       puts "not hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false,uid=session[:oktastate]['uid'])
       @response_step = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
-      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
+      @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=false,uid=session[:oktastate]['uid'])
+      @response_calories = FetchData.get_datastreams(session,data_source="google-fit",datatype="com.personicle.individual.datastreams.interval.total_calories",start_date=st, end_date=et, is_hard_refresh=false,user_id=session[:oktastate]['uid'])
+      puts "Calories data"
+      puts @response_calories
+      # puts "Step data"
+      # puts @response_step
     end 
    
     if !@response.empty?
@@ -58,11 +69,35 @@ class DashboardController < ApplicationController
       # puts @response
       # puts @last_week_sleep_event
     end
+
+    if !@response_calories.empty?
+    
+      tmp_calories = @response_calories.select {|record| record['end_time'].to_datetime > 30.days.ago}.map {|rec| [rec['end_time'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+      @daily_calories = tmp_calories.map {|k,v| [k, v.sum {|r| r[1]}]}.to_h
+      puts @daily_calories
+
+      @last_month_total_calories = @daily_calories.select {|k,v| k > 30.days.ago}.sum {|k,v| v}
+      puts @last_month_total_calories
+      @last_month_calories_days = @daily_calories.select {|k,v| k > 30.days.ago}.size
+      puts @last_month_calories_days
+      @last_week_total_calories = @daily_calories.select {|k,v| k > 7.days.ago}.sum {|k,v| v}
+      puts @last_week_total_calories
+      @last_week_calories_days = @daily_calories.select {|k,v| k > 7.days.ago}.size
+      puts @last_week_calories_days
+
+      @last_week_average_calories = @last_week_calories_days>0? @last_week_total_calories/@last_week_calories_days:0
+      puts @last_week_average_calories
+      @last_month_average_calories = @last_month_calories_days>0? @last_month_total_calories/@last_month_calories_days:0
+      puts @last_month_average_calories
+      
+      @response_calories_prev_week = @response_calories.select {|record| record['end_time'].to_datetime > 7.days.ago}.map {|rec| [rec['end_time'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+      puts @response_calories_prev_week
+    end
  
 
     if !@response_step.empty?
     
-      tmp_steps = @response_step.select {|record| record['timestamp'].to_datetime > 30.days.ago}.map {|rec| [rec['timestamp'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+      tmp_steps = @response_step.select {|record| record['end_time'].to_datetime > 30.days.ago}.map {|rec| [rec['end_time'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
       @daily_steps = tmp_steps.map {|k,v| [k, v.sum {|r| r[1]}]}.to_h
       # puts @daily_steps
 
