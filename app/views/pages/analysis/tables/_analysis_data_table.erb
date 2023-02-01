@@ -1,16 +1,17 @@
  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
- <%= form_with url: select_user_events_path, local: true, method: :post do |form| %>
-  <input type="hidden" id="selected_event" name="selected_event" value="[]"/>
+ <%= form_with url: delete_user_analysis_path, local: true, method: :post do |form| %>
+  <input type="hidden" id="selected_analysis" name="selected_analysis" value="[]"/>
   <div class="card">
   <div class="card-header border-0">
     <div class="row align-items-center">
       <div class="col">
-        <h3 class="mb-0">User Events</h3>
+        <h3 class="mb-0">User Analysis</h3>
       </div>
       <div class="col text-right">
-        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/analysis/select-event' name="select_event">Update with Selected Chart</button>
+        <button type="submit" class="btn btn-sm btn-primary" formaction='/pages/analysis/select-analysis' name="select_analysis">Update with Selected Chart</button>
+        <button type="submit" class="btn btn-sm btn-primary" name="delete_analysis">Delete Selected </button>      
       </div>
     </div>
   </div>

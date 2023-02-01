@@ -122,49 +122,49 @@ class AnalysisController < ApplicationController
         @user_created_analyses = UserCreatedAnalysis.where("user_id = '#{session[:oktastate]["uid"]}'")
         @user_created_analyses.each do |analysis|
             puts "User ID Loop"
-            puts analysis.user_id
+            # puts analysis.user_id
 
             puts "Unique Analysis ID"
-            puts analysis.unique_analysis_id
+            # puts analysis.unique_analysis_id
 
             puts "Anchor"
-            puts analysis.anchor
+            # puts analysis.anchor
 
             puts "Antecedent Name Loop"
-            puts analysis.antecedent_name
+            # puts analysis.antecedent_name
 
             puts "Antedent Table"
-            puts analysis.antecedent_table
+            # puts analysis.antecedent_table
 
             puts "Antecedent Parameter"
-            puts analysis.antecedent_parameter
+            # puts analysis.antecedent_parameter
 
             puts "Consequent Name"
-            puts analysis.consequent_name
+            # puts analysis.consequent_name
 
             puts "Consequent Table"
-            puts analysis.consequent_table
+            # puts analysis.consequent_table
 
             puts "Consequent Parameter"
-            puts analysis.consequent_parameter
+            # puts analysis.consequent_parameter
 
             puts "Aggregate Function"
-            puts analysis.aggregate_function
+            # puts analysis.aggregate_function
 
             puts "Antecedent Type"
-            puts analysis.antecedent_type
+            # puts analysis.antecedent_type
 
             puts "Consequent Type"
-            puts analysis.consequent_type
+            # puts analysis.consequent_type
 
             puts "Consequent Interval"
-            puts analysis.consequent_interval
+            # puts analysis.consequent_interval
 
             puts "Antecendent Interval"
-            puts analysis.antecedent_interval
+            # puts analysis.antecedent_interval
 
             puts "Query Interval"
-            puts analysis.query_interval
+            # puts analysis.query_interval
             puts "--------------"
         end
 
@@ -183,9 +183,9 @@ class AnalysisController < ApplicationController
         puts @response
     end
 
-    def select_event  
+    def select_analysis  
         # Get Updated Event
-        puts "Print selected event"
+        puts "Print Selected Analysis"
         selected = params[:selected]
         puts params[:selected].class
         puts selected
@@ -201,6 +201,7 @@ class AnalysisController < ApplicationController
         puts @user_metadata
         analysis = UserCreatedAnalysis.new do |u|
             u.user_id = "#{session[:oktastate]["uid"]}"
+            puts u.user_id
             u.anchor = params["anchor-select"]
             u.antecedent_name = params["antecedentName"]
             u.antecedent_table = "test"
@@ -218,5 +219,33 @@ class AnalysisController < ApplicationController
         analysis.save
         redirect_to analysis_page_path
     end
+
+    def delete_analysis
+        puts params
+        puts session
+        puts @user_metadata
+
+        puts "Print Selected Analysis"
+        selected = params[:selected]
+        puts selected
+
+        if !selected.nil?
+            analysis = UserCreatedAnalysis.delete(selected)
+        end
+        redirect_to analysis_page_path
+    end
+    
+
+        # analysis = params[:selected]
+        # puts "analysis"
+        # puts analysis
+
+        # if !analysis.nil?
+        #     analysis = analysis.join(";")
+        #     url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{analysis}"
+        #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
+        #     redirect_to pages_analysis_path(refresh:"hard_refresh", selected_analysis_id: selected)
+        # end
+
 
 end
