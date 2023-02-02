@@ -6,6 +6,7 @@ class AnalysisController < ApplicationController
     before_action :require_user, :session_active?
 
     def index
+        
         puts params
         if(params.has_key?(:selected_analysis_id))
             puts "Selected Analysis ID found in Parameters"
@@ -14,22 +15,10 @@ class AnalysisController < ApplicationController
             puts "Not found"
         end
 
-        @user_metadata = {
-            "Sleep" => {
-                "type" => "event",
-                "parameters" => ["duration", "sleep_quality"]
-                },
-            "Running" => {
-                "type" => "event",
-                "parameters" => ["duration", "calories"]
-            },
-            "Steps" => {
-                "type" => "datastream"
-            },
-            "Calories" => {
-                "type" => "datastream"
-            }
-        }
+        @user_metadata = get_metadata()
+        if @user_metadata.has_key? "status" && @user_metadata["status"] == "unauthorized"
+            @user_metadata = {}
+        end
 
         @response = JSON.parse(File.read('db/scatterplot_e2d.json'))
         # puts @response
@@ -112,8 +101,8 @@ class AnalysisController < ApplicationController
           
         # Push filtered_values into @response which will be fed to the view
         @response['correlation_result']["2"]["data"].replace(filtered_values)
-        puts "Response After Anomaly Removal - Replacing Data with Filtered Values in Position 2"
-        puts @response
+        # puts "Response After Anomaly Removal - Replacing Data with Filtered Values in Position 2"
+        # puts @response
 
         # Make view expect only data from one user
         @send =  @response['correlation_result']["2"]
@@ -132,12 +121,54 @@ class AnalysisController < ApplicationController
 
             puts "Antecedent Name Loop"
             # puts analysis.antecedent_name
+        end
+    end
+    def get_metadata
+        begin
+            # get user events metadata for the user id in the request
+            event_metadata = JSON.parse(RestClient::Request.execute(:url => ENV["METADATA_HOST_EVENT"], headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            puts event_metadata
+ 
+            # Accumulate the parameters metadata from different sources in one row
+            return_event_metadata = {}
+            event_metadata.each do |datum| 
+               if return_event_metadata.has_key? datum.event_type then 
+                 current_object = return_event_metadata[datum.event_type]
+               else
+                 current_object = {
+                     "type" => "event",
+                     "parameters" => []
+                 }
+               end
+               datum_parameters = JSON.parse datum.observed_parameters
+               datum_parameters.each do |param, count|
+                   unless current_object["parameters"].include?(param)
+                      current_object["parameters"] << param
+                   end
+                end
+               return_event_metadata[datum.event_type] = current_object
+            end
 
             puts "Antedent Table"
             # puts analysis.antecedent_table
+            datastream_metadata = JSON.parse(RestClient::Request.execute(:url => ENV["METADATA_HOST_DATASTREAM"], headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :get,:verify_ssl => false ),object_class: OpenStruct)
+            puts datastream_metadata
 
             puts "Antecedent Parameter"
             # puts analysis.antecedent_parameter
+            datastream_metadata.each do |datum|
+                stream_name = datum.datastream
+                display_name = stream_name.split(".")[-1]
+                unless stream_name.include? "subjective" 
+                    puts stream_name
+                    puts display_name
+                    unless return_event_metadata.has_key? display_name
+                        return_event_metadata[display_name] = {"type" => "datastream"}
+                    end
+                end
+            end
+            puts "final metadata"
+            puts return_event_metadata
 
             puts "Consequent Name"
             # puts analysis.consequent_name
@@ -166,8 +197,31 @@ class AnalysisController < ApplicationController
             puts "Query Interval"
             # puts analysis.query_interval
             puts "--------------"
+            return  return_event_metadata
+            # Sample return packet
+            # {
+            #         "Sleep" => {
+            #             "type" => "event",
+            #             "parameters" => ["duration", "sleep_quality"]
+            #             },
+            #         "Running" => {
+            #             "type" => "event",
+            #             "parameters" => ["duration", "calories"]
+            #         },
+            #         "Steps" => {
+            #             "type" => "datastream"
+            #         },
+            #         "Calories" => {
+            #             "type" => "datastream"
+            #         }
+            #     }
+            # return the events metadata in the required JSON format
+        rescue => exception
+            if exception.response.code == 401
+                # return  render status: :unauthorized, json: { error: "Unauthorized. You are not authorized to access this resource." }
+                return {"status" => "unauthorized", "error" => "Unauthorized. You are not authorized to access this resource."}
+            end
         end
-
     end
 
     def percentile(values, percentile)
@@ -235,17 +289,4 @@ class AnalysisController < ApplicationController
         redirect_to analysis_page_path
     end
     
-
-        # analysis = params[:selected]
-        # puts "analysis"
-        # puts analysis
-
-        # if !analysis.nil?
-        #     analysis = analysis.join(";")
-        #     url = "https://api.personicle.org/data/write/event/delete?user_id=#{session[:oktastate]['uid']}&event_id=#{analysis}"
-        #     res =  JSON.parse(RestClient::Request.execute(:url => url, headers: {Authorization: "Bearer #{session[:oktastate]['credentials']['token']} "}, :method => :delete,:verify_ssl => false ),object_class: OpenStruct)
-        #     redirect_to pages_analysis_path(refresh:"hard_refresh", selected_analysis_id: selected)
-        # end
-
-
 end
