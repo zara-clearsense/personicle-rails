@@ -51,4 +51,62 @@
 @import 'custom/utilities';
 @import 'custom/vendors';
 @import "bootstrap/scss/bootstrap";
- 
+// body { 
+//     background-color: #5e72e4;
+// }
+
+.physician-questions-error-message, .user-physician-responses-error-message {
+  background-color: rgb(177, 20, 20);
+  border-radius: 25px;
+  width: 20rem;
+  text-align: center;
+  padding: 10px;
+  color: white;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  margin: 20px auto;
+
+   
+}
+.header-margin{
+    background-color: #5e72e4;
+    margin: 0px;
+    padding: 0px;
+.header-info {
+    border-radius: 25px;
+    background-color: white;
+    color: black;
+    padding: 20px 15px;
+    margin: 0px 25px;
+    height: 150px;
+}
+}
+.hovertext {
+    position: relative;
+    // font-family:
+  }
+  
+  .hovertext:before {
+    content: attr(data-hover);
+    visibility: hidden;
+    opacity: 0;
+    width: 400px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 0;
+    transition: opacity 1s ease-in-out;
+  
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 110%;
+  }
+  
+  .hovertext:hover:before {
+    opacity: 1;
+    visibility: visible;
+  }
+
