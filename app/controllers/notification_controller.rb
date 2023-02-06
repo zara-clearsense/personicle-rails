@@ -5,7 +5,7 @@ class NotificationController < ApplicationController
         @current_user = User.find_by(user_id: session[:oktastate]['uid'])
         @notifications = @current_user.notifications.unread.newest_first
         @notifications.each do |n|
-            logger.info n.params
+            # logger.info n.params
 
             # logger.info json_unescape(n.params)
         end
