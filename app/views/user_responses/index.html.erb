@@ -7,8 +7,31 @@
 }
 
 </style>
+
+<div class="header-margin">
+<div class="header-info">
+  <h1>View Your Answers</h1>
+  <p><b>Displays graphed responses to questions created and answered by the user as well as questions created by physicians and answered by the user.</b></p>
+</div>
+</div>
+
+  <div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+  <div class="col-lg-6 col-7">
+   
+  </div>
+  <div class="col-lg-6 col-5 text-right">
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
 <% if @user_responses.nil? && @user_responses_physician.nil? %>
-<p>No responses to visualize</p>
+<p class="user-physician-responses-error-message">No responses to visualize</p>
 <% end %>
 <% if !@user_responses.nil? %>
 <div class="accordion" id="userResponsesAccordion">
@@ -16,7 +39,7 @@
     <div class="card-header" id="headingOne">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseUserResponses" aria-expanded="true" aria-controls="collapseUserResponses">
-         Your responses
+         <span class="hovertext" data-hover="Enables the user to view the health metrics graphed from the answers they provided to their own questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Your responses
         </button>
       </h2>
     </div>
@@ -26,8 +49,14 @@
         <% if !@user_responses.nil? %>
               <% @unique_tags.each do |tag| %>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
-                </label>    
+                  <% @user_questions["questions"].each_with_index do |element, index| %>
+                  <%# <% puts "#{element["question"]}, #{index}"  %>
+                    <% if element["tag"] == tag %>
+                    <span class="hovertext" data-hover="<%=element["question"]%>"><i class="fa fa-info-circle" aria-hidden="true"></i></span><input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
+                    <%# <%break%> 
+                    <% end %> 
+                  <% end %>
+                </label>                
               <% end %>
         <% end %>
 
@@ -48,10 +77,10 @@
           
            <div id="actions" class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-secondary">
-                  <input type="radio" name="chart" value="daily" checked> Daily
+                  <input type="radio" name="chart" value="daily" checked><span class="hovertext" data-hover="A stacked bar graph showing the user’s daily question responses to their own questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Daily
                 </label>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="chart" value="weekly" > Weekly
+                  <input type="radio" name="chart" value="weekly" ><input type="radio" name="chart" value="daily" checked><span class="hovertext" data-hover="A stacked bar graph showing the user’s weekly question responses to their own questions."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Weekly
                 </label>
             </div>
            
