@@ -14,7 +14,7 @@ class NotificationController < ApplicationController
     def mark_notification_as_read
        @notification_read = Notification.find_by(id: params[:notif_id]).mark_as_read!
        render json: {success: true}
-    end
+    end 
 end
 
 class UserNotification
