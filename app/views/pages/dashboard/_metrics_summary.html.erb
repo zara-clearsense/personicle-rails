@@ -56,7 +56,7 @@
             <%if avg_calories_week == 0%>
             <%calories_text = "No calories data"%>
             <%else%>
-            <%calories_text = "#{number_with_delimiter(avg_calories_week, :delimiter => ',')} calories per day"%>
+            <%calories_text = "#{number_with_delimiter(avg_calories_week.round(2), :delimiter => ',')} calories per day"%>
             <%end%>
             <span class="h2 font-weight-bold mb-0"><%=calories_text%></span>
           </div>
@@ -85,7 +85,7 @@
     </div>
   </div>
 
-  <div class="col-xl-3 col-md-6">
+  <div class="col-xl-4 col-md-6">
 
     <div class="card card-stats">
       <!-- Card body -->

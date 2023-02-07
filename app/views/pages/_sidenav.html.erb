@@ -72,12 +72,12 @@
             </a>
           </li>
           <% end %>
-          <li class="nav-item">
-            <a class="nav-link" href="<%= pages_login_path %>">
-              <i class="ni ni-key-25 text-info"></i>
-              <span class="nav-link-text">Login</span>
-            </a>
-          </li>
+          <%# <li class="nav-item">
+            <a class="nav-link" href="<%= pages_login_path %><%# "> %>
+              <%# <i class="ni ni-key-25 text-info"></i> %>
+              <%# <span class="nav-link-text">Login</span> %>
+            <%# </a> %>
+          <%# </li> %>
           <% if session[:oktastate]["physician"]%>
           <li class="nav-item">
             <a class="nav-link" href=<%= pages_dashboard_physician_path %> >
