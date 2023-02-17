@@ -24,19 +24,17 @@
     <div id="collapsePhysicianResponses<%=phy%>" class="collapse" aria-labelledby="headingOne" data-parent="#physicianResponsesAccordion">
       <div class="card-body">
         <div id="chart_type_user_physician" class="btn-group-vertical btn-group-toggle tab mr-1" data-toggle="buttons">
-            <% if @physician_responses.nil? %>
-              <% @tags.each do |tag| %>
-                <label class="btn btn-secondary">
+            <% @tags.each do |tag| %>
+                    <label class="btn btn-secondary">
                   <% @questions[[phy,phy_name]]["questions"].each_with_index do |element, index| %>
                   <%# <% puts "#{element["question"]}, #{index}"  %>
                     <% if element["tag"] == tag %>
-                    <span class="hovertext" data-hover="<%=element["question"]%>"><i class="fa fa-info-circle" aria-hidden="true"></i></span><input type="radio" name="user_chart_type" value="<%=tag%>_chart"> <%=tag%>
+                    <span class="hovertext" data-hover="<%=element["question"]%>"><i class="fa fa-info-circle" aria-hidden="true"></i></span><input type="radio" name="user_physician_chart_type" value="<%=tag%>_chart"> <%=tag%>
                     <%# <%break%> 
                     <% end %> 
                   <% end %>
-                </label>                
+                </label>            
               <% end %>
-        <% end %>
 
         
   </div>
