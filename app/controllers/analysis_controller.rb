@@ -11,9 +11,12 @@ class AnalysisController < ApplicationController
         if(params.has_key?(:selected_analysis_id))
             puts "Selected Analysis ID found in Parameters"
             puts params[:selected_analysis_id]
+            puts params[:selected_analysis_id].class
+            puts params[:selected_analysis_id].to_s
         else
             puts "Not found"
         end
+        
 
         @user_metadata = get_metadata()
         if @user_metadata.has_key? "status" && @user_metadata["status"] == "unauthorized"
@@ -21,7 +24,8 @@ class AnalysisController < ApplicationController
         end
 
         @response = JSON.parse(File.read('db/scatterplot_e2d.json'))
-        # puts @response
+        puts "Response - hellow world"
+        puts @response
         # puts @response['correlation_result']["0"]
         # puts @response['correlation_result']["0"]['data']
         
@@ -101,15 +105,64 @@ class AnalysisController < ApplicationController
           
         # Push filtered_values into @response which will be fed to the view
         @response['correlation_result']["2"]["data"].replace(filtered_values)
-        # puts "Response After Anomaly Removal - Replacing Data with Filtered Values in Position 2"
-        # puts @response
+        puts "Response After Anomaly Removal - Replacing Data with Filtered Values in Position 2"
+        puts @response
+
+        # Loop through all UserAnalysisResults model and get the Hash for the selected unique_analysis_id, then plot that id
+
+        puts session[:oktastate]['uid']
+        puts session[:oktastate]['uid'].class
+        # @user_analysis_results = SELECT "user_analysis_results".* FROM "user_analysis_results" WHERE (CreateUserAnalysisResults.unique_analysis_id = params[:selected_analysis_id])
+        @user_analysis_results = UserAnalysisResult.where("user_id = '#{session[:oktastate]['uid']}'")
+        puts "User Analysis Results"
+        puts @user_analysis_results
+
+        @user_analysis_results.each_with_index do |result, index|
+                puts "Result"
+                puts result
+                puts "Unique Analysis ID"
+                unique_analysis ='["' + "#{result.unique_analysis_id}" + '"]'  
+                puts unique_analysis
+                puts unique_analysis.class
+                # puts result.unique_analysis_id.class
+                puts "Selected Analysis ID - Params"
+                puts params[:selected_analysis_id].to_s
+                puts params[:selected_analysis_id].to_s.class
+                puts "Results - User ID"
+                puts result.user_id
+                puts "Results - Correlation  Result"
+                puts result.correlation_result
+                puts "i"
+                puts index
+            # puts @user_analysis_results.result
+            if (unique_analysis.eql?(params[:selected_analysis_id].to_s))
+                puts "Equalizer"
+                puts unique_analysis
+                puts "String containing (:) converted to Hash with (=>)"
+                hash_as_string = result.correlation_result
+                @hash = JSON.parse(hash_as_string)
+                puts @hash
+                puts "@send for Recently Selected Chart"
+                $send = @hash
+                puts $send
+                puts $send.class
+            else
+                puts "Not equal"
+            end
+            puts " "
+        end
+        
 
         # Make view expect only data from one user
-        @send =  @response['correlation_result']["2"]
+        # @send =  @response['correlation_result']["2"]
+        # puts "send"
+        # puts @send
+        # puts @send.class
 
         # Query User Created Analysis for Test User
         @user_created_analyses = UserCreatedAnalysis.where("user_id = '#{session[:oktastate]["uid"]}'")
         @user_created_analyses.each do |analysis|
+            
             puts "User ID Loop"
             # puts analysis.user_id
 

@@ -10,28 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_16_215922) do
-
-  create_table "event_analyses", force: :cascade do |t|
-    t.string "user_id", null: false
-    t.string "unique_analysis_id"
-    t.string "anchor", null: false
-    t.string "antecedent_name", null: false
-    t.string "antecedent_table", null: false
-    t.string "antecedent_parameter"
-    t.string "consequent_name", null: false
-    t.string "consequent_table", null: false
-    t.string "consequent_parameter"
-    t.string "aggregate_function", null: false
-    t.string "antecedent_type", null: false
-    t.string "consequent_type", null: false
-    t.string "consequent_interval"
-    t.string "antecedent_interval"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "query_intervalTIME_INTERVAL"
-    t.string "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000000125391090>"
-  end
+ActiveRecord::Schema.define(version: 2023_02_16_023859) do
 
   create_table "insights", force: :cascade do |t|
     t.string "user_id", null: false
@@ -62,6 +41,16 @@ ActiveRecord::Schema.define(version: 2022_12_16_215922) do
     t.json "questions", default: {}
   end
 
+  create_table "read_user_analysis_results", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "correlation_result", null: false
+    t.string "unique_analysis_id", null: false
+    t.datetime "timestamp_added", null: false
+    t.boolean "viewed", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
@@ -69,6 +58,16 @@ ActiveRecord::Schema.define(version: 2022_12_16_215922) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "user_analysis_results", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "correlation_result", null: false
+    t.string "unique_analysis_id", null: false
+    t.datetime "timestamp_added", null: false
+    t.boolean "viewed", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_created_analyses", force: :cascade do |t|

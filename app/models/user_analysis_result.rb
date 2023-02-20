@@ -1,0 +1,2 @@
+class UserAnalysisResult < ApplicationRecord
+end
