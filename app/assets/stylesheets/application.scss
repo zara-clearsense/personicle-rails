@@ -51,9 +51,29 @@
 @import 'custom/utilities';
 @import 'custom/vendors';
 @import "bootstrap/scss/bootstrap";
-// body { 
-//     background-color: #5e72e4;
-// }
+
+.widget-container {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: repeat(1, 1fr);
+  grid-auto-rows: 1fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  max-width: 100%;
+}
+
+.widget-wrap {
+  display: flex;
+  padding: 0.5em;
+  margin-bottom: 20px;
+}
+
+.widget-card {
+  width: 100%;
+
+}
+
+
 
 .physician-questions-error-message, .user-physician-responses-error-message {
   background-color: rgb(177, 20, 20);
@@ -74,13 +94,13 @@
     margin: 0px;
     padding: 0px;
 .header-info {
-    border-radius: 25px;
+    border-radius: 2.5rem;
     background-color: white;
     color: black;
-    padding: 30px 0px 30px 20px;
-    margin: 0px 25px 0px 25px;
+    padding: 2rem 1.5rem 1.6rem 1.5rem;
+    margin: 0rem 1.5rem 0rem 1.5rem;
     text-size-adjust: auto;
-    height: 175px;
+    height: 12rem auto;
 }
 }
 
@@ -111,4 +131,3 @@
     opacity: 1;
     visibility: visible;
   }
-
