@@ -55,6 +55,24 @@
 //     background-color: #5e72e4;
 // }
 
+.widget-container {
+  display: flex; 
+  flex-flow: row wrap;
+}
+
+.widget-wrap {
+  flex: 0 0% 0% 100%;
+  display: flex;
+  padding: 0px; /* gutter width */
+}
+
+.widget-card {
+  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+  flex: 100% 0 100%;
+}
+
+
+
 .physician-questions-error-message, .user-physician-responses-error-message {
   background-color: rgb(177, 20, 20);
   border-radius: 25px;
@@ -74,13 +92,13 @@
     margin: 0px;
     padding: 0px;
 .header-info {
-    border-radius: 25px;
+    border-radius: 2.5rem;
     background-color: white;
     color: black;
-    padding: 1.7rem 2.0rem 1.0rem 2.0rem;
+    padding: 2rem 1.5rem 1.6rem 1.5rem;
     margin: 0rem 1.5rem 0rem 1.5rem;
     text-size-adjust: auto;
-    height: 175px;
+    height: 12rem auto;
 }
 }
 
