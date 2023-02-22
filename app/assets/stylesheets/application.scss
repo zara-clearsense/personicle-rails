@@ -75,6 +75,24 @@
 
 
 
+.widget-container {
+  display: flex; 
+  flex-flow: row wrap;
+}
+
+.widget-wrap {
+  flex: 0 0% 0% 100%;
+  display: flex;
+  padding: 0px; /* gutter width */
+}
+
+.widget-card {
+  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+  flex: 100% 0 100%;
+}
+
+
+
 .physician-questions-error-message, .user-physician-responses-error-message {
   background-color: rgb(177, 20, 20);
   border-radius: 25px;
