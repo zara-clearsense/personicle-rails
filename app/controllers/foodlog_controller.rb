@@ -32,15 +32,23 @@ class FoodlogController < ApplicationController
           else
             form_status_msg = 'Please fill out all fields'
         end
-
+       
         if form_complete
-            respond_to do |format|
-                format.html {render :recipes, locals: { status_msg: form_status_msg, feedback: params, recipes: response.hits } }
-                # redirect_to pages_recipes_path, recipes: response.hits
+            if response.count == 0
+                respond_to do |format|
+                    format.html {render :index, locals: { feedback: params, recipes: response.hits, count: response.count } }
+                    # redirect_to pages_recipes_path, recipes: response.hits
+                end
+            else
+                respond_to do |format|
+                    format.html {render :recipes, locals: { status_msg: form_status_msg, feedback: params, recipes: response.hits, count: response.count } }
+                  
+                end
             end
+            
         else 
             respond_to do |format|
-                format.html {render :index, locals: { status_msg: form_status_msg, feedback: params} }
+                format.html {render :index, locals: { status_msg: form_status_msg, feedback: params, count: response.count } }
             end
         end
         
@@ -66,9 +74,9 @@ class FoodlogController < ApplicationController
         end_time_millis = (Time.parse(end_time).to_f)*1000
         duration = end_time_millis - start_time_millis
         # puts params[:ingredients]
-        puts start_time.class
-        puts end_time.class
-        puts Time.find_zone("UTC").parse(end_time)
+        # puts start_time.class
+        # puts end_time.class
+        # puts Time.find_zone("UTC").parse(end_time)
         data = [{
             "individual_id": "#{session[:oktastate]["uid"]}",
             "start_time": "#{Time.find_zone("UTC").parse(start_time)}",
