@@ -147,7 +147,7 @@
            %> 
             
                <% if show_numeric_chart == true %> 
-                <%# <% puts @numeric_responses_data %>
+                  
                 <%# <% puts @data %> 
 
                 <%= line_chart  @numeric_responses_data,points:false, title: tag, round: 2, loading: "Loading...",
@@ -187,6 +187,7 @@
           <div id="<%=tag%>_chart_weekly" class="chart hidden">
            <%
               @tag_responses=  @user_responses.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
+            
               @data = []
                  @tag_responses.each do |k,v|
                       v.each do |key,val|
@@ -222,7 +223,9 @@
                       end
                     end
                   end
+                 
            %> 
+           
            <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
           </div>
         <%end%>

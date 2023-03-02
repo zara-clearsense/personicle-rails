@@ -169,8 +169,23 @@
            <div id="<%=tag%>_chart_physician_weekly" class="chart hidden">
            <%
               @tag_responses=  @current_phy_resp.filter {|rec| rec[0][0] == tag}.group_by {|rec| rec[0][1].strftime('%Y-%U')}
+              
+              numeric_weekly_data = {}
+              @tag_responses.to_h.each do |date_str, values|
+                sum = 0
+                count = 0
+                values.each do |value|
+                  sum += value[0][2].to_i * value[1]
+                  count += value[1]
+                end
+                avg_value = sum / count.to_f
+                numeric_weekly_data[date_str] = avg_value.round(3)
+              end
+            
               @data = []
                  @tag_responses.each do |k,v|
+                    numeric_responses = v.filter {|r| r[0][3] == "numeric"}.group_by {|rec| rec[0][1]}
+                    avg_numeric_responses = numeric_responses.map {|k,v|  [k, v.sum {|r| r[1] * r[0][2].to_i}/v.sum{ |r| r[1]}] }
                       v.each do |key,val|
                         obj_exists =  @data.find{ |obj| obj[:name] == key[2] }
                         if !obj_exists.nil?
@@ -183,7 +198,8 @@
                         
                       end
                  end
-
+                 
+                 
                   dates = @data.map {|obj| obj[:data].map { |sub_array| sub_array.first }}.flatten
                   min_date = dates.min
                   max_date = dates.max
@@ -205,8 +221,23 @@
                     end
                   end
            %> 
-           
-           <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
+           <% if show_numeric_chart %>
+              <%
+                  start_date = numeric_weekly_data.keys.min 
+                  end_date = numeric_weekly_data.keys.max 
+                  date_range = (start_date..end_date)
+                  date_range.step(1) do |date|
+                    if !numeric_weekly_data[date]
+                      numeric_weekly_data[date] = 0
+                    end
+                  end
+                  numeric_weekly_data = numeric_weekly_data.sort.to_h
+              %>
+              <%= column_chart  numeric_weekly_data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
+           <% else %>
+              <%= column_chart  @data,   title: tag, library: { isStacked: 'percent' },suffix: "",points:false, round: 2, loading: "Loading...", xtitle: "Year - Week number", ytitle: "Total Responses", stacked: true %>
+           <% end %>
+          
           </div>
         <%end%>
 
