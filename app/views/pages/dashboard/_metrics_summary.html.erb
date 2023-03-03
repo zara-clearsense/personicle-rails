@@ -1,13 +1,14 @@
 
+
     <script src="https://kit.fontawesome.com/16923e284e.js" crossorigin="anonymous"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
     
 
 <div class="row">
-  <div class="col-xl-4 col-md-6">
-    <div class="card card-stats">
+  <div class="widget-container col-xl-4 col-md-6">
+    <div class="widget-wrap card card-stats">
       <!-- Card body -->
-      <div class="card-body">
+      <div class="widget-card card-body">
         <div class="row">
           <div class="col">  
             <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The average sleep of the user over the course of the month. Indicates increase or decrease in sleep as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Average sleep </h5>
@@ -45,19 +46,20 @@
     </div>
   </div>
 
-  <div class="col-xl-4 col-md-6">
+  <div class="widget-container col-xl-4 col-md-6">
 
-    <div class="card card-stats">
+    <div class="widget-wrap card card-stats">
+
       <!-- Card body -->
-      <div class="card-body">
+      <div class="widget-card card-body">
         <div class="row">
           <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0">Calories Burned</h5>
+            <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The average calories burned by the user over the course of the month. Indicates increase or decrease in calories burned as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Calories Burned</h5>
             <%if avg_calories_week == 0%>
             <%calories_text = "No calories data"%>
             <%else%>
-            <%calories_text = "#{number_with_delimiter(avg_calories_week, :delimiter => ',')} calories per day"%>
-            <%end%>
+            <%calories_text = "#{number_with_delimiter(avg_calories_week.round(2), :delimiter => ',')} calories per day"%>
+            <%end%> 
             <span class="h2 font-weight-bold mb-0"><%=calories_text%></span>
           </div>
           <div class="col-auto">
@@ -85,11 +87,12 @@
     </div>
   </div>
 
-  <div class="col-xl-3 col-md-6">
+  <div class="widget-container col-xl-4 col-md-6">
 
-    <div class="card card-stats">
+    <div class="widget-wrap card card-stats">
+
       <!-- Card body -->
-      <div class="card-body">
+      <div class="widget-card card-body">
         <div class="row">
           <div class="col">
             <h5 class="card-title text-uppercase text-muted mb-0"><span class="hovertext" data-hover="The number of steps over the past month performing physical activity. Indicates increase or decrease in steps as compared to the previous month."><i class="fa fa-info-circle" aria-hidden="true"></i></span> Walking </h5>

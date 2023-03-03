@@ -100,6 +100,8 @@
                             <fieldset class="my-2">
                                 <%= file_field_tag :picture , :multiple => true, name: "#{session[:oktastate]['uid'] + ' ' + q['tag'] + ' ' + 'image'}[]" %>
                             </fieldset>
+                            <%= link_to 'Delete', pages_user_create_question_path(:question_id => q['tag']),
+                             data: {confirm: "Are you sure you want to delete this question?"}, :method => :delete %>
                         </div>    
 
                     <% elsif q['response_type'] == 'string' %>
@@ -107,6 +109,8 @@
                                 <fieldset class="my-2">
                                     <input class="" type="text" name="<%= session[:oktastate]['uid'] + ' ' + q['tag']%> string" >
                                 </fieldset>
+                                <%= link_to 'Delete', pages_user_create_question_path(:question_id => q['tag']),
+                             data: {confirm: "Are you sure you want to delete this question?"}, :method => :delete %>
                         </div>
 
                     <% elsif q['response_type'] == 'numeric' %>
@@ -114,6 +118,8 @@
                             <fieldset class="my-2">
                                 <input class="" type="number" name="<%= session[:oktastate]['uid'] + ' ' + q['tag']%> numeric" >
                             </fieldset>
+                            <%= link_to 'Delete', pages_user_create_question_path(:question_id => q['tag']),
+                             data: {confirm: "Are you sure you want to delete this question?"}, :method => :delete %>
                         </div>
 
                     <% else %>
@@ -128,6 +134,8 @@
                             </div>
                                     
                         <% end %>
+                        <%= link_to 'Delete', pages_user_create_question_path(:question_id => q['tag']),
+                            data: {confirm: "Are you sure you want to delete this question?"}, :method => :delete %>
                     <% end %>
                 </li>
             </ul>

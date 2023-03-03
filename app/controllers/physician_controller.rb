@@ -24,11 +24,13 @@ class PhysicianController < ApplicationController
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=true,uid=params["data_for_user"])
             @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=true,uid=params["data_for_user"])
+            @response_calories = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.interval.total_calories",start_date=st, end_date=et, hard_refresh=true,uid=params["data_for_user"])
         else
             @user_data =  FetchData.get_events(session,event_type="Sleep",st,et,hard_refresh=false, uid=params["data_for_user"])
             @user_events = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.step.count",st, et, hard_refresh=false,uid=params["data_for_user"])
             @user_hr  = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.heartrate",st, et, hard_refresh=false,uid=params["data_for_user"])
             @user_responses  = FetchData.get_datastreams(session,source=nil,data_type="com.personicle.individual.datastreams.subjective.physician_questionnaire",st, et, hard_refresh=false,uid=params["data_for_user"])
+            @response_calories = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.interval.total_calories",start_date=st, end_date=et, hard_refresh=false,uid=params["data_for_user"])
             
         end
         
@@ -128,6 +130,34 @@ class PhysicianController < ApplicationController
             @daily_step_summary = []
             @weekly_step_summary  = []
         end
+
+        # calories data
+        # puts "response calories"
+        # puts @response_calories
+        if !@response_calories.empty?
+    
+            tmp_calories = @response_calories.select {|record| record['end_time'].to_datetime > 30.days.ago}.map {|rec| [rec['end_time'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+            @daily_calories = tmp_calories.map {|k,v| [k, v.sum {|r| r[1]}]}.to_h
+          
+      
+            @last_month_total_calories = @daily_calories.select {|k,v| k > 30.days.ago}.sum {|k,v| v}
+           
+            @last_month_calories_days = @daily_calories.select {|k,v| k > 30.days.ago}.size
+      
+            @last_week_total_calories = @daily_calories.select {|k,v| k > 7.days.ago}.sum {|k,v| v}
+          
+            @last_week_calories_days = @daily_calories.select {|k,v| k > 7.days.ago}.size
+            
+      
+            @last_week_average_calories = @last_week_calories_days>0? @last_week_total_calories/@last_week_calories_days:0
+           
+            @last_month_average_calories = @last_month_calories_days>0? @last_month_total_calories/@last_month_calories_days:0
+            # puts "last week calories"
+            # puts @last_week_average_calories
+            
+            @response_calories_prev_week = @response_calories.select {|record| record['end_time'].to_datetime > 7.days.ago}.map {|rec| [rec['end_time'].to_date, rec['value']]}.group_by {|r| r[0]}.to_h
+           
+          end
         #sleep data 
         if !@user_data.empty?
 

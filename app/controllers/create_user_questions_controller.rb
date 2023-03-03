@@ -5,6 +5,16 @@ class CreateUserQuestionsController < ApplicationController
         @user_questions = User.find_by(user_id: session[:oktastate]['uid']).questions
     end
 
+    def destroy
+        @user = User.find_by(user_id: session[:oktastate]['uid'])   
+        question_id =  params[:question_id]
+        @user_questions = User.find_by(user_id: session[:oktastate]['uid']).questions['questions']
+        index_to_delete =  @user_questions.index { |json| json["tag"] == question_id }
+        @user_questions.delete_at(index_to_delete)
+        @user.update(questions: {"questions": @user_questions})
+        return  redirect_to pages_user_create_question_path
+    end
+
     def send_responses
         question_reponses = params.except(:authenticity_token,:controller, :action)
         user_questions_responses = {}
