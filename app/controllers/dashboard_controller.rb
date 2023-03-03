@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
       @response_weight = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.weight",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
 
       @response_calories = FetchData.get_datastreams(session,source="google-fit",data_type="com.personicle.individual.datastreams.interval.total_calories",start_date=st, end_date=et, hard_refresh=true,uid=session[:oktastate]['uid'])
-
+  
     else
       puts "not hard refresh"
       @response = FetchData.get_events(session,event_type=false,st,et,hard_refresh=false,uid=session[:oktastate]['uid'])
