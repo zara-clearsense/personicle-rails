@@ -4,7 +4,7 @@
   <p><b>Find recipes, choose serving sizes, and log mealtimes.  </b></p>
 </div>
 </div>
-
+<% if local_assigns[:count] != 0 %>
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
     <div class="header-body">
@@ -110,6 +110,12 @@
       </div>
     </div>
   </div>
+  <% else%>
+  <div style="text-align: center;">
+   <p><strong>No recipes found</strong></p>
+   <%= link_to "Search for different recipes", pages_foodlog_path, class: "btn btn-primary",style: "font-size: 12px; padding: 4px 8px;"%>
+  </div>
+  <% end %>
   <%= render 'pages/footer' %>
 </div>
 <%# Add rows to nutrients table %>
