@@ -43,7 +43,7 @@
       %>
       <% @weekly_data = !@weekly_aggregated.nil? ? @weekly_aggregated: []
       %>
-        <%= render 'pages/mobility/charts/bar_totalsteps_dayandweek.html.erb', daily_user_data:@daily_steps, weekly_user_data:@weekly_aggregated, last_month_data: @last_month_total_steps %>
+        <%= render 'pages/mobility/charts/bar_totalsteps_dayandweek.html.erb', daily_user_data:@daily_steps, weekly_user_data:@weekly_aggregated, all_months_by_month_year_data: @all_months_with_steps  %>
       
     </div>
     
