@@ -53,21 +53,51 @@ class MobilityController < ApplicationController
       all_minutes = [*0..1439]
       all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
+      puts "Weekday Grouped Data"
       weekday_grouped_data = @steps_data_raw.group_by { |rec| rec['weekday']}.to_h
-      
-      # puts weekday_grouped_data
+      puts weekday_grouped_data
 
       @processed_steps_data = {}
       all_days.each { |week_day|
         # puts week_day
         current_day_data = weekday_grouped_data[week_day]
         if !current_day_data.nil? 
-          summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30}.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
+          summarized_data = current_day_data.group_by {|rec| rec['minute_value']/30 }.map {|k, v| [k, (v.size>0)?(v.sum {|r| r['value']}.to_f/90) : 0]}.to_h
           # summarized_data = current_day_data.group_by {|rec| rec[0]}.to_h {|k, v| [k, v.sum {|r| r[1]}]}
           @processed_steps_data[week_day] = summarized_data
         end
       }
+      puts "Processed Steps Data"
+      puts @processed_steps_data
 
+      puts "Processed Steps Data with Minute Value as 0:00 - 24:00"
+      @time_string_data = {}
+      @processed_steps_data.each { |week_day, kv|
+        puts week_day
+        # puts kv
+        @time_string_data[week_day] = {}
+        kv.each {|minute_divided_by_30, steps|
+        # puts minute_divided_by_30
+        # puts steps
+        time_str = format("%02d:%02d", (minute_divided_by_30) * 30 / 60, (minute_divided_by_30) * 30 % 60)
+        puts "#{minute_divided_by_30} becomes a time string of #{time_str}"
+      
+        @time_string_data[week_day][time_str] = steps
+      }
+      }
+      puts "TimeString for Each WeekDay with Steps"
+      puts @time_string_data
+
+      puts "Ordered TimeString for Each WeekDay with Steps"
+      @sorted_time_string_data = {}
+        @time_string_data.each do |week_day, kv|
+        sorted_kv = kv.sort.to_h
+        @sorted_time_string_data[week_day] = sorted_kv
+      end
+
+      puts @sorted_time_string_data
+
+      
       temporary_steps = @response.group_by_day{|rec| rec['end_time'].to_datetime}.to_h 
       @mobility_aggregated = temporary_steps.map {|k,v| {k => v.sum {|r| r['value']}}}
       #puts temporary_steps
@@ -80,7 +110,7 @@ class MobilityController < ApplicationController
       # puts tmp_steps
       @daily_steps = tmp_steps.map {|k,v| [k, v.sum {|r| r[1]}]}.to_h
       puts "Daily Steps For Past 12 Months"
-      puts @daily_steps
+      # puts @daily_steps
       @last_week_total_steps = @daily_steps.select {|k,v| k > 7.days.ago}.sum {|k,v| v}
       puts "Number of Steps Taken All Last Week"
       # puts @last_week_total_steps 
@@ -89,7 +119,7 @@ class MobilityController < ApplicationController
         
         range_for_daily_steps = @daily_steps.keys.first.beginning_of_month..@daily_steps.keys.last.end_of_month
         puts "Range for Daily Steps (All 12 Months)"
-        puts range_for_daily_steps
+        # puts range_for_daily_steps
 
         @add_missing_days = {}
         range_for_daily_steps.each do |date|
@@ -103,7 +133,7 @@ class MobilityController < ApplicationController
         
         @grouped_by_month = @daily_steps.group_by_month { |date, steps| date.strftime('%Y-%m-%d') }
         puts "Grouped By Month"
-        puts @grouped_by_month
+        # puts @grouped_by_month
 
 
 
@@ -116,8 +146,8 @@ class MobilityController < ApplicationController
           start_date = Date.new(year, month, 1)
           end_date = (start_date >> 1) - 1
           @date_range = start_date..end_date
-          puts @date_range
-          puts "#{date.strftime('%b %Y')}: #{@date_range}"
+          # puts @date_range
+          # puts "#{date.strftime('%b %Y')}: #{@date_range}"
           # puts "Each Month Daily"
           @any_month_daily = @add_missing_days.select {|k,v| @date_range.include?(k)}
           # puts @any_month_daily
@@ -125,9 +155,9 @@ class MobilityController < ApplicationController
         end
   
       puts "Each Month's Set Accessed Using date.strftime('%b %Y')"
-      puts @all_months_with_steps
+      # puts @all_months_with_steps
       puts "Hash with Zero Steps on Missing Dates"
-      puts @add_missing_days
+      # puts @add_missing_days
     else
       @processed_steps_data = {}
       @mobility_aggregated = {}
