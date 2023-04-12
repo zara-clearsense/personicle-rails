@@ -28,7 +28,14 @@
           <div class="row icon-examples">
             <div class="col-lg-3 col-md-6">
             <a href="<%= ENV['FITBIT_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
-              <span><button type="button" class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Fitbit with last date of data retrieval. User can retrieve most recent data by clicking the Fitbit button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+              <span><button type="button" style="background-color: 
+    <% if @service_status["fitbit"] == "connected" %>
+      green
+    <% elsif @service_status["fitbit"] == "expired" %>
+      red
+    <% elsif @not_included.key?("fitbit") %>
+      grey
+    <% end %>;" class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Fitbit with last date of data retrieval. User can retrieve most recent data by clicking the Fitbit button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
                <span class="iconify" data-icon="vscode-icons:file-type-fitbit"></span>
               <span class="btn-inner--text">Fitbit</span>
               </button>
@@ -36,7 +43,14 @@
             </div>
             <div class="col-lg-3 col-md-6">
             <a href="<%= ENV['GOOGLEFIT_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
-              <span><button type="button"class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Google Fit with last date of data retrieval. User can retrieve most recent data by clicking the Google Fit button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+              <span><button type="button" style="background-color:
+    <% if @service_status["google-fit"] == "connected" %>
+      green
+    <% elsif @service_status["google-fit"] == "expired" %>
+      red
+    <% elsif @not_included.key?("google-fit") %>
+      grey
+    <% end %>;" class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Google Fit with last date of data retrieval. User can retrieve most recent data by clicking the Google Fit button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
                  <span class="iconify" data-icon="logos:google-fit"></span>
                 <span class="btn-inner--text">Google Fit</span>
               </button>
@@ -44,7 +58,13 @@
             </div>
             <div class="col-lg-3 col-md-6">
             <a href="<%= ENV['OURA_CONNECTION'] + '?user_id='+ session[:oktastate]['uid']  %>" target="_blank">
-              <span><button type="button" class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Oura Ring with last date of data retrieval. User can retrieve most recent data by clicking the Oura Ring button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+              <span><button type="button" style="background-color: <% if @service_status["oura"] == "connected" %>
+      green
+    <% elsif @service_status["oura"] == "expired" %>
+      red
+    <% elsif @not_included.key?("oura") %>
+      grey
+    <% end %>;"  class="btn-icon-clipboard hovertext" data-clipboard-text="active-40" data-hover="Connection to Oura Ring with last date of data retrieval. User can retrieve most recent data by clicking the Oura Ring button."><i class="fa fa-info-circle" aria-hidden="true"></i></span>
                <span class="iconify" data-icon="arcticons:oura"></span>
               <span class="btn-inner--text">Oura</span>
               </button>
